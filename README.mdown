@@ -2,10 +2,10 @@
 
 Для открытия файла требуется указать его структуру в файле [dbclayout.xml][]. В данный момент имеются структуры лишь для небольшого числа dbc файлов.
 
-Имеется возможность экспорта в sql, а так же интерфейс для написания плагинов экспорта в другие форматы (csv, xml и т.д.) Для примера можно посмотреть [Export2SQL.cs][] экспортера в sql.
+Имеется возможность экспорта в sql, а так же интерфейс для написания плагинов экспорта в другие форматы (csv, xml и т.д.) Для примера можно посмотреть [Export2SQL.cs][исходник] экспортера в sql.
 
 Для запуска утилиты требуется [Microsoft .NET Framework 4.0][].
 
 [dbclayout.xml]: http://github.com/tomrus88/dbcviewer/blob/master/DBC%20Viewer/dbclayout.xml
-[исходник]: http://github.com/tomrus88/dbcviewer/blob/master/Export2SQL/Export2SQL.cs
+[Export2SQL.cs]: http://github.com/tomrus88/dbcviewer/blob/master/Export2SQL/Export2SQL.cs
 [Microsoft .NET Framework 4.0]: http://www.microsoft.com/downloads/details.aspx?familyid=0A391ABD-25C1-4FC0-919F-B21F31AB88B7
