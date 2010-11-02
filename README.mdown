@@ -7,4 +7,4 @@
 Для запуска утилиты требуется [Microsoft .NET Framework 4.0][].
 
 [dbclayout.xml]: http://github.com/tomrus88/dbcviewer/blob/master/DBC%20Viewer/dbclayout.xml
-[Microsoft .NET Framework 4.0]: http://www.microsoft.com/downloads/details.aspx?familyid=0A391ABD-25C1-4FC0-919F-B21F31AB88B7&displaylang=ru
+[Microsoft .NET Framework 4.0]: http://www.microsoft.com/downloads/details.aspx?familyid=0A391ABD-25C1-4FC0-919F-B21F31AB88B7
