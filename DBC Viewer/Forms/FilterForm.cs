@@ -150,6 +150,12 @@ namespace DBCViewer
 
             try
             {
+                if (col.DataType.IsPrimitive && col.DataType != typeof(float) && col.DataType != typeof(double))
+                {
+                    if (val.StartsWith("0x", true, CultureInfo.InvariantCulture))
+                        val = Convert.ToUInt64(val, 16).ToString();
+                }
+
                 Convert.ChangeType(val, col.DataType, CultureInfo.InvariantCulture);
             }
             catch
