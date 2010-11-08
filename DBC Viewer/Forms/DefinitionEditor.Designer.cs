@@ -30,6 +30,7 @@
         {
             this.button1 = new System.Windows.Forms.Button();
             this.listView1 = new System.Windows.Forms.ListView();
+            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -38,7 +39,6 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
@@ -78,6 +78,11 @@
             this.listView1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.listView1_KeyUp);
             this.listView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseDoubleClick);
             this.listView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseDown);
+            // 
+            // columnHeader4
+            // 
+            this.columnHeader4.Text = "Index";
+            this.columnHeader4.Width = 43;
             // 
             // columnHeader1
             // 
@@ -154,11 +159,6 @@
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
-            // columnHeader4
-            // 
-            this.columnHeader4.Text = "Index";
-            this.columnHeader4.Width = 43;
-            // 
             // textBox2
             // 
             this.textBox2.Location = new System.Drawing.Point(285, 226);
@@ -172,6 +172,7 @@
             // 
             // DefinitionEditor
             // 
+            this.AcceptButton = this.button1;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(499, 263);
@@ -189,6 +190,7 @@
             this.Name = "DefinitionEditor";
             this.ShowInTaskbar = false;
             this.Text = "Definition Editor";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DefinitionEditor_FormClosing);
             this.Load += new System.EventHandler(this.DefinitionEditor_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

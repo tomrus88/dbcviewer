@@ -34,6 +34,7 @@ namespace DBCViewer
         public XmlElement Definition { get { return m_definition; } }
         public string DBCName { get { return m_dbcName; } }
         public int DefinitionIndex { get { return m_selector != null ? m_selector.DefinitionIndex : 0; } }
+        public string DBCFile { get { return m_dbcFile; } }
 
         // Delegates
         delegate void SetDataViewDelegate(DataView view);
@@ -107,6 +108,8 @@ namespace DBCViewer
             DefinitionEditor editor = new DefinitionEditor();
             var result = editor.ShowDialog(this);
             editor.Dispose();
+            if (result == DialogResult.Abort)
+                return;
             if (result == DialogResult.OK)
                 LoadFile(m_dbcFile);
             else

@@ -37,9 +37,7 @@ namespace dbc2sql
                     throw new InvalidDataException(String.Format("File {0} is corrupted!", fileName));
                 }
 
-                var signature = reader.ReadUInt32();
-
-                if (signature != DB2FmtSig)
+                if (reader.ReadUInt32() != DB2FmtSig)
                 {
                     throw new InvalidDataException(String.Format("File {0} isn't valid DBC file!", fileName));
                 }

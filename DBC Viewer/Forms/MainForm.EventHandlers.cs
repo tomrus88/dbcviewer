@@ -70,16 +70,17 @@ namespace DBCViewer
 
             try
             {
-                if (Path.GetExtension(file).ToUpperInvariant() == ".DBC")
+                var ext = Path.GetExtension(file).ToUpperInvariant();
+                if (ext == ".DBC")
                     m_reader = new DBCReader(file);
-                else if (Path.GetExtension(file).ToUpperInvariant() == ".DB2")
+                else if (ext == ".DB2")
                     m_reader = new DB2Reader(file);
-                else if (Path.GetExtension(file).ToUpperInvariant() == ".ADB")
+                else if (ext == ".ADB")
                     m_reader = new ADBReader(file);
-                else if (Path.GetExtension(file).ToUpperInvariant() == ".WDB")
+                else if (ext == ".WDB")
                     m_reader = new WDBReader(file);
                 else
-                    throw new InvalidDataException(String.Format("Unknown file type {0}", Path.GetExtension(file)));
+                    throw new InvalidDataException(String.Format("Unknown file type {0}", ext));
             }
             catch (Exception ex)
             {

@@ -992,4 +992,103 @@
     <field type="int" name="MovementId" />
     <field type="int" name="Unk1" />
   </creaturecache>
+  <TeamContributionPoints build="12340">
+    <index>
+      <primary>m_level</primary>
+    </index>
+    <field type="uint" name="m_level" />
+    <field type="float" name="m_multiplier" />
+  </TeamContributionPoints>
+  <AreaTable build="13205">
+    <index>
+      <primary>id</primary>
+    </index>
+    <field type="int" name="id" />
+    <field type="int" name="map" />
+    <field type="int" name="zone" />
+    <field type="int" name="exploreFlag" />
+    <field type="uint" name="flags" />
+    <field type="int" name="newField1" />
+    <field type="int" name="newField2" />
+    <field type="int" name="newField3" />
+    <field type="int" name="newField4" />
+    <field type="int" name="newField5" />
+    <field type="int" name="areaLevel" />
+    <field type="string" name="name" />
+    <field type="int" name="team" />
+    <field type="int" name="newField6" />
+    <field type="int" name="newField7" />
+    <field type="int" name="newField8" />
+    <field type="int" name="newField9" />
+    <field type="float" name="newField10" />
+    <field type="float" name="newField11" />
+    <field type="int" name="newField12" />
+    <field type="int" name="newField13" />
+    <field type="int" name="newField14" />
+    <field type="int" name="newField15" />
+    <field type="int" name="newField16" />
+    <field type="int" name="newField17" />
+  </AreaTable>
+  <Map build="13205">
+    <index>
+      <primary>id</primary>
+    </index>
+    <field type="int" name="id" />
+    <field type="string" name="iname" />
+    <field type="int" name="type" />
+    <field type="int" name="flags" />
+    <field type="int" name="unk4" />
+    <field type="int" name="isPvp" />
+    <field type="string" name="name" />
+    <field type="int" name="linkedZone" />
+    <field type="string" name="hordeIntro" />
+    <field type="string" name="allianceIntro" />
+    <field type="int" name="multimap_id" />
+    <field type="float" name="BattlefieldMapIconScale" />
+    <field type="int" name="ghost_entrance_map" />
+    <field type="float" name="ghost_entrance_x" />
+    <field type="float" name="ghost_entrance_y" />
+    <field type="int" name="timeOfDayOverride" />
+    <field type="int" name="addon" />
+    <field type="int" name="unkTime" />
+    <field type="int" name="maxPlayers" />
+    <field type="int" name="unk400" />
+  </Map>
+  <MapDifficulty build="13205">
+    <field type="int" name="m_id" />
+    <field type="int" name="m_mapId" />
+    <field type="int" name="m_difficulty" />
+    <field type="string" name="m_requirement" />
+    <field type="int" name="m_resetTime" />
+    <field type="int" name="m_maxPlayers" />
+    <field type="string" name="m_difficultyString" />
+  </MapDifficulty>
+  <Achievement_Criteria build="13241">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+    <field type="int" name="field5" />
+    <field type="int" name="field6" />
+    <field type="int" name="field7" />
+    <field type="int" name="field8" />
+    <field type="string" name="field9" />
+    <field type="int" name="field10" />
+    <field type="int" name="field11" />
+    <field type="int" name="field12" />
+    <field type="int" name="field13" />
+    <field type="int" name="field14" />
+    <field type="int" name="field15" />
+    <field type="int" name="field16" />
+    <field type="int" name="field17" />
+    <field type="int" name="field18" />
+    <field type="int" name="field19" />
+    <field type="int" name="field20" />
+    <field type="int" name="field21" />
+    <field type="int" name="field22" />
+  </Achievement_Criteria>
 </DBFilesClient>
