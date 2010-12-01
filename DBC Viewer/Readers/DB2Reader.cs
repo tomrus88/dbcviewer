@@ -52,15 +52,19 @@ namespace dbc2sql
                 uint build = reader.ReadUInt32(); // new field in WDB2
 
                 int unk1 = reader.ReadInt32(); // new field in WDB2
-                int unk2 = reader.ReadInt32(); // new field in WDB2
-                int unk3 = reader.ReadInt32(); // new field in WDB2 (index table?)
-                int locale = reader.ReadInt32(); // new field in WDB2
-                int unk5 = reader.ReadInt32(); // new field in WDB2
 
-                if (unk3 != 0)
+                if (build > 12880) // new extended header
                 {
-                    reader.ReadBytes(unk3 * 4 - HeaderSize);     // an index for rows
-                    reader.ReadBytes(unk3 * 2 - HeaderSize * 2); // a memory allocation bank
+                    int unk2 = reader.ReadInt32(); // new field in WDB2
+                    int unk3 = reader.ReadInt32(); // new field in WDB2 (index table?)
+                    int locale = reader.ReadInt32(); // new field in WDB2
+                    int unk5 = reader.ReadInt32(); // new field in WDB2
+
+                    if (unk3 != 0)
+                    {
+                        reader.ReadBytes(unk3 * 4 - HeaderSize);     // an index for rows
+                        reader.ReadBytes(unk3 * 2 - HeaderSize * 2); // a memory allocation bank
+                    }
                 }
 
                 m_rows = new byte[RecordsCount][];

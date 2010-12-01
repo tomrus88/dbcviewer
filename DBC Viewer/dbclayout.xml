@@ -773,7 +773,25 @@
       <primary>id</primary>
     </index>
     <field type="int" name="id" />
-    <field type="string" name="name" />
+    <field type="int" name="newField1" />
+    <field type="string" name="newField2" />
+    <field type="int" name="newField3" />
+    <field type="int" name="newField4" />
+    <field type="int" name="newField5" />
+    <field type="int" name="newField6" />
+    <field type="int" name="newField7" />
+    <field type="int" name="newField8" />
+    <field type="int" name="newField9" />
+    <field type="int" name="newField10" />
+    <field type="int" name="newField11" />
+    <field type="int" name="newField12" />
+    <field type="int" name="newField13" />
+    <field type="int" name="newField14" />
+    <field type="int" name="newField15" />
+    <field type="int" name="newField16" />
+    <field type="int" name="newField17" />
+    <field type="int" name="newField18" />
+    <field type="int" name="newField19" />
   </SpellShapeshiftForm>
   <WorldMapArea build="0">
     <index>
@@ -1091,4 +1109,193 @@
     <field type="int" name="field21" />
     <field type="int" name="field22" />
   </Achievement_Criteria>
+  <CameraMode build="13241">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="string" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="float" name="field4" />
+    <field type="float" name="field5" />
+    <field type="float" name="field6" />
+    <field type="float" name="field7" />
+    <field type="float" name="field8" />
+    <field type="float" name="field9" />
+    <field type="float" name="field10" />
+    <field type="float" name="field11" />
+    <field type="float" name="field12" />
+    <field type="int" name="field13" />
+    <field type="int" name="field14" />
+    <field type="int" name="field15" />
+    <field type="int" name="field16" />
+  </CameraMode>
+  <WowError_Strings build="13241">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="string" name="field1" />
+    <field type="string" name="field2" />
+  </WowError_Strings>
+  <BattlemasterList build="13241">
+    <index>
+      <primary>m_id</primary>
+    </index>
+    <field type="int" name="m_id" />
+    <field type="int" name="m_mapId_1" />
+    <field type="int" name="m_mapId_2" />
+    <field type="int" name="m_mapId_3" />
+    <field type="int" name="m_mapId_4" />
+    <field type="int" name="m_mapId_5" />
+    <field type="int" name="m_mapId_6" />
+    <field type="int" name="m_mapId_7" />
+    <field type="int" name="m_mapId_8" />
+    <field type="int" name="m_mapType" />
+    <field type="int" name="m_canJoinAsGroup" />
+    <field type="string" name="m_name" />
+    <field type="int" name="m_maxGroupSize" />
+    <field type="int" name="m_HolidayWorldStateId" />
+    <field type="int" name="m_minLevel" />
+    <field type="int" name="m_maxLevel" />
+    <field type="int" name="m_maxGroupSizeRated" />
+    <field type="int" name="m_maxPlayers" />
+    <field type="int" name="m_unkRated" />
+  </BattlemasterList>
+  <AreaTrigger build="13245">
+    <index>
+      <primary>m_id</primary>
+    </index>
+    <field type="int" name="m_id" />
+    <field type="int" name="m_mapId" />
+    <field type="float" name="m_posX" />
+    <field type="float" name="m_posY" />
+    <field type="float" name="m_posZ" />
+    <field type="int" name="field5" />
+    <field type="int" name="field6" />
+    <field type="int" name="field7" />
+    <field type="float" name="field8" />
+    <field type="float" name="field9" />
+    <field type="float" name="field10" />
+    <field type="float" name="field11" />
+    <field type="float" name="field12" />
+  </AreaTrigger>
+  <CreatureType build="13277">
+    <index>
+      <primary>m_id</primary>
+    </index>
+    <field type="int" name="m_id" />
+    <field type="string" name="m_name" />
+    <field type="int" name="m_unk1" />
+  </CreatureType>
+  <ChrClasses build="13277">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="string" name="field2" />
+    <field type="string" name="field3" />
+    <field type="int" name="field4" />
+    <field type="int" name="field5" />
+    <field type="string" name="field6" />
+    <field type="int" name="field7" />
+    <field type="int" name="field8" />
+    <field type="int" name="field9" />
+    <field type="int" name="field10" />
+    <field type="int" name="field11" />
+    <field type="int" name="field12" />
+    <field type="int" name="field13" />
+  </ChrClasses>
+  <CurrencyCategory build="13287">
+    <index>
+      <primary>m_category</primary>
+    </index>
+    <field type="uint" name="m_category" />
+    <field type="uint" name="m_unk1" />
+    <field type="string" name="m_name" />
+  </CurrencyCategory>
+  <CurrencyTypes build="13287">
+    <index>
+      <primary>m_id</primary>
+    </index>
+    <field type="int" name="m_id" />
+    <field type="int" name="m_category" />
+    <field type="string" name="m_name" />
+    <field type="string" name="m_iconName" />
+    <field type="int" name="field4" />
+    <field type="int" name="field5" />
+    <field type="int" name="field6" />
+    <field type="int" name="field7" />
+    <field type="int" name="field8" />
+    <field type="int" name="field9" />
+    <field type="string" name="m_desc" />
+  </CurrencyTypes>
+  <ItemDisenchantLoot build="13287">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+    <field type="int" name="field5" />
+    <field type="int" name="field6" />
+  </ItemDisenchantLoot>
+  <SpellCastingRequirements build="13287">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+    <field type="int" name="field5" />
+    <field type="int" name="field6" />
+  </SpellCastingRequirements>
+  <AreaGroup build="13287">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+    <field type="int" name="field5" />
+    <field type="int" name="field6" />
+    <field type="int" name="field7" />
+  </AreaGroup>
+  <SummonProperties build="13827">
+    <index>
+      <primary>m_id</primary>
+    </index>
+    <field type="int" name="m_id" />
+    <field type="uint" name="m_group" />
+    <field type="uint" name="m_faction" />
+    <field type="int" name="m_summonTitle" />
+    <field type="int" name="m_summonType" />
+    <field type="uint" name="m_flags" />
+  </SummonProperties>
+  <GameTables build="13240">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="string" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+  </GameTables>
+  <gtOCTClassCombatRatingScalar build="13240">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="float" name="field1" />
+  </gtOCTClassCombatRatingScalar>
+  <gtCombatRatings build="12340">
+    <field type="float" name="field0" />
+  </gtCombatRatings>
 </DBFilesClient>

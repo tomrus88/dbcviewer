@@ -101,7 +101,10 @@ namespace DBCViewer
                 {
                     def = CreateDefaultDefinition();
                     if (def == null)
+                    {
+                        MessageBox.Show(String.Format("Can't create default definitions for {0}", m_name));
                         return;
+                    }
                 }
                 else
                     return;
