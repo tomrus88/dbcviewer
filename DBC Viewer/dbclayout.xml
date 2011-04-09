@@ -988,6 +988,43 @@
     <field type="string" name="Name4" visible="false" />
     <field type="string" name="SubName" />
     <field type="string" name="IconName" />
+    <field type="uint" name="Flags" />
+    <field type="int" name="Type" />
+    <field type="int" name="Family" />
+    <field type="int" name="Rank" />
+    <field type="int" name="KillCredit1" />
+    <field type="int" name="KillCredit2" />
+    <field type="int" name="Modelid1" />
+    <field type="int" name="Modelid2" />
+    <field type="int" name="Modelid3" />
+    <field type="int" name="Modelid4" />
+    <field type="float" name="HealthModifier" />
+    <field type="float" name="PowerModifier" />
+    <field type="byte" name="RacialLeader" />
+    <field type="int" name="QuestItem_1" />
+    <field type="int" name="QuestItem_2" />
+    <field type="int" name="QuestItem_3" />
+    <field type="int" name="QuestItem_4" />
+    <field type="int" name="QuestItem_5" />
+    <field type="int" name="QuestItem_6" />
+    <field type="int" name="MovementId" />
+    <field type="int" name="VehicleUnk1" />
+  </creaturecache>
+  <creaturecache build="13682">
+    <index>
+      <primary>Entry</primary>
+    </index>
+    <field type="int" name="Entry" />
+    <field type="string" name="Name" />
+    <field type="string" name="Name2" visible="false" />
+    <field type="string" name="Name3" visible="false" />
+    <field type="string" name="Name4" visible="false" />
+    <field type="string" name="Name5" visible="false" />
+    <field type="string" name="Name6" visible="false" />
+    <field type="string" name="Name7" visible="false" />
+    <field type="string" name="Name8" visible="false" />
+    <field type="string" name="SubName" />
+    <field type="string" name="IconName" />
     <field type="int" name="Flags" />
     <field type="int" name="Type" />
     <field type="int" name="Family" />
@@ -1298,4 +1335,337 @@
   <gtCombatRatings build="12340">
     <field type="float" name="field0" />
   </gtCombatRatings>
+  <MountCapability build="13329">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+    <field type="int" name="field5" />
+    <field type="int" name="field6" />
+    <field type="int" name="field7" />
+  </MountCapability>
+  <MountType build="13329">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+    <field type="int" name="field5" />
+    <field type="int" name="field6" />
+    <field type="int" name="field7" />
+    <field type="int" name="field8" />
+    <field type="int" name="field9" />
+    <field type="int" name="field10" />
+    <field type="int" name="field11" />
+    <field type="int" name="field12" />
+    <field type="int" name="field13" />
+    <field type="int" name="field14" />
+    <field type="int" name="field15" />
+    <field type="int" name="field16" />
+    <field type="int" name="field17" />
+    <field type="int" name="field18" />
+    <field type="int" name="field19" />
+    <field type="int" name="field20" />
+    <field type="int" name="field21" />
+    <field type="int" name="field22" />
+    <field type="int" name="field23" />
+    <field type="int" name="field24" />
+  </MountType>
+  <Holidays build="12340">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+    <field type="int" name="field5" />
+    <field type="int" name="field6" />
+    <field type="int" name="field7" />
+    <field type="int" name="field8" />
+    <field type="int" name="field9" />
+    <field type="int" name="field10" />
+    <field type="int" name="field11" />
+    <field type="int" name="field12" />
+    <field type="int" name="field13" />
+    <field type="int" name="field14" />
+    <field type="int" name="field15" />
+    <field type="int" name="field16" />
+    <field type="int" name="field17" />
+    <field type="int" name="field18" />
+    <field type="int" name="field19" />
+    <field type="int" name="field20" />
+    <field type="int" name="field21" />
+    <field type="int" name="field22" />
+    <field type="int" name="field23" />
+    <field type="int" name="field24" />
+    <field type="int" name="field25" />
+    <field type="int" name="field26" />
+    <field type="int" name="field27" />
+    <field type="int" name="field28" />
+    <field type="int" name="field29" />
+    <field type="int" name="field30" />
+    <field type="int" name="field31" />
+    <field type="int" name="field32" />
+    <field type="int" name="field33" />
+    <field type="int" name="field34" />
+    <field type="int" name="field35" />
+    <field type="int" name="field36" />
+    <field type="int" name="field37" />
+    <field type="int" name="field38" />
+    <field type="int" name="field39" />
+    <field type="int" name="field40" />
+    <field type="int" name="field41" />
+    <field type="int" name="field42" />
+    <field type="int" name="field43" />
+    <field type="int" name="field44" />
+    <field type="int" name="field45" />
+    <field type="int" name="field46" />
+    <field type="int" name="field47" />
+    <field type="int" name="field48" />
+    <field type="int" name="holidayNameId" />
+    <field type="int" name="holidayDescriptionId" />
+    <field type="string" name="texture" />
+    <field type="int" name="field52" />
+    <field type="int" name="field53" />
+    <field type="int" name="field54" />
+  </Holidays>
+  <HolidayDescriptions build="12340">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="string" name="field1" />
+    <field type="string" name="field2" />
+    <field type="string" name="field3" />
+    <field type="string" name="field4" />
+    <field type="string" name="field5" />
+    <field type="string" name="field6" />
+    <field type="string" name="field7" />
+    <field type="string" name="field8" />
+    <field type="string" name="field9" />
+    <field type="string" name="field10" />
+    <field type="string" name="field11" />
+    <field type="string" name="field12" />
+    <field type="string" name="field13" />
+    <field type="string" name="field14" />
+    <field type="string" name="field15" />
+    <field type="string" name="field16" />
+    <field type="int" name="field17" />
+  </HolidayDescriptions>
+  <HolidayNames build="12340">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="string" name="field1" />
+    <field type="string" name="field2" />
+    <field type="string" name="field3" />
+    <field type="string" name="field4" />
+    <field type="string" name="field5" />
+    <field type="string" name="field6" />
+    <field type="string" name="field7" />
+    <field type="string" name="field8" />
+    <field type="string" name="field9" />
+    <field type="string" name="field10" />
+    <field type="string" name="field11" />
+    <field type="string" name="field12" />
+    <field type="string" name="field13" />
+    <field type="string" name="field14" />
+    <field type="string" name="field15" />
+    <field type="string" name="field16" />
+    <field type="int" name="field17" />
+  </HolidayNames>
+  <LFGDungeonExpansion build="13750">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+    <field type="int" name="field5" />
+    <field type="int" name="field6" />
+    <field type="int" name="field7" />
+  </LFGDungeonExpansion>
+  <LFGDungeonGroup build="13750">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="string" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+  </LFGDungeonGroup>
+  <LFGDungeons build="13750">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="string" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+    <field type="int" name="field5" />
+    <field type="int" name="field6" />
+    <field type="int" name="field7" />
+    <field type="int" name="field8" />
+    <field type="int" name="field9" />
+    <field type="int" name="field10" />
+    <field type="int" name="field11" />
+    <field type="string" name="field12" />
+    <field type="int" name="field13" />
+    <field type="int" name="field14" />
+    <field type="int" name="field15" />
+    <field type="int" name="field16" />
+    <field type="int" name="field17" />
+  </LFGDungeons>
+  <CreatureModelData build="13793">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="string" name="field2" />
+    <field type="int" name="field3" />
+    <field type="float" name="field4" />
+    <field type="int" name="field5" />
+    <field type="int" name="field6" />
+    <field type="float" name="field7" />
+    <field type="float" name="field8" />
+    <field type="float" name="field9" />
+    <field type="int" name="field10" />
+    <field type="int" name="field11" />
+    <field type="int" name="field12" />
+    <field type="int" name="field13" />
+    <field type="float" name="field14" />
+    <field type="float" name="field15" />
+    <field type="float" name="field16" />
+    <field type="float" name="field17" />
+    <field type="float" name="field18" />
+    <field type="float" name="field19" />
+    <field type="int" name="field20" />
+    <field type="int" name="field21" />
+    <field type="int" name="field22" />
+    <field type="int" name="field23" />
+    <field type="int" name="field24" />
+    <field type="int" name="field25" />
+    <field type="int" name="field26" />
+    <field type="int" name="field27" />
+    <field type="int" name="field28" />
+    <field type="int" name="field29" />
+    <field type="int" name="field30" />
+  </CreatureModelData>
+  <CreatureDisplayInfo build="13793">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="float" name="field4" />
+    <field type="int" name="field5" />
+    <field type="string" name="field6" />
+    <field type="string" name="field7" />
+    <field type="string" name="field8" />
+    <field type="string" name="field9" />
+    <field type="int" name="field10" />
+    <field type="int" name="field11" />
+    <field type="int" name="field12" />
+    <field type="int" name="field13" />
+    <field type="int" name="field14" />
+    <field type="int" name="field15" />
+    <field type="int" name="field16" />
+  </CreatureDisplayInfo>
+  <ItemClass build="13812">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="string" name="field4" />
+  </ItemClass>
+  <ItemSubClass build="13812">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+    <field type="int" name="field5" />
+    <field type="int" name="field6" />
+    <field type="int" name="field7" />
+    <field type="int" name="field8" />
+    <field type="int" name="field9" />
+    <field type="int" name="field10" />
+    <field type="string" name="field11" />
+    <field type="string" name="field12" />
+  </ItemSubClass>
+  <ItemCurrencyCost build="13850">
+    <index>
+      <primary>Id</primary>
+    </index>
+    <field type="int" name="Id" />
+    <field type="int" name="ItemId" />
+  </ItemCurrencyCost>
+  <ItemExtendedCost build="13850">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="Id" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="ItemId1" />
+    <field type="int" name="ItemId2" />
+    <field type="int" name="ItemId3" />
+    <field type="int" name="ItemId4" />
+    <field type="int" name="ItemId5" />
+    <field type="int" name="ItemCount1" />
+    <field type="int" name="ItemCount2" />
+    <field type="int" name="ItemCount3" />
+    <field type="int" name="ItemCount4" />
+    <field type="int" name="ItemCount5" />
+    <field type="int" name="Arena" />
+    <field type="int" name="field15" />
+    <field type="int" name="CurrencyId1" />
+    <field type="int" name="CurrencyId2" />
+    <field type="int" name="CurrencyId3" />
+    <field type="int" name="CurrencyId4" />
+    <field type="int" name="CurrencyId5" />
+    <field type="int" name="CurrencyCount1" />
+    <field type="int" name="CurrencyCount2" />
+    <field type="int" name="CurrencyCount3" />
+    <field type="int" name="CurrencyCount4" />
+    <field type="int" name="CurrencyCount5" />
+    <field type="int" name="field26" />
+    <field type="int" name="field27" />
+    <field type="int" name="field28" />
+    <field type="int" name="field29" />
+    <field type="int" name="field30" />
+  </ItemExtendedCost>
+  <ItemCondExtCosts build="13812">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+  </ItemCondExtCosts>
 </DBFilesClient>

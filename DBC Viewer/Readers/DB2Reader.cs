@@ -48,22 +48,22 @@ namespace dbc2sql
                 StringTableSize = reader.ReadInt32();
 
                 // WDB2 specific fields
-                uint tableHash = reader.ReadUInt32(); // new field in WDB2
-                uint build = reader.ReadUInt32(); // new field in WDB2
-
-                int unk1 = reader.ReadInt32(); // new field in WDB2
+                uint tableHash = reader.ReadUInt32();   // new field in WDB2
+                uint build = reader.ReadUInt32();       // new field in WDB2
+                uint unk1 = reader.ReadUInt32();        // new field in WDB2
 
                 if (build > 12880) // new extended header
                 {
-                    int unk2 = reader.ReadInt32(); // new field in WDB2
-                    int unk3 = reader.ReadInt32(); // new field in WDB2 (index table?)
-                    int locale = reader.ReadInt32(); // new field in WDB2
-                    int unk5 = reader.ReadInt32(); // new field in WDB2
+                    int MinId = reader.ReadInt32();     // new field in WDB2
+                    int MaxId = reader.ReadInt32();     // new field in WDB2
+                    int locale = reader.ReadInt32();    // new field in WDB2
+                    int unk5 = reader.ReadInt32();      // new field in WDB2
 
-                    if (unk3 != 0)
+                    if (MaxId != 0)
                     {
-                        reader.ReadBytes(unk3 * 4 - HeaderSize);     // an index for rows
-                        reader.ReadBytes(unk3 * 2 - HeaderSize * 2); // a memory allocation bank
+                        var diff = MaxId - MinId + 1;   // blizzard is weird people...
+                        reader.ReadBytes(diff * 4);     // an index for rows
+                        reader.ReadBytes(diff * 2);     // a memory allocation bank
                     }
                 }
 
