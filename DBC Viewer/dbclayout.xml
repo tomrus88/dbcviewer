@@ -1489,16 +1489,16 @@
   </LFGDungeonGroup>
   <LFGDungeons build="13750">
     <index>
-      <primary>field0</primary>
+      <primary>m_Id</primary>
     </index>
-    <field type="int" name="field0" />
+    <field type="int" name="m_Id" />
     <field type="string" name="field1" />
     <field type="int" name="field2" />
     <field type="int" name="field3" />
     <field type="int" name="field4" />
     <field type="int" name="field5" />
     <field type="int" name="field6" />
-    <field type="int" name="field7" />
+    <field type="int" name="m_mapId" />
     <field type="int" name="field8" />
     <field type="int" name="field9" />
     <field type="int" name="field10" />
@@ -2065,7 +2065,7 @@
     <field type="int" name="m_section3" />
     <field type="int" name="m_index" />
     <field type="int" name="field6" />
-    <field type="int" name="field7" />
+    <field type="int" name="m_flags" />
     <field type="string" name="m_name" />
     <field type="string" name="m_description" />
     <field type="int" name="field10" />
@@ -2089,4 +2089,66 @@
     <field type="int" name="field0" />
     <field type="string" name="field1" />
   </PlayerCondition>
+  <JournalEncounter build="14133">
+    <index>
+      <primary>m_id</primary>
+    </index>
+    <field type="int" name="m_id" />
+    <field type="int" name="m_dungeonMapId" />
+    <field type="float" name="m_unkFloat1" />
+    <field type="float" name="m_unkFloat2" />
+    <field type="int" name="m_sectionId" />
+    <field type="int" name="m_instanceId" />
+    <field type="int" name="m_index" />
+    <field type="string" name="m_name" />
+    <field type="string" name="m_description" />
+  </JournalEncounter>
+  <AreaAssignment build="14133">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+  </AreaAssignment>
+  <JournalInstance build="14133">
+    <index>
+      <primary>m_id</primary>
+    </index>
+    <field type="int" name="m_id" />
+    <field type="int" name="m_mapId" />
+    <field type="int" name="m_areaId" />
+    <field type="int" name="m_unk1" />
+    <field type="int" name="m_unk2" />
+    <field type="string" name="m_name" />
+    <field type="string" name="m_description" />
+  </JournalInstance>
+  <DungeonEncounter build="14133">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+    <field type="string" name="field5" />
+    <field type="int" name="field6" />
+    <field type="int" name="field7" />
+  </DungeonEncounter>
+  <DungeonMap build="14133">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="float" name="field3" />
+    <field type="float" name="field4" />
+    <field type="float" name="field5" />
+    <field type="float" name="field6" />
+    <field type="int" name="field7" />
+  </DungeonMap>
 </DBFilesClient>
