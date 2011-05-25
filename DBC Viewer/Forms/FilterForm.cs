@@ -29,6 +29,11 @@ namespace DBCViewer
 
         private void button1_Click(object sender, EventArgs e)
         {
+            Filter();
+        }
+
+        private void Filter()
+        {
             if (m_filters.Count == 0)
             {
                 MessageBox.Show("Add filter(s) first!");
@@ -201,6 +206,20 @@ namespace DBCViewer
         {
             listBox1.Items.Clear();
             SyncFilters();
+        }
+
+        public void SetSelection(string column, string value)
+        {
+            for (var i = 0; i < listBox2.Items.Count; ++i)
+            {
+                if ((string)listBox2.Items[i] == column)
+                {
+                    listBox2.SelectedIndex = i;
+                    break;
+                }
+            }
+
+            textBox2.Text = value;
         }
     }
 }

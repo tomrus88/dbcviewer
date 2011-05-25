@@ -288,6 +288,11 @@ namespace DBCViewer
 
         private void filterToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ShowFilterForm();
+        }
+
+        private void ShowFilterForm()
+        {
             if (m_dataTable == null)
                 return;
 
@@ -462,6 +467,21 @@ namespace DBCViewer
         private void dataGridView1_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             label2.Text = String.Format(CultureInfo.InvariantCulture, "Rows Displayed: {0}", dataGridView1.RowCount);
+        }
+
+        private void dataGridView1_CellContextMenuStripNeeded(object sender, DataGridViewCellContextMenuStripNeededEventArgs e)
+        {
+            cellContextMenuStrip.Tag = String.Format("{0} {1}", e.ColumnIndex, e.RowIndex);
+            e.ContextMenuStrip = cellContextMenuStrip;
+        }
+
+        private void filterThisToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var meta = ((string)cellContextMenuStrip.Tag).Split(' ');
+            var column = Convert.ToInt32(meta[0]);
+            var row = Convert.ToInt32(meta[1]);
+            ShowFilterForm();
+            m_filterForm.SetSelection(dataGridView1.Columns[column].Name, dataGridView1[column, row].Value.ToString());
         }
     }
 }
