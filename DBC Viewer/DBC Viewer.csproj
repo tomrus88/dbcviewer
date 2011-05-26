@@ -118,10 +118,6 @@
       <DependentUpon>FilterForm.cs</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FilterForm.Filters.cs">
-      <DependentUpon>FilterForm.cs</DependentUpon>
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

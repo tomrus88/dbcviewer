@@ -262,6 +262,7 @@ namespace DBCViewer
         private void LoadDefinitions()
         {
             m_definitions = new XmlDocument();
+            //var path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             m_definitions.Load(Path.Combine(m_workingFolder, "dbclayout.xml"));
         }
 

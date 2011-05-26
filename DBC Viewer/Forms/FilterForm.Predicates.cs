@@ -4,216 +4,201 @@ using System.Globalization;
 
 namespace DBCViewer
 {
+    public enum ComparisonType
+    {
+        Equal,
+        NotEqual,
+        Less,
+        Greater,
+        StartWith,
+        EndsWith,
+        Contains,
+        And,
+        AndNot
+    }
+
     partial class FilterForm
     {
-        private bool Equal<T>(DataRow row) where T : IComparable<T>
+        private bool Compare(DataRow row)
         {
-            var result = false;
+            var matches = 0;
+            var checks = 0;
 
             foreach (var filter in m_filters.Values)
             {
-                if (filter.Op != "==" || row[filter.Col].GetType() != typeof(T))
-                    continue;
-                if (row.Field<T>(filter.Col).CompareTo((T)Convert.ChangeType(filter.Val, typeof(T), CultureInfo.InvariantCulture)) == 0)
-                    result = true;
+                checks++;
+
+                var type = row[filter.Col].GetType();
+
+                var value1 = (IComparable)row[filter.Col];
+                var value2 = (IComparable)Convert.ChangeType(filter.Val, type, CultureInfo.InvariantCulture);
+
+                switch (filter.Type)
+                {
+                    case ComparisonType.And:
+                        if (And(type, filter, row))
+                            matches++;
+                        break;
+                    case ComparisonType.AndNot:
+                        if (AndNot(type, filter, row))
+                            matches++;
+                        break;
+                    case ComparisonType.Contains:
+                        if (Contains(filter, row))
+                            matches++;
+                        break;
+                    case ComparisonType.EndsWith:
+                        if (EndsWith(filter, row))
+                            matches++;
+                        break;
+                    case ComparisonType.Equal:
+                        if (Equal(type, filter, row))
+                            matches++;
+                        break;
+                    case ComparisonType.Greater:
+                        if (Greater(type, filter, row))
+                            matches++;
+                        break;
+                    case ComparisonType.Less:
+                        if (Less(type, filter, row))
+                            matches++;
+                        break;
+                    case ComparisonType.NotEqual:
+                        if (NotEqual(type, filter, row))
+                            matches++;
+                        break;
+                    case ComparisonType.StartWith:
+                        if (StartWith(filter, row))
+                            matches++;
+                        break;
+                    default:
+                        break;
+                }
             }
 
-            return result;
+            return checks == matches;
         }
 
-        private bool NotEqual<T>(DataRow row) where T : IComparable<T>
+        private bool Equal(Type type, FilterOptions filter, DataRow row)
         {
-            var result = false;
+            var value1 = (IComparable)row[filter.Col];
+            var value2 = (IComparable)Convert.ChangeType(filter.Val, type, CultureInfo.InvariantCulture);
 
-            foreach (var filter in m_filters.Values)
-            {
-                if (filter.Op != "!=" || row[filter.Col].GetType() != typeof(T))
-                    continue;
-                if (row.Field<T>(filter.Col).CompareTo((T)Convert.ChangeType(filter.Val, typeof(T), CultureInfo.InvariantCulture)) != 0)
-                    result = true;
-            }
+            if (value1.CompareTo(value2) == 0)
+                return true;
 
-            return result;
+            return false;
         }
 
-        private bool Less<T>(DataRow row) where T : IComparable<T>
+        private bool NotEqual(Type type, FilterOptions filter, DataRow row)
         {
-            var result = false;
+            var value1 = (IComparable)row[filter.Col];
+            var value2 = (IComparable)Convert.ChangeType(filter.Val, type, CultureInfo.InvariantCulture);
 
-            foreach (var filter in m_filters.Values)
-            {
-                if (filter.Op != "<" || row[filter.Col].GetType() != typeof(T))
-                    continue;
-                if (row.Field<T>(filter.Col).CompareTo((T)Convert.ChangeType(filter.Val, typeof(T), CultureInfo.InvariantCulture)) < 0)
-                    result = true;
-            }
+            if (value1.CompareTo(value2) != 0)
+                return true;
 
-            return result;
+            return false;
         }
 
-        private bool Greater<T>(DataRow row) where T : IComparable<T>
+        private bool Less(Type type, FilterOptions filter, DataRow row)
         {
-            var result = false;
+            var value1 = (IComparable)row[filter.Col];
+            var value2 = (IComparable)Convert.ChangeType(filter.Val, type, CultureInfo.InvariantCulture);
 
-            foreach (var filter in m_filters.Values)
-            {
-                if (filter.Op != ">" || row[filter.Col].GetType() != typeof(T))
-                    continue;
-                if (row.Field<T>(filter.Col).CompareTo((T)Convert.ChangeType(filter.Val, typeof(T), CultureInfo.InvariantCulture)) > 0)
-                    result = true;
-            }
+            if (value1.CompareTo(value2) < 0)
+                return true;
 
-            return result;
+            return false;
         }
 
-        private bool StartWith(DataRow row)
+        private bool Greater(Type type, FilterOptions filter, DataRow row)
         {
-            var result = false;
+            var value1 = (IComparable)row[filter.Col];
+            var value2 = (IComparable)Convert.ChangeType(filter.Val, type, CultureInfo.InvariantCulture);
 
-            foreach (var filter in m_filters.Values)
-            {
-                if (filter.Op != "*__")
-                    continue;
-                if (row.Field<string>(filter.Col).StartsWith(filter.Val, StringComparison.Ordinal))
-                    result = true;
-            }
+            if (value1.CompareTo(value2) > 0)
+                return true;
 
-            return result;
+            return false;
         }
 
-        private bool StartWithNoCase(DataRow row)
+        private bool StartWith(FilterOptions filter, DataRow row)
         {
-            var result = false;
+            if (row.Field<string>(filter.Col).StartsWith(filter.Val, checkBox2.Checked ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                return true;
 
-            foreach (var filter in m_filters.Values)
-            {
-                if (filter.Op != "*__")
-                    continue;
-                if (row.Field<string>(filter.Col).StartsWith(filter.Val, StringComparison.OrdinalIgnoreCase))
-                    result = true;
-            }
-
-            return result;
+            return false;
         }
 
-        private bool EndsWith(DataRow row)
+        private bool EndsWith(FilterOptions filter, DataRow row)
         {
-            var result = false;
+            if (row.Field<string>(filter.Col).EndsWith(filter.Val, checkBox2.Checked ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                return true;
 
-            foreach (var filter in m_filters.Values)
-            {
-                if (filter.Op != "__*")
-                    continue;
-                if (row.Field<string>(filter.Col).EndsWith(filter.Val, StringComparison.Ordinal))
-                    result = true;
-            }
-
-            return result;
+            return false;
         }
 
-        private bool EndsWithNoCase(DataRow row)
+        private bool Contains(FilterOptions filter, DataRow row)
         {
-            var result = false;
-
-            foreach (var filter in m_filters.Values)
+            if (checkBox2.Checked)
             {
-                if (filter.Op != "__*")
-                    continue;
-                if (row.Field<string>(filter.Col).EndsWith(filter.Val, StringComparison.OrdinalIgnoreCase))
-                    result = true;
-            }
-
-            return result;
-        }
-
-        private bool Contains(DataRow row)
-        {
-            var result = false;
-
-            foreach (var filter in m_filters.Values)
-            {
-                if (filter.Op != "_*_")
-                    continue;
-                if (row.Field<string>(filter.Col).Contains(filter.Val))
-                    result = true;
-            }
-
-            return result;
-        }
-
-        private bool ContainsNoCase(DataRow row)
-        {
-            var result = false;
-
-            foreach (var filter in m_filters.Values)
-            {
-                if (filter.Op != "_*_")
-                    continue;
                 if (row.Field<string>(filter.Col).ToUpperInvariant().Contains(filter.Val.ToUpperInvariant()))
-                    result = true;
-            }
+                    return true;
 
-            return result;
+                return false;
+            }
+            else
+            {
+                if (row.Field<string>(filter.Col).Contains(filter.Val))
+                    return true;
+
+                return false;
+            }
         }
 
-        private bool AndUnsigned<T>(DataRow row)
+        private bool And(Type type, FilterOptions filter, DataRow row)
         {
-            var result = false;
+            var typeCode = Type.GetTypeCode(type);
 
-            foreach (var filter in m_filters.Values)
+            if (typeCode == TypeCode.Byte || typeCode == TypeCode.UInt16 || typeCode == TypeCode.UInt32 || typeCode == TypeCode.UInt64)
             {
-                if (filter.Op != "&")
-                    continue;
-                if (((ulong)Convert.ChangeType(row.Field<T>(filter.Col), typeof(ulong), CultureInfo.InvariantCulture) & Convert.ToUInt64(filter.Val, CultureInfo.InvariantCulture)) != 0)
-                    result = true;
-            }
+                if (((ulong)Convert.ChangeType(row[filter.Col], typeof(ulong), CultureInfo.InvariantCulture) & Convert.ToUInt64(filter.Val, CultureInfo.InvariantCulture)) != 0)
+                    return true;
 
-            return result;
+                return false;
+            }
+            else if (typeCode == TypeCode.SByte || typeCode == TypeCode.Int16 || typeCode == TypeCode.Int32 || typeCode == TypeCode.Int64)
+            {
+                if (((long)Convert.ChangeType(row[filter.Col], typeof(long), CultureInfo.InvariantCulture) & Convert.ToInt64(filter.Val, CultureInfo.InvariantCulture)) != 0)
+                    return true;
+
+                return false;
+            }
+            else
+                return false;
         }
 
-        private bool AndSigned<T>(DataRow row)
+        private bool AndNot(Type type, FilterOptions filter, DataRow row)
         {
-            var result = false;
+            var typeCode = Type.GetTypeCode(type);
 
-            foreach (var filter in m_filters.Values)
+            if (typeCode == TypeCode.Byte || typeCode == TypeCode.UInt16 || typeCode == TypeCode.UInt32 || typeCode == TypeCode.UInt64)
             {
-                if (filter.Op != "&")
-                    continue;
-                if (((long)Convert.ChangeType(row.Field<T>(filter.Col), typeof(long), CultureInfo.InvariantCulture) & Convert.ToInt64(filter.Val, CultureInfo.InvariantCulture)) != 0)
-                    result = true;
+                if (((ulong)Convert.ChangeType(row[filter.Col], typeof(ulong), CultureInfo.InvariantCulture) & Convert.ToUInt64(filter.Val, CultureInfo.InvariantCulture)) == 0)
+                    return true;
+
+                return false;
             }
-
-            return result;
-        }
-
-        private bool AndNotUnsigned<T>(DataRow row)
-        {
-            var result = false;
-
-            foreach (var filter in m_filters.Values)
+            else if (typeCode == TypeCode.SByte || typeCode == TypeCode.Int16 || typeCode == TypeCode.Int32 || typeCode == TypeCode.Int64)
             {
-                if (filter.Op != "~&")
-                    continue;
-                if (((ulong)Convert.ChangeType(row.Field<T>(filter.Col), typeof(ulong), CultureInfo.InvariantCulture) & Convert.ToUInt64(filter.Val, CultureInfo.InvariantCulture)) == 0)
-                    result = true;
+                if (((long)Convert.ChangeType(row[filter.Col], typeof(long), CultureInfo.InvariantCulture) & Convert.ToInt64(filter.Val, CultureInfo.InvariantCulture)) == 0)
+                    return true;
+
+                return false;
             }
-
-            return result;
-        }
-
-        private bool AndNotSigned<T>(DataRow row)
-        {
-            var result = false;
-
-            foreach (var filter in m_filters.Values)
-            {
-                if (filter.Op != "~&")
-                    continue;
-                if (((long)Convert.ChangeType(row.Field<T>(filter.Col), typeof(long), CultureInfo.InvariantCulture) & Convert.ToInt64(filter.Val, CultureInfo.InvariantCulture)) == 0)
-                    result = true;
-            }
-
-            return result;
+            else
+                return false;
         }
     }
 }

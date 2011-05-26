@@ -49,48 +49,8 @@ namespace DBCViewer
             if (!checkBox1.Checked)
                 m_filter = dt.AsEnumerable();
 
-            if (FilterTable(dt))
-                owner.SetDataSource(m_filter.AsDataView());
-            else
-                MessageBox.Show("Unhandled type?");
-        }
-
-        private bool FilterTable(DataTable dt)
-        {
-            bool result = false;
-            foreach (var filter in m_filters)
-            {
-                var colName = filter.Value.Col;
-                var col = dt.Columns[colName];
-                var op = filter.Value.Op;
-
-                if (col.DataType == typeof(string))
-                    result = FilterString(op);
-                else if (col.DataType == typeof(long))
-                    result = FilterInt64(op);
-                else if (col.DataType == typeof(int))
-                    result = FilterInt32(op);
-                else if (col.DataType == typeof(short))
-                    result = FilterInt16(op);
-                else if (col.DataType == typeof(sbyte))
-                    result = FilterInt8(op);
-                else if (col.DataType == typeof(ulong))
-                    result = FilterUInt64(op);
-                else if (col.DataType == typeof(uint))
-                    result = FilterUInt32(op);
-                else if (col.DataType == typeof(ushort))
-                    result = FilterUInt16(op);
-                else if (col.DataType == typeof(byte))
-                    result = FilterUInt8(op);
-                else if (col.DataType == typeof(float))
-                    result = FilterSingle(op);
-                else if (col.DataType == typeof(double))
-                    result = FilterDouble(op);
-                else
-                    MessageBox.Show("Unhandled type?");
-            }
-
-            return result;
+            m_filter = m_filter.Where(Compare);
+            owner.SetDataSource(m_filter.AsDataView());
         }
 
         private void FilterForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -198,7 +158,34 @@ namespace DBCViewer
                 if (args.Length != 3)
                     throw new ArgumentException("We got a trouble!");
 
-                m_filters[i] = new FilterOptions(args[0], args[1], args[2]);
+                m_filters[i] = new FilterOptions(args[0], StringToCompType(args[1]), args[2]);
+            }
+        }
+
+        private ComparisonType StringToCompType(string str)
+        {
+            switch (str)
+            {
+                case "&":
+                    return ComparisonType.And;
+                case "~&":
+                    return ComparisonType.AndNot;
+                case "==":
+                    return ComparisonType.Equal;
+                case "!=":
+                    return ComparisonType.NotEqual;
+                case "<":
+                    return ComparisonType.Less;
+                case ">":
+                    return ComparisonType.Greater;
+                case "*__":
+                    return ComparisonType.StartWith;
+                case "__*":
+                    return ComparisonType.EndsWith;
+                case "_*_":
+                    return ComparisonType.Contains;
+                default:
+                    throw new Exception("Bad comparison string!");
             }
         }
 
