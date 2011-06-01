@@ -644,7 +644,60 @@
     <field type="int" name="m_SpellShapeshiftId" />
     <field type="int" name="m_SpellTargetRestrictionsId" />
     <field type="int" name="m_SpellTotemsId" />
-    <field type="int" name="m_ResearchId" />
+    <field type="int" name="m_ResearchProjectId" />
+  </Spell>
+  <Spell build="14002">
+    <index>
+      <primary>m_ID</primary>
+    </index>
+    <field type="int" name="m_ID" />
+    <field type="uint" name="m_attributes" format="X8" />
+    <field type="uint" name="m_attributesEx" format="X8" />
+    <field type="uint" name="m_attributesExB" format="X8" />
+    <field type="uint" name="m_attributesExC" format="X8" />
+    <field type="uint" name="m_attributesExD" format="X8" />
+    <field type="uint" name="m_attributesExE" format="X8" />
+    <field type="uint" name="m_attributesExF" format="X8" />
+    <field type="uint" name="m_attributesExG" format="X8" />
+    <field type="uint" name="m_attributesExH" format="X8" />
+    <field type="uint" name="m_unk_400_1" format="X8" />
+    <field type="uint" name="m_unk_420_1" format="X8" />
+    <field type="int" name="m_castingTimeIndex" />
+    <field type="int" name="m_durationIndex" />
+    <field type="int" name="m_powerType" />
+    <field type="int" name="m_rangeIndex" />
+    <field type="float" name="m_speed" />
+    <field type="uint" name="m_spellVisualID_1" />
+    <field type="uint" name="m_spellVisualID_2" />
+    <field type="int" name="m_spellIconID" />
+    <field type="int" name="m_activeIconID" />
+    <field type="string" name="m_name" />
+    <field type="string" name="m_nameSubtext" />
+    <field type="string" name="m_description" />
+    <field type="string" name="m_auraDescription" />
+    <field type="int" name="m_schoolMask" />
+    <field type="int" name="m_runeCostID" />
+    <field type="int" name="m_spellMissileID" />
+    <field type="int" name="m_spellDescriptionVariableID" />
+    <field type="int" name="m_spellDifficultyID" />
+    <field type="float" name="m_unk_f1" />
+    <field type="int" name="m_spellScalingID" />
+    <field type="int" name="m_SpellAuraOptionsId" />
+    <field type="int" name="m_SpellAuraRestrictionsId" />
+    <field type="int" name="m_SpellCastingRequirementsId" />
+    <field type="int" name="m_SpellCategoriesId" />
+    <field type="int" name="m_SpellClassOptionsId" />
+    <field type="int" name="m_SpellCooldownsId" />
+    <field type="int" name="m_unk_i1" />
+    <field type="int" name="m_SpellEquippedItemsId" />
+    <field type="int" name="m_SpellInterruptsId" />
+    <field type="int" name="m_SpellLevelsId" />
+    <field type="int" name="m_SpellPowerId" />
+    <field type="int" name="m_SpellReagentsId" />
+    <field type="int" name="m_SpellShapeshiftId" />
+    <field type="int" name="m_SpellTargetRestrictionsId" />
+    <field type="int" name="m_SpellTotemsId" />
+    <field type="int" name="m_ResearchProjectId" />
   </Spell>
   <SpellAuraNames build="0">
     <index>
@@ -2151,4 +2204,13 @@
     <field type="float" name="field6" />
     <field type="int" name="field7" />
   </DungeonMap>
+  <SpellCooldowns build="14002">
+    <index>
+      <primary>m_id</primary>
+    </index>
+    <field type="int" name="m_id" />
+    <field type="int" name="m_categoryRecoveryTime" />
+    <field type="int" name="m_recoveryTime" />
+    <field type="int" name="m_startRecoveryTime" />
+  </SpellCooldowns>
 </DBFilesClient>
