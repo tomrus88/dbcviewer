@@ -31,30 +31,42 @@ namespace DBCViewer
             if (e.RowIndex == -1)
                 return;
 
-            int val = 0;
+            ulong val = 0;
 
-            if (m_dataTable.Columns[e.ColumnIndex].DataType != typeof(string))
+            Type dataType = m_dataTable.Columns[e.ColumnIndex].DataType;
+            CultureInfo culture = CultureInfo.InvariantCulture;
+            object value = dataGridView1[e.ColumnIndex, e.RowIndex].Value;
+
+            if (dataType != typeof(string))
             {
-                if (m_dataTable.Columns[e.ColumnIndex].DataType == typeof(int))
-                    val = Convert.ToInt32(dataGridView1[e.ColumnIndex, e.RowIndex].Value, CultureInfo.InvariantCulture);
-                else if (m_dataTable.Columns[e.ColumnIndex].DataType == typeof(float))
-                    val = (int)BitConverter.ToUInt32(BitConverter.GetBytes((float)dataGridView1[e.ColumnIndex, e.RowIndex].Value), 0);
+                if (dataType == typeof(int))
+                    val = (uint)Convert.ToInt32(value, culture);
+                else if (dataType == typeof(uint))
+                    val = Convert.ToUInt32(value, culture);
+                else if (dataType == typeof(long))
+                    val = (ulong)Convert.ToInt64(value, culture);
+                else if (dataType == typeof(ulong))
+                    val = Convert.ToUInt64(value, culture);
+                else if (dataType == typeof(float))
+                    val = BitConverter.ToUInt32(BitConverter.GetBytes((float)value), 0);
+                else if (dataType == typeof(double))
+                    val = BitConverter.ToUInt64(BitConverter.GetBytes((double)value), 0);
                 else
-                    val = (int)Convert.ToUInt32(dataGridView1[e.ColumnIndex, e.RowIndex].Value, CultureInfo.InvariantCulture);
+                    val = Convert.ToUInt32(value, culture);
             }
             else
             {
                 if (!(m_reader is WDBReader))
-                    val = (from k in m_reader.StringTable where string.Compare(k.Value, (string)dataGridView1[e.ColumnIndex, e.RowIndex].Value, StringComparison.Ordinal) == 0 select k.Key).FirstOrDefault();
+                    val = (uint)(from k in m_reader.StringTable where string.Compare(k.Value, (string)value, StringComparison.Ordinal) == 0 select k.Key).FirstOrDefault();
             }
 
             var sb = new StringBuilder();
-            sb.AppendFormat(CultureInfo.InvariantCulture, "Integer: {0:D}{1}", val, Environment.NewLine);
+            sb.AppendFormat(culture, "Integer: {0:D}{1}", val, Environment.NewLine);
             sb.AppendFormat(new BinaryFormatter(), "HEX: {0:X}{1}", val, Environment.NewLine);
             sb.AppendFormat(new BinaryFormatter(), "BIN: {0:B}{1}", val, Environment.NewLine);
-            sb.AppendFormat(CultureInfo.InvariantCulture, "Float: {0}{1}", BitConverter.ToSingle(BitConverter.GetBytes(val), 0), Environment.NewLine);
-            //sb.AppendFormat(CultureInfo.InvariantCulture, "Double: {0}{1}", BitConverter.ToDouble(BitConverter.GetBytes(val), 0), Environment.NewLine);
-            sb.AppendFormat(CultureInfo.InvariantCulture, "String: {0}{1}", !(m_reader is WDBReader) ? m_reader.StringTable[(int)val] : String.Empty, Environment.NewLine);
+            sb.AppendFormat(culture, "Float: {0}{1}", BitConverter.ToSingle(BitConverter.GetBytes(val), 0), Environment.NewLine);
+            sb.AppendFormat(culture, "Double: {0}{1}", BitConverter.ToDouble(BitConverter.GetBytes(val), 0), Environment.NewLine);
+            sb.AppendFormat(culture, "String: {0}{1}", !(m_reader is WDBReader) ? m_reader.StringTable[(int)val] : String.Empty, Environment.NewLine);
             e.ToolTipText = sb.ToString();
         }
 
@@ -386,29 +398,6 @@ namespace DBCViewer
             ((ToolStripMenuItem)columnsFilterToolStripMenuItem.DropDownItems[index]).Checked = true;
         }
 
-        private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-                return;
-
-            DataGridView.HitTestInfo hit = dataGridView1.HitTest(e.X, e.Y);
-
-            if (hit.Type == DataGridViewHitTestType.ColumnHeader)
-            {
-                columnContextMenuStrip.Tag = hit.ColumnIndex;
-
-                foreach (ToolStripMenuItem item in autoSizeModeToolStripMenuItem.DropDownItems)
-                {
-                    if (item.Tag.ToString() == dataGridView1.Columns[hit.ColumnIndex].AutoSizeMode.ToString())
-                        item.Checked = true;
-                    else
-                        item.Checked = false;
-                }
-
-                columnContextMenuStrip.Show((Control)sender, e.Location.X, e.Location.Y);
-            }
-        }
-
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CloseFile();
@@ -471,8 +460,25 @@ namespace DBCViewer
 
         private void dataGridView1_CellContextMenuStripNeeded(object sender, DataGridViewCellContextMenuStripNeededEventArgs e)
         {
-            cellContextMenuStrip.Tag = String.Format("{0} {1}", e.ColumnIndex, e.RowIndex);
-            e.ContextMenuStrip = cellContextMenuStrip;
+            if (e.RowIndex == -1)
+            {
+                columnContextMenuStrip.Tag = e.ColumnIndex;
+
+                foreach (ToolStripMenuItem item in autoSizeModeToolStripMenuItem.DropDownItems)
+                {
+                    if (item.Tag.ToString() == dataGridView1.Columns[e.ColumnIndex].AutoSizeMode.ToString())
+                        item.Checked = true;
+                    else
+                        item.Checked = false;
+                }
+
+                e.ContextMenuStrip = columnContextMenuStrip;
+            }
+            else
+            {
+                cellContextMenuStrip.Tag = String.Format("{0} {1}", e.ColumnIndex, e.RowIndex);
+                e.ContextMenuStrip = cellContextMenuStrip;
+            }
         }
 
         private void filterThisToolStripMenuItem_Click(object sender, EventArgs e)

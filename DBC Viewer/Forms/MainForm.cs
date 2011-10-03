@@ -297,5 +297,10 @@ namespace DBCViewer
             }
             return count;
         }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("DBC Viewer @ 2011 TOM_RUS", "About DBC Viewer", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
     }
 }

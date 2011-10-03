@@ -1787,15 +1787,15 @@
     <field type="int" name="field3" />
     <field type="int" name="field4" />
     <field type="int" name="field5" />
-    <field type="int" name="field6" />
+    <field type="string" name="field6" />
     <field type="int" name="field7" />
     <field type="int" name="field8" />
     <field type="int" name="field9" />
     <field type="int" name="field10" />
-    <field type="int" name="field11" />
+    <field type="string" name="field11" />
     <field type="int" name="field12" />
     <field type="int" name="field13" />
-    <field type="int" name="field14" />
+    <field type="string" name="field14" />
     <field type="int" name="field15" />
     <field type="int" name="field16" />
     <field type="int" name="field17" />
@@ -1846,9 +1846,9 @@
     <field type="int" name="field62" />
     <field type="int" name="field63" />
     <field type="int" name="field64" />
-    <field type="int" name="field65" />
-    <field type="int" name="field66" />
-    <field type="int" name="field67" />
+    <field type="string" name="field65" />
+    <field type="string" name="field66" />
+    <field type="string" name="field67" />
     <field type="int" name="field68" />
   </ChrRaces>
   <AreaTable build="12340">
@@ -2257,41 +2257,41 @@
   </gameobjectcache>
   <Lock build="14007">
     <index>
-      <primary>field0</primary>
+      <primary>m_ID</primary>
     </index>
-    <field type="int" name="field0" />
-    <field type="int" name="field1" />
-    <field type="int" name="field2" />
-    <field type="int" name="field3" />
-    <field type="int" name="field4" />
-    <field type="int" name="field5" />
-    <field type="int" name="field6" />
-    <field type="int" name="field7" />
-    <field type="int" name="field8" />
-    <field type="int" name="field9" />
-    <field type="int" name="field10" />
-    <field type="int" name="field11" />
-    <field type="int" name="field12" />
-    <field type="int" name="field13" />
-    <field type="int" name="field14" />
-    <field type="int" name="field15" />
-    <field type="int" name="field16" />
-    <field type="int" name="field17" />
-    <field type="int" name="field18" />
-    <field type="int" name="field19" />
-    <field type="int" name="field20" />
-    <field type="int" name="field21" />
-    <field type="int" name="field22" />
-    <field type="int" name="field23" />
-    <field type="int" name="field24" />
-    <field type="int" name="field25" />
-    <field type="int" name="field26" />
-    <field type="int" name="field27" />
-    <field type="int" name="field28" />
-    <field type="int" name="field29" />
-    <field type="int" name="field30" />
-    <field type="int" name="field31" />
-    <field type="int" name="field32" />
+    <field type="int" name="m_ID" />
+    <field type="int" name="m_Type1" />
+    <field type="int" name="m_Type2" />
+    <field type="int" name="m_Type3" />
+    <field type="int" name="m_Type4" />
+    <field type="int" name="m_Type5" />
+    <field type="int" name="m_Type6" />
+    <field type="int" name="m_Type7" />
+    <field type="int" name="m_Type8" />
+    <field type="int" name="m_Index1" />
+    <field type="int" name="m_Index2" />
+    <field type="int" name="m_Index3" />
+    <field type="int" name="m_Index4" />
+    <field type="int" name="m_Index5" />
+    <field type="int" name="m_Index6" />
+    <field type="int" name="m_Index7" />
+    <field type="int" name="m_Index8" />
+    <field type="int" name="m_Skill1" />
+    <field type="int" name="m_Skill2" />
+    <field type="int" name="m_Skill3" />
+    <field type="int" name="m_Skill4" />
+    <field type="int" name="m_Skill5" />
+    <field type="int" name="m_Skill6" />
+    <field type="int" name="m_Skill7" />
+    <field type="int" name="m_Skill8" />
+    <field type="int" name="m_Action1" />
+    <field type="int" name="m_Action2" />
+    <field type="int" name="m_Action3" />
+    <field type="int" name="m_Action4" />
+    <field type="int" name="m_Action5" />
+    <field type="int" name="m_Action6" />
+    <field type="int" name="m_Action7" />
+    <field type="int" name="m_Action8" />
   </Lock>
   <JournalEncounter build="14288">
     <index>
@@ -2484,4 +2484,96 @@
     <field type="int" name="field54" />
     <field type="int" name="field55" />
   </SkillLine>
+  <ChrRaces build="14316">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+    <field type="int" name="field5" />
+    <field type="string" name="field6" />
+    <field type="int" name="field7" />
+    <field type="int" name="field8" />
+    <field type="int" name="field9" />
+    <field type="int" name="field10" />
+    <field type="string" name="field11" />
+    <field type="int" name="field12" />
+    <field type="int" name="field13" />
+    <field type="string" name="field14" />
+    <field type="int" name="field55" />
+    <field type="int" name="field56" />
+    <field type="string" name="field62" />
+    <field type="string" name="field63" />
+    <field type="string" name="field64" />
+    <field type="int" name="field65" />
+    <field type="int" name="field66" />
+    <field type="int" name="field67" />
+    <field type="int" name="field68" />
+  </ChrRaces>
+  <LockType build="14316">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="string" name="field1" />
+    <field type="string" name="field2" />
+    <field type="string" name="field3" />
+    <field type="string" name="field4" />
+  </LockType>
+  <TaxiNodes build="14492">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="float" name="field2" />
+    <field type="float" name="field3" />
+    <field type="float" name="field4" />
+    <field type="int" name="field5" />
+    <field type="int" name="field6" />
+    <field type="int" name="field7" />
+    <field type="int" name="field8" />
+    <field type="float" name="field9" />
+    <field type="float" name="field10" />
+  </TaxiNodes>
+  <creaturecache build="14545">
+    <index>
+      <primary>Entry</primary>
+    </index>
+    <field type="int" name="Entry" />
+    <field type="string" name="Name" />
+    <field type="string" name="Name2" />
+    <field type="string" name="Name3" />
+    <field type="string" name="Name4" />
+    <field type="string" name="Name5" />
+    <field type="string" name="Name6" />
+    <field type="string" name="Name7" />
+    <field type="string" name="Name8" />
+    <field type="string" name="SubName" />
+    <field type="string" name="IconName" />
+    <field type="ulong" name="Flags" />
+    <field type="int" name="Type" />
+    <field type="int" name="Family" />
+    <field type="int" name="Rank" />
+    <field type="int" name="KillCredit1" />
+    <field type="int" name="KillCredit2" />
+    <field type="int" name="Modelid1" />
+    <field type="int" name="Modelid2" />
+    <field type="int" name="Modelid3" />
+    <field type="int" name="Modelid4" />
+    <field type="float" name="HealthModifier" />
+    <field type="float" name="PowerModifier" />
+    <field type="byte" name="RacialLeader" />
+    <field type="int" name="QuestItem_1" />
+    <field type="int" name="QuestItem_2" />
+    <field type="int" name="QuestItem_3" />
+    <field type="int" name="QuestItem_4" />
+    <field type="int" name="QuestItem_5" />
+    <field type="int" name="QuestItem_6" />
+    <field type="int" name="MovementId" />
+    <field type="int" name="Unk1" />
+  </creaturecache>
 </DBFilesClient>
