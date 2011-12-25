@@ -7,7 +7,6 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
-using dbc2sql;
 using PluginInterface;
 
 namespace DBCViewer

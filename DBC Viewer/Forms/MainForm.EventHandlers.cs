@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using dbc2sql;
 
 namespace DBCViewer
 {
@@ -82,17 +81,7 @@ namespace DBCViewer
 
             try
             {
-                var ext = Path.GetExtension(file).ToUpperInvariant();
-                if (ext == ".DBC")
-                    m_reader = new DBCReader(file);
-                else if (ext == ".DB2")
-                    m_reader = new DB2Reader(file);
-                else if (ext == ".ADB")
-                    m_reader = new ADBReader(file);
-                else if (ext == ".WDB")
-                    m_reader = new WDBReader(file);
-                else
-                    throw new InvalidDataException(String.Format("Unknown file type {0}", ext));
+                m_reader = DBReaderFactory.GetReader(file);
             }
             catch (Exception ex)
             {

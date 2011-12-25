@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace dbc2sql
+namespace DBCViewer
 {
     #region Coords3
     /// <summary>

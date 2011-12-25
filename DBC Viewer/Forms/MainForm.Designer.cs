@@ -43,6 +43,8 @@
             this.columnsFilterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetColumnsFilterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.difinitionEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
@@ -66,8 +68,6 @@
             this.fillToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cellContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.filterThisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -179,8 +179,23 @@
             // 
             this.difinitionEditorToolStripMenuItem.Name = "difinitionEditorToolStripMenuItem";
             this.difinitionEditorToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-            this.difinitionEditorToolStripMenuItem.Text = "Definition Editor";
+            this.difinitionEditorToolStripMenuItem.Text = "Definitions Editor";
             this.difinitionEditorToolStripMenuItem.Click += new System.EventHandler(this.difinitionEditorToolStripMenuItem_Click);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.aboutToolStripMenuItem.Text = "About...";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
@@ -384,29 +399,14 @@
             this.cellContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.filterThisToolStripMenuItem});
             this.cellContextMenuStrip.Name = "cellContextMenuStrip";
-            this.cellContextMenuStrip.Size = new System.Drawing.Size(153, 48);
+            this.cellContextMenuStrip.Size = new System.Drawing.Size(123, 26);
             // 
             // filterThisToolStripMenuItem
             // 
             this.filterThisToolStripMenuItem.Name = "filterThisToolStripMenuItem";
-            this.filterThisToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.filterThisToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
             this.filterThisToolStripMenuItem.Text = "Filter this";
             this.filterThisToolStripMenuItem.Click += new System.EventHandler(this.filterThisToolStripMenuItem_Click);
-            // 
-            // helpToolStripMenuItem
-            // 
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.aboutToolStripMenuItem});
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem.Text = "Help";
-            // 
-            // aboutToolStripMenuItem
-            // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.aboutToolStripMenuItem.Text = "About...";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // MainForm
             // 

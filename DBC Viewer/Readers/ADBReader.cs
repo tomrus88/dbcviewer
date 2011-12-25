@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace dbc2sql
+namespace DBCViewer
 {
     class ADBReader : IWowClientDBReader
     {
@@ -14,7 +15,7 @@ namespace dbc2sql
         public int RecordSize { get; private set; }
         public int StringTableSize { get; private set; }
 
-        public StringTable StringTable { get; private set; }
+        public Dictionary<int, string> StringTable { get; private set; }
 
         private byte[][] m_rows;
 
@@ -72,7 +73,7 @@ namespace dbc2sql
 
                 int stringTableStart = (int)reader.BaseStream.Position;
 
-                StringTable = new StringTable();
+                StringTable = new Dictionary<int, string>();
 
                 while (reader.BaseStream.Position != reader.BaseStream.Length)
                 {

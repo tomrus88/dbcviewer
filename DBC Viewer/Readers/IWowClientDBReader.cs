@@ -1,6 +1,7 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 
-namespace dbc2sql
+namespace DBCViewer
 {
     interface IWowClientDBReader
     {
@@ -8,7 +9,7 @@ namespace dbc2sql
         int FieldsCount { get; }
         int RecordSize { get; }
         int StringTableSize { get; }
-        StringTable StringTable { get; }
+        Dictionary<int, string> StringTable { get; }
         byte[] GetRowAsByteArray(int row);
         BinaryReader this[int row] { get; }
     }

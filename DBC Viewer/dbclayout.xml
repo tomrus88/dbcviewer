@@ -124,17 +124,14 @@
     <field type="uint" name="m_friend_4" />
   </FactionTemplate>
   <Item build="12984">
-    <!--<index>
-      <primary>id</primary>
-    </index>-->
     <field type="uint" name="id" />
     <field type="uint" name="class" />
     <field type="uint" name="subclass" />
-    <field type="int" name="unk0" />
+    <field type="int" name="sound_override_subclassid" />
     <field type="int" name="material" />
     <field type="uint" name="displayid" />
     <field type="uint" name="inventorytype" />
-    <field type="uint" name="sheath" />
+    <field type="uint" name="sheatheType" />
   </Item>
   <ItemSet build="0">
     <index>
@@ -1623,11 +1620,11 @@
   </ItemClass>
   <ItemSubClass build="13812">
     <index>
-      <primary>field0</primary>
+      <primary>generatedId</primary>
     </index>
-    <field type="int" name="field0" />
-    <field type="int" name="field1" />
-    <field type="int" name="field2" />
+    <field type="int" name="generatedId" />
+    <field type="int" name="class" />
+    <field type="int" name="subclass" />
     <field type="int" name="field3" />
     <field type="int" name="field4" />
     <field type="int" name="field5" />
@@ -1636,8 +1633,8 @@
     <field type="int" name="field8" />
     <field type="int" name="field9" />
     <field type="int" name="field10" />
-    <field type="string" name="field11" />
-    <field type="string" name="field12" />
+    <field type="string" name="name" />
+    <field type="string" name="subname" />
   </ItemSubClass>
   <ItemCurrencyCost build="13850">
     <index>
@@ -2061,7 +2058,7 @@
     </index>
     <field type="int" name="field0" />
     <field type="string" name="field1" />
-    <field type="int" name="field2" />
+    <field type="uint" name="field2" />
   </ItemNameDescription>
   <JournalEncounter build="14002">
     <index>
@@ -2576,4 +2573,171 @@
     <field type="int" name="MovementId" />
     <field type="int" name="Unk1" />
   </creaturecache>
+  <SpellEffect build="14545">
+    <index>
+      <primary>m_ID</primary>
+    </index>
+    <field type="uint" name="m_ID" />
+    <field type="uint" name="m_effect" />
+    <field type="float" name="m_effectAmplitude" />
+    <field type="uint" name="m_effectAura" />
+    <field type="uint" name="m_effectAuraPeriod" />
+    <field type="int" name="m_effectBasePoints" />
+    <field type="float" name="m_effectUnk_320" />
+    <field type="float" name="m_effectChainAmplitude" />
+    <field type="uint" name="m_effectChainTargets" />
+    <field type="uint" name="m_effectDieSides" />
+    <field type="uint" name="m_effectItemType" />
+    <field type="uint" name="m_effectMechanic" />
+    <field type="int" name="m_effectMiscValue" />
+    <field type="int" name="m_effectMiscValueB" />
+    <field type="float" name="m_effectPointsPerCombo" />
+    <field type="uint" name="m_effectRadiusIndex" />
+    <field type="uint" name="m_effectRadiusMaxIndex" />
+    <field type="float" name="m_effectRealPointsPerLevel" />
+    <field type="uint" name="m_effectSpellClassMask_1" />
+    <field type="uint" name="m_effectSpellClassMask_2" />
+    <field type="uint" name="m_effectSpellClassMask_3" />
+    <field type="int" name="m_effectTriggerSpell" />
+    <field type="uint" name="m_implicitTargetA" />
+    <field type="uint" name="m_implicitTargetB" />
+    <field type="uint" name="m_effectSpellId" />
+    <field type="uint" name="m_effectIndex" />
+    <field type="int" name="newField1" />
+  </SpellEffect>
+  <Item-sparse build="14995">
+    <field type="int" name="id" />
+    <field type="int" name="quality" />
+    <field type="uint" name="flags" />
+    <field type="uint" name="flags2" />
+    <field type="float" name="newField1" />
+    <field type="float" name="newField2" />
+    <field type="int" name="newField3" />
+    <field type="int" name="buyprice" />
+    <field type="int" name="sellprice" />
+    <field type="int" name="inventorytype" />
+    <field type="int" name="allowableclass" />
+    <field type="int" name="allowablerace" />
+    <field type="int" name="itemlevel" />
+    <field type="int" name="requiredlevel" />
+    <field type="int" name="requiredskill" />
+    <field type="int" name="requiredskillrank" />
+    <field type="int" name="requiredspell" />
+    <field type="int" name="requiredhonorrank" />
+    <field type="int" name="requiredcityrank" />
+    <field type="int" name="requiredreputationfaction" />
+    <field type="int" name="requiredreputationrank" />
+    <field type="int" name="maxcount" />
+    <field type="int" name="stackable" />
+    <field type="int" name="containerslots" />
+    <field type="int" name="stat_type1" />
+    <field type="int" name="stat_type2" />
+    <field type="int" name="stat_type3" />
+    <field type="int" name="stat_type4" />
+    <field type="int" name="stat_type5" />
+    <field type="int" name="stat_type6" />
+    <field type="int" name="stat_type7" />
+    <field type="int" name="stat_type8" />
+    <field type="int" name="stat_type9" />
+    <field type="int" name="stat_type10" />
+    <field type="int" name="stat_value1" />
+    <field type="int" name="stat_value2" />
+    <field type="int" name="stat_value3" />
+    <field type="int" name="stat_value4" />
+    <field type="int" name="stat_value5" />
+    <field type="int" name="stat_value6" />
+    <field type="int" name="stat_value7" />
+    <field type="int" name="stat_value8" />
+    <field type="int" name="stat_value9" />
+    <field type="int" name="stat_value10" />
+    <field type="int" name="stat_unk1_1" />
+    <field type="int" name="stat_unk1_2" />
+    <field type="int" name="stat_unk1_3" />
+    <field type="int" name="stat_unk1_4" />
+    <field type="int" name="stat_unk1_5" />
+    <field type="int" name="stat_unk1_6" />
+    <field type="int" name="stat_unk1_7" />
+    <field type="int" name="stat_unk1_8" />
+    <field type="int" name="stat_unk1_9" />
+    <field type="int" name="stat_unk1_10" />
+    <field type="int" name="stat_unk2_1" />
+    <field type="int" name="stat_unk2_2" />
+    <field type="int" name="stat_unk2_3" />
+    <field type="int" name="stat_unk2_4" />
+    <field type="int" name="stat_unk2_5" />
+    <field type="int" name="stat_unk2_6" />
+    <field type="int" name="stat_unk2_7" />
+    <field type="int" name="stat_unk2_8" />
+    <field type="int" name="stat_unk2_9" />
+    <field type="int" name="stat_unk2_10" />
+    <field type="int" name="scalingstatdistribution" />
+    <field type="int" name="damagetype" />
+    <field type="int" name="delay" />
+    <field type="float" name="rangedmodrange" />
+    <field type="int" name="spellid_1" />
+    <field type="int" name="spellid_2" />
+    <field type="int" name="spellid_3" />
+    <field type="int" name="spellid_4" />
+    <field type="int" name="spellid_5" />
+    <field type="int" name="spelltrigger_1" />
+    <field type="int" name="spelltrigger_2" />
+    <field type="int" name="spelltrigger_3" />
+    <field type="int" name="spelltrigger_4" />
+    <field type="int" name="spelltrigger_5" />
+    <field type="int" name="spellcharges_1" />
+    <field type="int" name="spellcharges_2" />
+    <field type="int" name="spellcharges_3" />
+    <field type="int" name="spellcharges_4" />
+    <field type="int" name="spellcharges_5" />
+    <field type="int" name="spellcooldown_1" />
+    <field type="int" name="spellcooldown_2" />
+    <field type="int" name="spellcooldown_3" />
+    <field type="int" name="spellcooldown_4" />
+    <field type="int" name="spellcooldown_5" />
+    <field type="int" name="spellcategory_1" />
+    <field type="int" name="spellcategory_2" />
+    <field type="int" name="spellcategory_3" />
+    <field type="int" name="spellcategory_4" />
+    <field type="int" name="spellcategory_5" />
+    <field type="int" name="spellcategorycooldown_1" />
+    <field type="int" name="spellcategorycooldown_2" />
+    <field type="int" name="spellcategorycooldown_3" />
+    <field type="int" name="spellcategorycooldown_4" />
+    <field type="int" name="spellcategorycooldown_5" />
+    <field type="int" name="bonding" />
+    <field type="string" name="name" />
+    <field type="string" name="name2" />
+    <field type="string" name="name3" />
+    <field type="string" name="name4" />
+    <field type="string" name="description" />
+    <field type="int" name="pagetext" />
+    <field type="int" name="languageid" />
+    <field type="int" name="pagematerial" />
+    <field type="int" name="startquest" />
+    <field type="int" name="lockid" />
+    <field type="int" name="material" />
+    <field type="int" name="sheath" />
+    <field type="int" name="randomproperty" />
+    <field type="int" name="randomsuffix" />
+    <field type="int" name="itemset" />
+    <field type="int" name="area" />
+    <field type="int" name="map" />
+    <field type="int" name="bagfamily" />
+    <field type="int" name="totemcategory" />
+    <field type="int" name="socketcolor_1" />
+    <field type="int" name="socketcolor_2" />
+    <field type="int" name="socketcolor_3" />
+    <field type="int" name="socketcontent_1" />
+    <field type="int" name="socketcontent_2" />
+    <field type="int" name="socketcontent_3" />
+    <field type="int" name="socketbonus" />
+    <field type="int" name="gemproperties" />
+    <field type="float" name="armordamagemodifier" />
+    <field type="int" name="duration" />
+    <field type="int" name="itemlimitcategory" />
+    <field type="int" name="holidayid" />
+    <field type="float" name="statscalingfactor" />
+    <field type="int" name="newField4" />
+    <field type="int" name="newField5" />
+  </Item-sparse>
 </DBFilesClient>

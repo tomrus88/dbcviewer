@@ -1,10 +1,10 @@
 ﻿using System;
-using System.IO;
-using System.Text;
-using System.Linq;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 
-namespace dbc2sql
+namespace DBCViewer
 {
     class WDBReader : IWowClientDBReader
     {
@@ -27,7 +27,7 @@ namespace dbc2sql
         public int RecordSize { get; private set; }
         public int StringTableSize { get; private set; }
 
-        public StringTable StringTable { get; private set; }
+        public Dictionary<int, string> StringTable { get; private set; }
 
         private Dictionary<int, byte[]> m_rows;
 
