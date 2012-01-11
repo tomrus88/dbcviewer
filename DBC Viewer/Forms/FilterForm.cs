@@ -1,18 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Globalization;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace DBCViewer
 {
     public partial class FilterForm : Form
     {
         EnumerableRowCollection<DataRow> m_filter;
-        Object[] decimalOperators = new Object[] { "&", "~&", "==", "!=", "<", ">" };
-        Object[] stringOperators = new Object[] { "==", "!=", "*__", "__*", "_*_" };
-        Object[] floatOperators = new Object[] { "==", "!=", "<", ">" };
-        Dictionary<int, FilterOptions> m_filters = new Dictionary<int, FilterOptions>();
+
+        Object[] decimalOperators = new Object[]
+        {
+            ComparisonType.And,
+            ComparisonType.AndNot,
+            ComparisonType.Equal,
+            ComparisonType.NotEqual,
+            ComparisonType.Less,
+            ComparisonType.Greater
+        };
+
+        Object[] stringOperators = new Object[]
+        {
+            ComparisonType.Equal,
+            ComparisonType.NotEqual,
+            ComparisonType.StartWith,
+            ComparisonType.EndsWith,
+            ComparisonType.Contains
+        };
+
+        Object[] floatOperators = new Object[]
+        {
+            ComparisonType.Equal,
+            ComparisonType.NotEqual,
+            ComparisonType.Less,
+            ComparisonType.Greater
+        };
 
         public FilterForm()
         {
@@ -29,16 +53,13 @@ namespace DBCViewer
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Filter();
-        }
-
-        private void Filter()
-        {
-            if (m_filters.Count == 0)
+            if (listBox1.Items.Count == 0)
             {
                 MessageBox.Show("Add filter(s) first!");
                 return;
             }
+
+            //Stopwatch sw = Stopwatch.StartNew();
 
             var owner = ((MainForm)Owner);
             var dt = owner.DataTable;
@@ -49,8 +70,20 @@ namespace DBCViewer
             if (!checkBox1.Checked)
                 m_filter = dt.AsEnumerable();
 
-            m_filter = m_filter.Where(Compare);
+            var temp = m_filter.AsParallel().AsOrdered().Where(Compare);
+
+            if (temp.Count() != 0)
+                m_filter = temp.CopyToDataTable().AsEnumerable();
+            else
+                m_filter = new DataTable().AsEnumerable();
+
+            //m_filter = m_filter.Where(Compare);
+
             owner.SetDataSource(m_filter.AsDataView());
+
+            //sw.Stop();
+
+            //MessageBox.Show(sw.Elapsed.TotalMilliseconds.ToString());
         }
 
         private void FilterForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -75,25 +108,20 @@ namespace DBCViewer
             else
                 checkBox2.Visible = false;
 
-            FillComboBox(comboBox3, col);
-        }
-
-        private void FillComboBox(ComboBox comboBox, DataColumn col)
-        {
-            comboBox.Items.Clear();
+            comboBox3.Items.Clear();
 
             if (col.DataType == typeof(string))
-                comboBox.Items.AddRange(stringOperators);
+                comboBox3.Items.AddRange(stringOperators);
             else if (col.DataType == typeof(float))
-                comboBox.Items.AddRange(floatOperators);
+                comboBox3.Items.AddRange(floatOperators);
             else if (col.DataType == typeof(double))
-                comboBox.Items.AddRange(floatOperators);
+                comboBox3.Items.AddRange(floatOperators);
             else if (col.DataType.IsPrimitive)
-                comboBox.Items.AddRange(decimalOperators);
+                comboBox3.Items.AddRange(decimalOperators);
             else
                 MessageBox.Show("Unhandled type?");
 
-            comboBox.SelectedIndex = 0;
+            comboBox3.SelectedIndex = 0;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -105,23 +133,18 @@ namespace DBCViewer
                 return;
             }
 
-            var colName = (string)listBox2.SelectedItem;
-            var op = (string)comboBox3.SelectedItem;
-            var val = textBox2.Text;
+            var fi = new FilterOptions((string)listBox2.SelectedItem, (ComparisonType)comboBox3.SelectedItem, textBox2.Text);
 
-            var owner = ((MainForm)Owner);
-            var dt = owner.DataTable;
-            var col = dt.Columns[colName];
+            var dt = (Owner as MainForm).DataTable;
+            var col = dt.Columns[fi.Column];
 
             try
             {
                 if (col.DataType.IsPrimitive && col.DataType != typeof(float) && col.DataType != typeof(double))
-                {
-                    if (val.StartsWith("0x", true, CultureInfo.InvariantCulture))
-                        val = Convert.ToUInt64(val, 16).ToString();
-                }
+                    if (fi.Value.StartsWith("0x", true, CultureInfo.InvariantCulture))
+                        fi.Value = Convert.ToUInt64(fi.Value, 16).ToString(CultureInfo.InvariantCulture);
 
-                Convert.ChangeType(val, col.DataType, CultureInfo.InvariantCulture);
+                Convert.ChangeType(fi.Value, col.DataType, CultureInfo.InvariantCulture);
             }
             catch
             {
@@ -129,8 +152,7 @@ namespace DBCViewer
                 return;
             }
 
-            listBox1.Items.Add(String.Format(CultureInfo.InvariantCulture, "{0} {1} {2}", colName, op, val));
-            SyncFilters();
+            listBox1.Items.Add(fi);
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -139,60 +161,14 @@ namespace DBCViewer
                 return;
 
             listBox1.Items.RemoveAt(listBox1.SelectedIndex);
-            SyncFilters();
 
             if (listBox1.Items.Count > 0)
                 listBox1.SelectedIndex = 0;
         }
 
-        private void SyncFilters()
-        {
-            m_filters.Clear();
-
-            var delimiter = new char[] { ' ' };
-
-            for (var i = 0; i < listBox1.Items.Count; ++i)
-            {
-                string filter = (string)listBox1.Items[i];
-                var args = filter.Split(delimiter, 3);
-                if (args.Length != 3)
-                    throw new ArgumentException("We got a trouble!");
-
-                m_filters[i] = new FilterOptions(args[0], StringToCompType(args[1]), args[2]);
-            }
-        }
-
-        private ComparisonType StringToCompType(string str)
-        {
-            switch (str)
-            {
-                case "&":
-                    return ComparisonType.And;
-                case "~&":
-                    return ComparisonType.AndNot;
-                case "==":
-                    return ComparisonType.Equal;
-                case "!=":
-                    return ComparisonType.NotEqual;
-                case "<":
-                    return ComparisonType.Less;
-                case ">":
-                    return ComparisonType.Greater;
-                case "*__":
-                    return ComparisonType.StartWith;
-                case "__*":
-                    return ComparisonType.EndsWith;
-                case "_*_":
-                    return ComparisonType.Contains;
-                default:
-                    throw new Exception("Bad comparison string!");
-            }
-        }
-
         public void ResetFilters()
         {
             listBox1.Items.Clear();
-            SyncFilters();
         }
 
         public void SetSelection(string column, string value)

@@ -1,17 +1,24 @@
-﻿
+﻿using System;
+using System.Globalization;
+
 namespace DBCViewer
 {
-    struct FilterOptions
+    class FilterOptions
     {
-        public string Col { get; set; }
-        public string Val { get; set; }
-        public ComparisonType Type { get; set; }
-        public FilterOptions(string col, ComparisonType type, string val)
-            : this()
+        public string Column { get; private set; }
+        public string Value { get; set; }
+        public ComparisonType CompType { get; private set; }
+
+        public FilterOptions(string col, ComparisonType ct, string val)
         {
-            Col = col;
-            Val = val;
-            Type = type;
+            Column = col;
+            Value = val;
+            CompType = ct;
+        }
+
+        public override string ToString()
+        {
+            return String.Format(CultureInfo.InvariantCulture, "{0} {1} {2}", Column, CompType, Value);
         }
     }
 }

@@ -65,7 +65,16 @@ namespace DBCViewer
             sb.AppendFormat(new BinaryFormatter(), "BIN: {0:B}{1}", val, Environment.NewLine);
             sb.AppendFormat(culture, "Float: {0}{1}", BitConverter.ToSingle(BitConverter.GetBytes(val), 0), Environment.NewLine);
             sb.AppendFormat(culture, "Double: {0}{1}", BitConverter.ToDouble(BitConverter.GetBytes(val), 0), Environment.NewLine);
-            sb.AppendFormat(culture, "String: {0}{1}", !(m_reader is WDBReader) ? m_reader.StringTable[(int)val] : String.Empty, Environment.NewLine);
+
+            try
+            {
+                sb.AppendFormat(culture, "String: {0}{1}", !(m_reader is WDBReader) ? m_reader.StringTable[(int)val] : String.Empty, Environment.NewLine);
+            }
+            catch
+            {
+                sb.AppendFormat(culture, "String: <empty>{0}", Environment.NewLine);
+            }
+
             e.ToolTipText = sb.ToString();
         }
 
@@ -242,9 +251,7 @@ namespace DBCViewer
                 Invoke(d, new object[] { m_dataTable.DefaultView });
             }
             else
-            {
                 SetDataSource(m_dataTable.DefaultView);
-            }
 
             e.Result = file;
         }
@@ -370,11 +377,10 @@ namespace DBCViewer
         private void autoSizeColumnsModeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var control = (ToolStripMenuItem)sender;
+
             foreach (ToolStripMenuItem item in autoSizeModeToolStripMenuItem.DropDownItems)
-            {
                 if (item != control)
                     item.Checked = false;
-            }
 
             var index = (int)columnContextMenuStrip.Tag;
             dataGridView1.Columns[index].AutoSizeMode = (DataGridViewAutoSizeColumnMode)Enum.Parse(typeof(DataGridViewAutoSizeColumnMode), (string)control.Tag);
@@ -406,9 +412,7 @@ namespace DBCViewer
 
             var cmds = Environment.GetCommandLineArgs();
             if (cmds.Length > 1)
-            {
                 LoadFile(cmds[1]);
-            }
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)

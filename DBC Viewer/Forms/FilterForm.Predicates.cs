@@ -24,16 +24,16 @@ namespace DBCViewer
             var matches = 0;
             var checks = 0;
 
-            foreach (var filter in m_filters.Values)
+            foreach (FilterOptions filter in listBox1.Items)
             {
                 checks++;
 
-                var type = row[filter.Col].GetType();
+                var type = row[filter.Column].GetType();
 
-                var value1 = (IComparable)row[filter.Col];
-                var value2 = (IComparable)Convert.ChangeType(filter.Val, type, CultureInfo.InvariantCulture);
+                var value1 = (IComparable)row[filter.Column];
+                var value2 = (IComparable)Convert.ChangeType(filter.Value, type, CultureInfo.InvariantCulture);
 
-                switch (filter.Type)
+                switch (filter.CompType)
                 {
                     case ComparisonType.And:
                         if (And(type, filter, row))
@@ -81,8 +81,8 @@ namespace DBCViewer
 
         private bool Equal(Type type, FilterOptions filter, DataRow row)
         {
-            var value1 = (IComparable)row[filter.Col];
-            var value2 = (IComparable)Convert.ChangeType(filter.Val, type, CultureInfo.InvariantCulture);
+            var value1 = (IComparable)row[filter.Column];
+            var value2 = (IComparable)Convert.ChangeType(filter.Value, type, CultureInfo.InvariantCulture);
 
             if (value1.CompareTo(value2) == 0)
                 return true;
@@ -92,8 +92,8 @@ namespace DBCViewer
 
         private bool NotEqual(Type type, FilterOptions filter, DataRow row)
         {
-            var value1 = (IComparable)row[filter.Col];
-            var value2 = (IComparable)Convert.ChangeType(filter.Val, type, CultureInfo.InvariantCulture);
+            var value1 = (IComparable)row[filter.Column];
+            var value2 = (IComparable)Convert.ChangeType(filter.Value, type, CultureInfo.InvariantCulture);
 
             if (value1.CompareTo(value2) != 0)
                 return true;
@@ -103,8 +103,8 @@ namespace DBCViewer
 
         private bool Less(Type type, FilterOptions filter, DataRow row)
         {
-            var value1 = (IComparable)row[filter.Col];
-            var value2 = (IComparable)Convert.ChangeType(filter.Val, type, CultureInfo.InvariantCulture);
+            var value1 = (IComparable)row[filter.Column];
+            var value2 = (IComparable)Convert.ChangeType(filter.Value, type, CultureInfo.InvariantCulture);
 
             if (value1.CompareTo(value2) < 0)
                 return true;
@@ -114,8 +114,8 @@ namespace DBCViewer
 
         private bool Greater(Type type, FilterOptions filter, DataRow row)
         {
-            var value1 = (IComparable)row[filter.Col];
-            var value2 = (IComparable)Convert.ChangeType(filter.Val, type, CultureInfo.InvariantCulture);
+            var value1 = (IComparable)row[filter.Column];
+            var value2 = (IComparable)Convert.ChangeType(filter.Value, type, CultureInfo.InvariantCulture);
 
             if (value1.CompareTo(value2) > 0)
                 return true;
@@ -125,7 +125,7 @@ namespace DBCViewer
 
         private bool StartWith(FilterOptions filter, DataRow row)
         {
-            if (row.Field<string>(filter.Col).StartsWith(filter.Val, checkBox2.Checked ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+            if (row.Field<string>(filter.Column).StartsWith(filter.Value, checkBox2.Checked ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
                 return true;
 
             return false;
@@ -133,7 +133,7 @@ namespace DBCViewer
 
         private bool EndsWith(FilterOptions filter, DataRow row)
         {
-            if (row.Field<string>(filter.Col).EndsWith(filter.Val, checkBox2.Checked ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+            if (row.Field<string>(filter.Column).EndsWith(filter.Value, checkBox2.Checked ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
                 return true;
 
             return false;
@@ -143,14 +143,14 @@ namespace DBCViewer
         {
             if (checkBox2.Checked)
             {
-                if (row.Field<string>(filter.Col).ToUpperInvariant().Contains(filter.Val.ToUpperInvariant()))
+                if (row.Field<string>(filter.Column).ToUpperInvariant().Contains(filter.Value.ToUpperInvariant()))
                     return true;
 
                 return false;
             }
             else
             {
-                if (row.Field<string>(filter.Col).Contains(filter.Val))
+                if (row.Field<string>(filter.Column).Contains(filter.Value))
                     return true;
 
                 return false;
@@ -163,14 +163,14 @@ namespace DBCViewer
 
             if (typeCode == TypeCode.Byte || typeCode == TypeCode.UInt16 || typeCode == TypeCode.UInt32 || typeCode == TypeCode.UInt64)
             {
-                if (((ulong)Convert.ChangeType(row[filter.Col], typeof(ulong), CultureInfo.InvariantCulture) & Convert.ToUInt64(filter.Val, CultureInfo.InvariantCulture)) != 0)
+                if (((ulong)Convert.ChangeType(row[filter.Column], typeof(ulong), CultureInfo.InvariantCulture) & Convert.ToUInt64(filter.Value, CultureInfo.InvariantCulture)) != 0)
                     return true;
 
                 return false;
             }
             else if (typeCode == TypeCode.SByte || typeCode == TypeCode.Int16 || typeCode == TypeCode.Int32 || typeCode == TypeCode.Int64)
             {
-                if (((long)Convert.ChangeType(row[filter.Col], typeof(long), CultureInfo.InvariantCulture) & Convert.ToInt64(filter.Val, CultureInfo.InvariantCulture)) != 0)
+                if (((long)Convert.ChangeType(row[filter.Column], typeof(long), CultureInfo.InvariantCulture) & Convert.ToInt64(filter.Value, CultureInfo.InvariantCulture)) != 0)
                     return true;
 
                 return false;
@@ -185,14 +185,14 @@ namespace DBCViewer
 
             if (typeCode == TypeCode.Byte || typeCode == TypeCode.UInt16 || typeCode == TypeCode.UInt32 || typeCode == TypeCode.UInt64)
             {
-                if (((ulong)Convert.ChangeType(row[filter.Col], typeof(ulong), CultureInfo.InvariantCulture) & Convert.ToUInt64(filter.Val, CultureInfo.InvariantCulture)) == 0)
+                if (((ulong)Convert.ChangeType(row[filter.Column], typeof(ulong), CultureInfo.InvariantCulture) & Convert.ToUInt64(filter.Value, CultureInfo.InvariantCulture)) == 0)
                     return true;
 
                 return false;
             }
             else if (typeCode == TypeCode.SByte || typeCode == TypeCode.Int16 || typeCode == TypeCode.Int32 || typeCode == TypeCode.Int64)
             {
-                if (((long)Convert.ChangeType(row[filter.Col], typeof(long), CultureInfo.InvariantCulture) & Convert.ToInt64(filter.Val, CultureInfo.InvariantCulture)) == 0)
+                if (((long)Convert.ChangeType(row[filter.Column], typeof(long), CultureInfo.InvariantCulture) & Convert.ToInt64(filter.Value, CultureInfo.InvariantCulture)) == 0)
                     return true;
 
                 return false;
