@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace DBCViewer
 {
@@ -55,11 +56,11 @@ namespace DBCViewer
             }
             else
             {
-                if (!(m_reader is WDBReader))
+                if (!(m_reader is WDBReader) && !(m_reader is STLReader))
                     val = (uint)(from k in m_reader.StringTable where string.Compare(k.Value, (string)value, StringComparison.Ordinal) == 0 select k.Key).FirstOrDefault();
             }
 
-            var sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             sb.AppendFormat(culture, "Integer: {0:D}{1}", val, Environment.NewLine);
             sb.AppendFormat(new BinaryFormatter(), "HEX: {0:X}{1}", val, Environment.NewLine);
             sb.AppendFormat(new BinaryFormatter(), "BIN: {0:B}{1}", val, Environment.NewLine);
@@ -86,7 +87,7 @@ namespace DBCViewer
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            var file = (string)e.Argument;
+            string file = (string)e.Argument;
 
             try
             {
@@ -103,17 +104,19 @@ namespace DBCViewer
 
             string[] types = new string[m_fields.Count];
 
-            for (var j = 0; j < m_fields.Count; ++j)
+            for (int j = 0; j < m_fields.Count; ++j)
                 types[j] = m_fields[j].Attributes["type"].Value;
 
             // hack for *.adb files (because they don't have FieldsCount)
-            var notADB = !(m_reader is ADBReader);
+            bool notADB = !(m_reader is ADBReader);
             // hack for *.wdb files (because they don't have FieldsCount)
-            var notWDB = !(m_reader is WDBReader);
+            bool notWDB = !(m_reader is WDBReader);
+            // hack for *.wdb files (because they don't have FieldsCount)
+            bool notSTL = !(m_reader is STLReader);
 
-            if (GetFieldsCount(m_fields) != m_reader.FieldsCount && notADB && notWDB)
+            if (GetFieldsCount(m_fields) != m_reader.FieldsCount && notADB && notWDB && notSTL)
             {
-                var msg = String.Format(CultureInfo.InvariantCulture, "{0} has invalid definition!\nFields count mismatch: got {1}, expected {2}", Path.GetFileName(file), m_fields.Count, m_reader.FieldsCount);
+                string msg = String.Format(CultureInfo.InvariantCulture, "{0} has invalid definition!\nFields count mismatch: got {1}, expected {2}", Path.GetFileName(file), m_fields.Count, m_reader.FieldsCount);
                 ShowErrorMessageBox(msg);
                 e.Cancel = true;
                 return;
@@ -126,78 +129,13 @@ namespace DBCViewer
 
             CreateIndexes();                                // Add indexes
 
-            for (var i = 0; i < m_reader.RecordsCount; ++i) // Add rows
+            for (int i = 0; i < m_reader.RecordsCount; ++i) // Add rows
             {
-                var dataRow = m_dataTable.NewRow();
+                DataRow dataRow = m_dataTable.NewRow();
 
-                #region Test
-                //var bytes = m_reader.GetRowAsByteArray(i);
-                //unsafe
-                //{
-                //    fixed (void* b = bytes)
-                //    {
-                //        IntPtr ptr = new IntPtr(b);
+                BinaryReader br = m_reader[i];
 
-                //        int offset = 0;
-
-                //        for (var j = 0; j < m_fields.Count; ++j)    // Add cells
-                //        {
-                //            switch (types[j])
-                //            {
-                //                case "long":
-                //                    dataRow[j] = *(long*)(ptr + offset);
-                //                    offset += 8;
-                //                    break;
-                //                case "ulong":
-                //                    dataRow[j] = *(ulong*)(ptr + offset);
-                //                    offset += 8;
-                //                    break;
-                //                case "int":
-                //                    dataRow[j] = *(int*)(ptr + offset);
-                //                    offset += 4;
-                //                    break;
-                //                case "uint":
-                //                    dataRow[j] = *(uint*)(ptr + offset);
-                //                    offset += 4;
-                //                    break;
-                //                case "short":
-                //                    dataRow[j] = *(short*)(ptr + offset);
-                //                    offset += 2;
-                //                    break;
-                //                case "ushort":
-                //                    dataRow[j] = *(ushort*)(ptr + offset);
-                //                    offset += 2;
-                //                    break;
-                //                case "sbyte":
-                //                    dataRow[j] = *(sbyte*)(ptr + offset);
-                //                    offset += 1;
-                //                    break;
-                //                case "byte":
-                //                    dataRow[j] = *(byte*)(ptr + offset);
-                //                    offset += 1;
-                //                    break;
-                //                case "float":
-                //                    dataRow[j] = *(float*)(ptr + offset);
-                //                    offset += 4;
-                //                    break;
-                //                case "double":
-                //                    dataRow[j] = *(double*)(ptr + offset);
-                //                    offset += 8;
-                //                    break;
-                //                case "string":
-                //                    dataRow[j] = m_reader.StringTable[*(int*)(ptr + offset)];
-                //                    offset += 4;
-                //                    break;
-                //                default:
-                //                    throw new Exception(String.Format("Unknown field type {0}!", m_fields[j].Attributes["type"].Value));
-                //            }
-                //        }
-                //    }
-                //}
-                #endregion
-                var br = m_reader[i];
-
-                for (var j = 0; j < m_fields.Count; ++j)    // Add cells
+                for (int j = 0; j < m_fields.Count; ++j)    // Add cells
                 {
                     switch (types[j])
                     {
@@ -232,7 +170,21 @@ namespace DBCViewer
                             dataRow[j] = br.ReadDouble();
                             break;
                         case "string":
-                            dataRow[j] = m_reader is WDBReader ? br.ReadStringNull() : m_reader.StringTable[br.ReadInt32()];
+                            if (m_reader is WDBReader)
+                                dataRow[j] = br.ReadStringNull();
+                            else if (m_reader is STLReader)
+                            {
+                                int offset = br.ReadInt32();
+
+                                //if (j == 2)
+                                //    offset += 0x10;
+                                //if (j == 6)
+                                //    offset += 0x8;
+
+                                dataRow[j] = (m_reader as STLReader).ReadString(offset);
+                            }
+                            else
+                                dataRow[j] = m_reader.StringTable[br.ReadInt32()];
                             break;
                         default:
                             throw new ArgumentException(String.Format(CultureInfo.InvariantCulture, "Unknown field type {0}!", types[j]));
@@ -340,7 +292,7 @@ namespace DBCViewer
 
             PluginsForm selector = new PluginsForm();
             selector.SetPlugins(Plugins);
-            var result = selector.ShowDialog(this);
+            DialogResult result = selector.ShowDialog(this);
             selector.Dispose();
             if (result != DialogResult.OK || selector.PluginIndex == -1)
             {
@@ -355,12 +307,12 @@ namespace DBCViewer
 
         private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            var attribute = m_fields[e.ColumnIndex].Attributes["format"];
+            XmlAttribute attribute = m_fields[e.ColumnIndex].Attributes["format"];
 
             if (attribute == null)
                 return;
 
-            var fmtStr = "{0:" + attribute.Value + "}";
+            string fmtStr = "{0:" + attribute.Value + "}";
             e.Value = String.Format(new BinaryFormatter(), fmtStr, e.Value);
             e.FormattingApplied = true;
         }
@@ -376,13 +328,13 @@ namespace DBCViewer
 
         private void autoSizeColumnsModeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var control = (ToolStripMenuItem)sender;
+            ToolStripMenuItem control = (ToolStripMenuItem)sender;
 
             foreach (ToolStripMenuItem item in autoSizeModeToolStripMenuItem.DropDownItems)
                 if (item != control)
                     item.Checked = false;
 
-            var index = (int)columnContextMenuStrip.Tag;
+            int index = (int)columnContextMenuStrip.Tag;
             dataGridView1.Columns[index].AutoSizeMode = (DataGridViewAutoSizeColumnMode)Enum.Parse(typeof(DataGridViewAutoSizeColumnMode), (string)control.Tag);
         }
 
@@ -410,7 +362,7 @@ namespace DBCViewer
             LoadDefinitions();
             Compose();
 
-            var cmds = Environment.GetCommandLineArgs();
+            string[] cmds = Environment.GetCommandLineArgs();
             if (cmds.Length > 1)
                 LoadFile(cmds[1]);
         }
@@ -476,9 +428,9 @@ namespace DBCViewer
 
         private void filterThisToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var meta = ((string)cellContextMenuStrip.Tag).Split(' ');
-            var column = Convert.ToInt32(meta[0]);
-            var row = Convert.ToInt32(meta[1]);
+            string[] meta = ((string)cellContextMenuStrip.Tag).Split(' ');
+            int column = Convert.ToInt32(meta[0]);
+            int row = Convert.ToInt32(meta[1]);
             ShowFilterForm();
             m_filterForm.SetSelection(dataGridView1.Columns[column].Name, dataGridView1[column, row].Value.ToString());
         }

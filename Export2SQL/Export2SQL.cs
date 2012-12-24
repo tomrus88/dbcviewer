@@ -13,7 +13,7 @@ namespace Export2SQL
     public class Export2SQL : IPlugin
     {
         [Import("PluginFinished")]
-        public Func<int, int> Finished { get; set; }
+        public Action<int> Finished { get; set; }
 
         public void Run(DataTable data)
         {

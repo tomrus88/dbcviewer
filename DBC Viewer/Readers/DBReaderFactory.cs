@@ -18,6 +18,8 @@ namespace DBCViewer
                 reader = new ADBReader(file);
             else if (ext == ".WDB")
                 reader = new WDBReader(file);
+            else if (ext == ".STL")
+                reader = new STLReader(file);
             else
                 throw new InvalidDataException(String.Format("Unknown file type {0}", ext));
 

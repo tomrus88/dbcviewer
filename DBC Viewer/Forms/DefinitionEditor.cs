@@ -93,10 +93,11 @@ namespace DBCViewer
 
             if (def == null)
             {
-                var result = MessageBox.Show(this, "Create default definition?", "Definition Missing!",
+                DialogResult result = MessageBox.Show(this, "Create default definition?", "Definition Missing!",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question,
                     MessageBoxDefaultButton.Button1);
+
                 if (result == DialogResult.Yes)
                 {
                     def = CreateDefaultDefinition();
@@ -110,6 +111,11 @@ namespace DBCViewer
                     return;
             }
 
+            InitForm(def);
+        }
+
+        private void InitForm(XmlElement def)
+        {
             textBox1.Text = def.Attributes["build"].Value;
 
             XmlNodeList fields = def.GetElementsByTagName("field");
@@ -150,7 +156,7 @@ namespace DBCViewer
                     XmlElement newnode = doc.CreateElement(m_name);
                     newnode.SetAttributeNode("build", "").Value = textBox1.Text;
 
-                    for (var i = 0; i < fieldsCount; ++i)
+                    for (int i = 0; i < fieldsCount; ++i)
                     {
                         if (i == 0)
                         {

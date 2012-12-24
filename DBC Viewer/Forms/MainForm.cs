@@ -14,18 +14,18 @@ namespace DBCViewer
     public partial class MainForm : Form
     {
         // Fields
-        DataTable m_dataTable;
-        IWowClientDBReader m_reader;
-        FilterForm m_filterForm;
-        DefinitionSelect m_selector;
-        XmlDocument m_definitions;
-        XmlNodeList m_fields;
-        DirectoryCatalog m_catalog;
-        XmlElement m_definition;        // definition for current file
-        string m_dbcName;               // file name without extension
-        string m_dbcFile;               // path to current file
-        DateTime m_startTime;
-        string m_workingFolder;
+        private DataTable m_dataTable;
+        private IWowClientDBReader m_reader;
+        private FilterForm m_filterForm;
+        private DefinitionSelect m_selector;
+        private XmlDocument m_definitions;
+        private XmlNodeList m_fields;
+        private DirectoryCatalog m_catalog;
+        private XmlElement m_definition;        // definition for current file
+        private string m_dbcName;               // file name without extension
+        private string m_dbcFile;               // path to current file
+        private DateTime m_startTime;
+        private string m_workingFolder;
 
         // Properties
         public DataTable DataTable { get { return m_dataTable; } }
@@ -43,12 +43,11 @@ namespace DBCViewer
         List<IPlugin> Plugins { get; set; }
 
         [Export("PluginFinished")]
-        public int PluginFinished(int result)
+        public void PluginFinished(int result)
         {
             var msg = String.Format("Plugin finished! {0} rows affected.", result);
             toolStripStatusLabel1.Text = msg;
             MessageBox.Show(msg);
-            return 0;
         }
 
         // MainForm
@@ -118,6 +117,11 @@ namespace DBCViewer
         private XmlElement GetDefinition()
         {
             XmlNodeList definitions = m_definitions["DBFilesClient"].GetElementsByTagName(m_dbcName);
+
+            if (definitions.Count == 0)
+            {
+                definitions = m_definitions["DBFilesClient"].GetElementsByTagName(Path.GetFileName(m_dbcFile));
+            }
 
             if (definitions.Count == 0)
             {
@@ -299,7 +303,7 @@ namespace DBCViewer
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("DBC Viewer @ 2011 TOM_RUS", "About DBC Viewer", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("DBC Viewer @ 2012 TOM_RUS", "About DBC Viewer", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
