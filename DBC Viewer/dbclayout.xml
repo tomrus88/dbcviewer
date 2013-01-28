@@ -4146,4 +4146,44 @@
     <field type="int" name="m_pos_y" />
     <field type="int" name="m_poi_id" />
   </QuestPOIPoint>
+  <Faction build="16309">
+    <index>
+      <primary>m_ID</primary>
+    </index>
+    <field type="uint" name="m_ID" />
+    <field type="int" name="m_reputationIndex" />
+    <field type="uint" name="m_reputationRaceMask_1" />
+    <field type="uint" name="m_reputationRaceMask_2" />
+    <field type="uint" name="m_reputationRaceMask_3" />
+    <field type="uint" name="m_reputationRaceMask_4" />
+    <field type="uint" name="m_reputationClassMask_1" />
+    <field type="uint" name="m_reputationClassMask_2" />
+    <field type="uint" name="m_reputationClassMask_3" />
+    <field type="uint" name="m_reputationClassMask_4" />
+    <field type="int" name="m_reputationBase_1" />
+    <field type="int" name="m_reputationBase_2" />
+    <field type="int" name="m_reputationBase_3" />
+    <field type="int" name="m_reputationBase_4" />
+    <field type="uint" name="m_reputationFlags_1" />
+    <field type="uint" name="m_reputationFlags_2" />
+    <field type="uint" name="m_reputationFlags_3" />
+    <field type="uint" name="m_reputationFlags_4" />
+    <field type="uint" name="m_parentFactionID" />
+    <field type="float" name="spilloverRate1" />
+    <field type="float" name="spilloverRate2" />
+    <field type="uint" name="spilloverMaxRank" />
+    <field type="uint" name="spilloverRank_unk" />
+    <field type="string" name="m_name_lang_1" />
+    <field type="string" name="m_description_lang_1" />
+    <field type="int" name="m_expansion" />
+  </Faction>
+  <FactionGroup build="16309">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="string" name="field2" />
+    <field type="string" name="field3" />
+  </FactionGroup>
 </DBFilesClient>

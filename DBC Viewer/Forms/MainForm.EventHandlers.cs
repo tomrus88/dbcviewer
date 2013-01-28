@@ -175,12 +175,6 @@ namespace DBCViewer
                             else if (m_reader is STLReader)
                             {
                                 int offset = br.ReadInt32();
-
-                                //if (j == 2)
-                                //    offset += 0x10;
-                                //if (j == 6)
-                                //    offset += 0x8;
-
                                 dataRow[j] = (m_reader as STLReader).ReadString(offset);
                             }
                             else
@@ -433,6 +427,11 @@ namespace DBCViewer
             int row = Convert.ToInt32(meta[1]);
             ShowFilterForm();
             m_filterForm.SetSelection(dataGridView1.Columns[column].Name, dataGridView1[column, row].Value.ToString());
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("DBC Viewer @ 2013 TOM_RUS", "About DBC Viewer", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
