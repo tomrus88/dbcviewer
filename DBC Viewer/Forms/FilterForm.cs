@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Data;
-using System.Diagnostics;
 using System.Globalization;
-using System.Windows.Forms;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace DBCViewer
 {
     public partial class FilterForm : Form
     {
-        EnumerableRowCollection<DataRow> m_filter;
+        private EnumerableRowCollection<DataRow> m_filter;
 
-        Object[] decimalOperators = new Object[]
+        private Object[] decimalOperators = new Object[]
         {
             ComparisonType.And,
             ComparisonType.AndNot,
@@ -21,7 +20,7 @@ namespace DBCViewer
             ComparisonType.Greater
         };
 
-        Object[] stringOperators = new Object[]
+        private Object[] stringOperators = new Object[]
         {
             ComparisonType.Equal,
             ComparisonType.NotEqual,
@@ -30,13 +29,15 @@ namespace DBCViewer
             ComparisonType.Contains
         };
 
-        Object[] floatOperators = new Object[]
+        private Object[] floatOperators = new Object[]
         {
             ComparisonType.Equal,
             ComparisonType.NotEqual,
             ComparisonType.Less,
             ComparisonType.Greater
         };
+
+        private MainForm m_mainForm;
 
         public FilterForm()
         {
@@ -45,7 +46,9 @@ namespace DBCViewer
 
         private void FilterForm_Load(object sender, EventArgs e)
         {
-            var dt = ((MainForm)Owner).DataTable;
+            m_mainForm = (MainForm)Owner;
+
+            var dt = m_mainForm.DataTable;
 
             for (var i = 0; i < dt.Columns.Count; ++i)
                 listBox2.Items.Add(dt.Columns[i].ColumnName);
@@ -59,10 +62,7 @@ namespace DBCViewer
                 return;
             }
 
-            //Stopwatch sw = Stopwatch.StartNew();
-
-            var owner = ((MainForm)Owner);
-            var dt = owner.DataTable;
+            var dt = m_mainForm.DataTable;
 
             if (m_filter == null)
                 m_filter = dt.AsEnumerable();
@@ -77,13 +77,7 @@ namespace DBCViewer
             else
                 m_filter = new DataTable().AsEnumerable();
 
-            //m_filter = m_filter.Where(Compare);
-
-            owner.SetDataSource(m_filter.AsDataView());
-
-            //sw.Stop();
-
-            //MessageBox.Show(sw.Elapsed.TotalMilliseconds.ToString());
+            m_mainForm.SetDataSource(m_filter.AsDataView());
         }
 
         private void FilterForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -98,8 +92,7 @@ namespace DBCViewer
 
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var owner = ((MainForm)Owner);
-            var dt = owner.DataTable;
+            var dt = m_mainForm.DataTable;
             var colName = (string)listBox2.SelectedItem;
             var col = dt.Columns[colName];
 
@@ -135,7 +128,7 @@ namespace DBCViewer
 
             var fi = new FilterOptions((string)listBox2.SelectedItem, (ComparisonType)comboBox3.SelectedItem, textBox2.Text);
 
-            var dt = (Owner as MainForm).DataTable;
+            var dt = m_mainForm.DataTable;
             var col = dt.Columns[fi.Column];
 
             try

@@ -15,6 +15,7 @@ namespace DBCViewer
         private string m_name;
         private bool m_changed;
         private bool m_saved;
+        private MainForm m_mainForm;
 
         public DefinitionEditor()
         {
@@ -43,7 +44,10 @@ namespace DBCViewer
         private void WriteXml()
         {
             XmlDocument doc = new XmlDocument();
-            doc.Load(Path.Combine((Owner as MainForm).WorkingFolder, "dbclayout.xml"));
+
+            string docPath = Path.Combine(m_mainForm.WorkingFolder, "dbclayout.xml");
+
+            doc.Load(docPath);
 
             XmlNode oldnode = null; // nodes.Count == 0
 
@@ -52,10 +56,7 @@ namespace DBCViewer
             if (nodes.Count == 1)
                 oldnode = nodes[0];
             else if (nodes.Count > 1)
-            {
-                int index = (Owner as MainForm).DefinitionIndex;
-                oldnode = nodes[index];
-            }
+                oldnode = nodes[m_mainForm.DefinitionIndex];
 
             XmlElement newnode = doc.CreateElement(m_name);
             newnode.SetAttributeNode("build", "").Value = textBox1.Text;
@@ -81,15 +82,15 @@ namespace DBCViewer
             else
                 doc["DBFilesClient"].ReplaceChild(newnode, oldnode);
 
-            doc.Save(Path.Combine((Owner as MainForm).WorkingFolder, "dbclayout.xml"));
+            doc.Save(docPath);
             m_saved = true;
         }
 
         public void InitDefinitions()
         {
-            m_name = (Owner as MainForm).DBCName;
+            m_name = m_mainForm.DBCName;
 
-            XmlElement def = (Owner as MainForm).Definition;
+            XmlElement def = m_mainForm.Definition;
 
             if (def == null)
             {
@@ -98,17 +99,15 @@ namespace DBCViewer
                     MessageBoxIcon.Question,
                     MessageBoxDefaultButton.Button1);
 
-                if (result == DialogResult.Yes)
-                {
-                    def = CreateDefaultDefinition();
-                    if (def == null)
-                    {
-                        MessageBox.Show(String.Format("Can't create default definitions for {0}", m_name));
-                        return;
-                    }
-                }
-                else
+                if (result != DialogResult.Yes)
                     return;
+
+                def = CreateDefaultDefinition();
+                if (def == null)
+                {
+                    MessageBox.Show(String.Format("Can't create default definitions for {0}", m_name));
+                    return;
+                }
             }
 
             InitForm(def);
@@ -135,7 +134,7 @@ namespace DBCViewer
 
         private XmlElement CreateDefaultDefinition()
         {
-            var file = (Owner as MainForm).DBCFile;
+            var file = m_mainForm.DBCFile;
 
             var ext = Path.GetExtension(file).ToUpperInvariant();
 
@@ -183,6 +182,8 @@ namespace DBCViewer
 
         private void DefinitionEditor_Load(object sender, EventArgs e)
         {
+            m_mainForm = (MainForm)Owner;
+
             InitDefinitions();
         }
 

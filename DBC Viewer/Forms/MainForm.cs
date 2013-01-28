@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PluginInterface;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
@@ -7,7 +8,6 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
-using PluginInterface;
 
 namespace DBCViewer
 {
