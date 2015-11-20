@@ -49,14 +49,16 @@ namespace DBCViewer
 
             doc.Load(docPath);
 
-            XmlNode oldnode = null; // nodes.Count == 0
-
             XmlNodeList nodes = doc["DBFilesClient"].GetElementsByTagName(m_name);
+
+            XmlNode oldnode;
 
             if (nodes.Count == 1)
                 oldnode = nodes[0];
             else if (nodes.Count > 1)
                 oldnode = nodes[m_mainForm.DefinitionIndex];
+            else
+                oldnode = null;
 
             XmlElement newnode = doc.CreateElement(m_name);
             newnode.SetAttributeNode("build", "").Value = textBox1.Text;

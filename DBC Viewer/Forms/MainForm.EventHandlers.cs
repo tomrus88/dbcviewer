@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -56,8 +57,8 @@ namespace DBCViewer
             }
             else
             {
-                if (!(m_reader is WDBReader) && !(m_reader is STLReader))
-                    val = (uint)(from k in m_reader.StringTable where string.Compare(k.Value, (string)value, StringComparison.Ordinal) == 0 select k.Key).FirstOrDefault();
+                if (!(m_dbreader is WDBReader) && !(m_dbreader is STLReader))
+                    val = (uint)(from k in m_dbreader.StringTable where string.Compare(k.Value, (string)value, StringComparison.Ordinal) == 0 select k.Key).FirstOrDefault();
             }
 
             StringBuilder sb = new StringBuilder();
@@ -69,7 +70,7 @@ namespace DBCViewer
 
             try
             {
-                sb.AppendFormat(culture, "String: {0}{1}", !(m_reader is WDBReader) ? m_reader.StringTable[(int)val] : String.Empty, Environment.NewLine);
+                sb.AppendFormat(culture, "String: {0}{1}", !(m_dbreader is WDBReader) ? m_dbreader.StringTable[(int)val] : String.Empty, Environment.NewLine);
             }
             catch
             {
@@ -91,7 +92,7 @@ namespace DBCViewer
 
             try
             {
-                m_reader = DBReaderFactory.GetReader(file);
+                m_dbreader = DBReaderFactory.GetReader(file);
             }
             catch (Exception ex)
             {
@@ -108,15 +109,16 @@ namespace DBCViewer
                 types[j] = m_fields[j].Attributes["type"].Value;
 
             // hack for *.adb files (because they don't have FieldsCount)
-            bool notADB = !(m_reader is ADBReader);
+            bool notADB = !(m_dbreader is ADBReader);
             // hack for *.wdb files (because they don't have FieldsCount)
-            bool notWDB = !(m_reader is WDBReader);
+            bool notWDB = !(m_dbreader is WDBReader);
             // hack for *.wdb files (because they don't have FieldsCount)
-            bool notSTL = !(m_reader is STLReader);
+            bool notSTL = !(m_dbreader is STLReader);
 
-            if (GetFieldsCount(m_fields) != m_reader.FieldsCount && notADB && notWDB && notSTL)
+            int fcount = GetFieldsCount(m_fields);
+            if (fcount != m_dbreader.FieldsCount && notADB && notWDB && notSTL)
             {
-                string msg = String.Format(CultureInfo.InvariantCulture, "{0} has invalid definition!\nFields count mismatch: got {1}, expected {2}", Path.GetFileName(file), m_fields.Count, m_reader.FieldsCount);
+                string msg = String.Format(CultureInfo.InvariantCulture, "{0} has invalid definition!\nFields count mismatch: got {1}, expected {2}", Path.GetFileName(file), fcount, m_dbreader.FieldsCount);
                 ShowErrorMessageBox(msg);
                 e.Cancel = true;
                 return;
@@ -129,67 +131,84 @@ namespace DBCViewer
 
             CreateIndexes();                                // Add indexes
 
-            for (int i = 0; i < m_reader.RecordsCount; ++i) // Add rows
+            //bool extraData = false;
+
+            for (int i = 0; i < m_dbreader.RecordsCount; ++i) // Add rows
             {
                 DataRow dataRow = m_dataTable.NewRow();
 
-                BinaryReader br = m_reader[i];
-
-                for (int j = 0; j < m_fields.Count; ++j)    // Add cells
+                using (BinaryReader br = m_dbreader[i])
                 {
-                    switch (types[j])
+                    for (int j = 0; j < m_fields.Count; ++j)    // Add cells
                     {
-                        case "long":
-                            dataRow[j] = br.ReadInt64();
-                            break;
-                        case "ulong":
-                            dataRow[j] = br.ReadUInt64();
-                            break;
-                        case "int":
-                            dataRow[j] = br.ReadInt32();
-                            break;
-                        case "uint":
-                            dataRow[j] = br.ReadUInt32();
-                            break;
-                        case "short":
-                            dataRow[j] = br.ReadInt16();
-                            break;
-                        case "ushort":
-                            dataRow[j] = br.ReadUInt16();
-                            break;
-                        case "sbyte":
-                            dataRow[j] = br.ReadSByte();
-                            break;
-                        case "byte":
-                            dataRow[j] = br.ReadByte();
-                            break;
-                        case "float":
-                            dataRow[j] = br.ReadSingle();
-                            break;
-                        case "double":
-                            dataRow[j] = br.ReadDouble();
-                            break;
-                        case "string":
-                            if (m_reader is WDBReader)
-                                dataRow[j] = br.ReadStringNull();
-                            else if (m_reader is STLReader)
-                            {
-                                int offset = br.ReadInt32();
-                                dataRow[j] = (m_reader as STLReader).ReadString(offset);
-                            }
-                            else
-                                dataRow[j] = m_reader.StringTable[br.ReadInt32()];
-                            break;
-                        default:
-                            throw new ArgumentException(String.Format(CultureInfo.InvariantCulture, "Unknown field type {0}!", types[j]));
+                        switch (types[j])
+                        {
+                            case "long":
+                                dataRow[j] = br.ReadInt64();
+                                break;
+                            case "ulong":
+                                dataRow[j] = br.ReadUInt64();
+                                break;
+                            case "int":
+                                dataRow[j] = br.ReadInt32();
+                                break;
+                            case "uint":
+                                dataRow[j] = br.ReadUInt32();
+                                break;
+                            case "short":
+                                dataRow[j] = br.ReadInt16();
+                                break;
+                            case "ushort":
+                                dataRow[j] = br.ReadUInt16();
+                                break;
+                            case "sbyte":
+                                dataRow[j] = br.ReadSByte();
+                                break;
+                            case "byte":
+                                dataRow[j] = br.ReadByte();
+                                break;
+                            case "float":
+                                dataRow[j] = br.ReadSingle();
+                                break;
+                            case "double":
+                                dataRow[j] = br.ReadDouble();
+                                break;
+                            case "string":
+                                if (m_dbreader is WDBReader)
+                                    dataRow[j] = br.ReadStringNull();
+                                else if (m_dbreader is STLReader)
+                                {
+                                    int offset = br.ReadInt32();
+                                    dataRow[j] = (m_dbreader as STLReader).ReadString(offset);
+                                }
+                                else
+                                {
+                                    try
+                                    {
+                                        dataRow[j] = m_dbreader.StringTable[br.ReadInt32()];
+                                    }
+                                    catch
+                                    {
+                                        dataRow[j] = "Invalid string index!";
+                                    }
+                                }
+                                break;
+                            default:
+                                throw new ArgumentException(String.Format(CultureInfo.InvariantCulture, "Unknown field type {0}!", types[j]));
+                        }
                     }
                 }
 
                 m_dataTable.Rows.Add(dataRow);
 
-                int percent = (int)((float)m_dataTable.Rows.Count / (float)m_reader.RecordsCount * 100.0f);
+                int percent = (int)((float)m_dataTable.Rows.Count / (float)m_dbreader.RecordsCount * 100.0f);
                 (sender as BackgroundWorker).ReportProgress(percent);
             }
+
+            //if (extraData)
+            //{
+            //    MessageBox.Show("extra data detected!");
+            //}
 
             if (dataGridView1.InvokeRequired)
             {
@@ -346,6 +365,12 @@ namespace DBCViewer
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            //Stopwatch sw = new Stopwatch();
+            //sw.Start();
+            //DBCReaderGeneric<AreaTableRecord> at = new DBCReaderGeneric<AreaTableRecord>(@"c:\my_old_files\Development\git\CASCExplorer\CASCConsole\bin\Debug\DBFilesClient\AreaTable.dbc");
+            //sw.Stop();
+            //MessageBox.Show(sw.Elapsed.ToString());
+
             WindowState = Properties.Settings.Default.WindowState;
             Size = Properties.Settings.Default.WindowSize;
             Location = Properties.Settings.Default.WindowLocation;

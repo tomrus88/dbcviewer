@@ -13,7 +13,14 @@ namespace DBCViewer
             if (ext == ".DBC")
                 reader = new DBCReader(file);
             else if (ext == ".DB2")
-                reader = new DB2Reader(file);
+                try
+                {
+                    reader = new DB2Reader(file);
+                }
+                catch
+                {
+                    reader = new DB3Reader(file);
+                }
             else if (ext == ".ADB")
                 reader = new ADBReader(file);
             else if (ext == ".WDB")

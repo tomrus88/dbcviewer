@@ -15,7 +15,7 @@ namespace DBCViewer
     {
         // Fields
         private DataTable m_dataTable;
-        private IWowClientDBReader m_reader;
+        private IWowClientDBReader m_dbreader;
         private FilterForm m_filterForm;
         private DefinitionSelect m_selector;
         private XmlDocument m_definitions;
