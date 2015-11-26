@@ -17,17 +17,18 @@ namespace DBCViewer
 
         public Dictionary<int, string> StringTable { get; private set; }
 
-        private MemoryStream[] m_records;
-        private Dictionary<int, int> Lookup = new Dictionary<int, int>();
+        private byte[][] m_records;
+        private SortedDictionary<int, int> Lookup = new SortedDictionary<int, int>();
 
-        public byte[] GetRowAsByteArray(int row)
+        public IEnumerable<BinaryReader> Rows
         {
-            return m_records[row].ToArray();
-        }
-
-        public BinaryReader this[int row]
-        {
-            get { return new BinaryReader(m_records[row], Encoding.UTF8); }
+            get
+            {
+                foreach(var row in Lookup)
+                {
+                    yield return new BinaryReader(new MemoryStream(m_records[row.Value]), Encoding.UTF8);
+                }
+            }
         }
 
         public DB3Reader(string fileName)
@@ -59,41 +60,54 @@ namespace DBCViewer
                 int CopyTableSize = reader.ReadInt32();
 
                 int stringTableStart = HeaderSize + RecordsCount * RecordSize;
+                int stringTableEnd = stringTableStart + StringTableSize;
 
-                bool hasIndex = stringTableStart + StringTableSize + CopyTableSize < reader.BaseStream.Length;
+                // Index table
+                int[] m_indexes = null;
+                bool hasIndex = stringTableEnd + CopyTableSize < reader.BaseStream.Length;
 
-                m_records = new MemoryStream[RecordsCount];
+                if (hasIndex)
+                {
+                    reader.BaseStream.Position = stringTableEnd;
+
+                    m_indexes = new int[RecordsCount];
+
+                    for (int i = 0; i < RecordsCount; i++)
+                        m_indexes[i] = reader.ReadInt32();
+                }
+
+                // Records table
+                reader.BaseStream.Position = HeaderSize;
+
+                m_records = new byte[RecordsCount][];
 
                 for (int i = 0; i < RecordsCount; i++)
                 {
-                    reader.BaseStream.Position = HeaderSize + i * RecordSize;
-
-                    m_records[i] = new MemoryStream(RecordSize);
                     byte[] recordBytes = reader.ReadBytes(RecordSize);
 
                     if (hasIndex)
                     {
-                        long oldpos = reader.BaseStream.Position;
-                        reader.BaseStream.Position = stringTableStart + StringTableSize + i * 4;
-                        byte[] indexBytes = reader.ReadBytes(4);
-                        m_records[i].Write(indexBytes, 0, indexBytes.Length);
-                        reader.BaseStream.Position = oldpos;
+                        byte[] newRecordBytes = new byte[RecordSize + 4];
 
-                        Lookup.Add(BitConverter.ToInt32(indexBytes, 0), i);
+                        Array.Copy(BitConverter.GetBytes(m_indexes[i]), newRecordBytes, 4);
+                        Array.Copy(recordBytes, 0, newRecordBytes, 4, recordBytes.Length);
+
+                        recordBytes = newRecordBytes;
+
+                        Lookup.Add(m_indexes[i], i);
                     }
                     else
                     {
                         Lookup.Add(BitConverter.ToInt32(recordBytes, 0), i);
                     }
 
-                    m_records[i].Write(recordBytes, 0, recordBytes.Length);
-
-                    m_records[i].Position = 0;
+                    m_records[i] = recordBytes;
                 }
 
-                StringTable = new Dictionary<int, string>();
+                // Strings table
+                reader.BaseStream.Position = stringTableStart;
 
-                int stringTableEnd = HeaderSize + RecordsCount * RecordSize + StringTableSize;
+                StringTable = new Dictionary<int, string>();
 
                 while (reader.BaseStream.Position != stringTableEnd)
                 {
@@ -101,7 +115,8 @@ namespace DBCViewer
                     StringTable[index] = reader.ReadStringNull();
                 }
 
-                long copyTablePos = stringTableEnd;
+                // Copy index table
+                long copyTablePos = stringTableEnd + (hasIndex ? 4 * RecordsCount : 0);
 
                 if (copyTablePos != reader.BaseStream.Length && CopyTableSize != 0)
                 {
@@ -111,6 +126,8 @@ namespace DBCViewer
                     {
                         int id = reader.ReadInt32();
                         int idcopy = reader.ReadInt32();
+
+                        RecordsCount++;
 
                         Lookup.Add(id, Lookup[idcopy]);
                     }

@@ -10,7 +10,6 @@ namespace DBCViewer
         int RecordSize { get; }
         int StringTableSize { get; }
         Dictionary<int, string> StringTable { get; }
-        byte[] GetRowAsByteArray(int row);
-        BinaryReader this[int row] { get; }
+        IEnumerable<BinaryReader> Rows { get; }
     }
 }

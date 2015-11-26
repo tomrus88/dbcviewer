@@ -19,14 +19,15 @@ namespace DBCViewer
 
         private byte[][] m_rows;
 
-        public byte[] GetRowAsByteArray(int row)
+        public IEnumerable<BinaryReader> Rows
         {
-            return m_rows[row];
-        }
-
-        public BinaryReader this[int row]
-        {
-            get { return new BinaryReader(new MemoryStream(m_rows[row]), Encoding.UTF8); }
+            get
+            {
+                for (int i = 0; i < RecordsCount; ++i)
+                {
+                    yield return new BinaryReader(new MemoryStream(m_rows[i]), Encoding.UTF8);
+                }
+            }
         }
 
         public ADBReader(string fileName)

@@ -38,10 +38,20 @@ namespace DBCViewer
             CultureInfo culture = CultureInfo.InvariantCulture;
             object value = dataGridView1[e.ColumnIndex, e.RowIndex].Value;
 
+            //val = (ulong)Convert.ChangeType(value, dataType);
+
             if (dataType != typeof(string))
             {
-                if (dataType == typeof(int))
-                    val = (uint)Convert.ToInt32(value, culture);
+                if (dataType == typeof(sbyte))
+                    val = (ulong)Convert.ToSByte(value, culture);
+                else if (dataType == typeof(byte))
+                    val = Convert.ToByte(value, culture);
+                else if (dataType == typeof(short))
+                    val = (ulong)Convert.ToInt16(value, culture);
+                else if (dataType == typeof(ushort))
+                    val = Convert.ToUInt16(value, culture);
+                else if (dataType == typeof(int))
+                    val = (ulong)Convert.ToInt32(value, culture);
                 else if (dataType == typeof(uint))
                     val = Convert.ToUInt32(value, culture);
                 else if (dataType == typeof(long))
@@ -135,11 +145,11 @@ namespace DBCViewer
 
             //bool extraData = false;
 
-            for (int i = 0; i < m_dbreader.RecordsCount; ++i) // Add rows
+            foreach (var row in m_dbreader.Rows) // Add rows
             {
                 DataRow dataRow = m_dataTable.NewRow();
 
-                using (BinaryReader br = m_dbreader[i])
+                using (BinaryReader br = row)
                 {
                     for (int j = 0; j < m_fields.Count; ++j)    // Add cells
                     {
@@ -203,7 +213,7 @@ namespace DBCViewer
 
                 m_dataTable.Rows.Add(dataRow);
 
-                int percent = (int)((float)m_dataTable.Rows.Count / (float)m_dbreader.RecordsCount * 100.0f);
+                int percent = (int)((float)m_dataTable.Rows.Count / m_dbreader.RecordsCount * 100.0f);
                 (sender as BackgroundWorker).ReportProgress(percent);
             }
 

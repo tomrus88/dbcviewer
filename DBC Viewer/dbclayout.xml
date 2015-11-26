@@ -7468,6 +7468,7 @@
     <field type="int" name="m_ColorIndex" />
   </CharHairGeosets>
   <CharHairGeosets build="20740">
+    <field type="int" name="m_Id" />
     <field type="int" name="field0" />
     <field type="int" name="m_fileDataId" />
     <field type="byte" name="m_RaceID" />
