@@ -17,16 +17,17 @@ namespace DBCViewer
 
         public Dictionary<int, string> StringTable { get; private set; }
 
-        private byte[][] m_rows;
+        private MemoryStream[] m_records;
+        private Dictionary<int, int> Lookup = new Dictionary<int, int>();
 
         public byte[] GetRowAsByteArray(int row)
         {
-            return m_rows[row];
+            return m_records[row].ToArray();
         }
 
         public BinaryReader this[int row]
         {
-            get { return new BinaryReader(new MemoryStream(m_rows[row]), Encoding.UTF8); }
+            get { return new BinaryReader(m_records[row], Encoding.UTF8); }
         }
 
         public DB3Reader(string fileName)
@@ -40,7 +41,7 @@ namespace DBCViewer
 
                 if (reader.ReadUInt32() != DB3FmtSig)
                 {
-                    throw new InvalidDataException(String.Format("File {0} isn't valid DBC file!", fileName));
+                    throw new InvalidDataException(String.Format("File {0} isn't valid DB2 file!", fileName));
                 }
 
                 RecordsCount = reader.ReadInt32();
@@ -48,40 +49,71 @@ namespace DBCViewer
                 RecordSize = reader.ReadInt32();
                 StringTableSize = reader.ReadInt32();
 
-                // WDB2 specific fields
-                uint tableHash = reader.ReadUInt32();   // new field in WDB2
-                uint build = reader.ReadUInt32();       // new field in WDB2
-                uint unk1 = reader.ReadUInt32();        // new field in WDB2
+                uint tableHash = reader.ReadUInt32();
+                uint build = reader.ReadUInt32();
+                uint unk1 = reader.ReadUInt32();
 
-                if (build > 12880) // new extended header
-                {
-                    int MinId = reader.ReadInt32();     // new field in WDB2
-                    int MaxId = reader.ReadInt32();     // new field in WDB2
-                    int locale = reader.ReadInt32();    // new field in WDB2
-                    int unk5 = reader.ReadInt32();      // new field in WDB2
+                int MinId = reader.ReadInt32();
+                int MaxId = reader.ReadInt32();
+                int locale = reader.ReadInt32();
+                int CopyTableSize = reader.ReadInt32();
 
-                    // gone in WDB3?
-                    //if (MaxId != 0)
-                    //{
-                    //    var diff = MaxId - MinId + 1;   // blizzard is weird people...
-                    //    reader.ReadBytes(diff * 4);     // an index for rows
-                    //    reader.ReadBytes(diff * 2);     // a memory allocation bank
-                    //}
-                }
+                int stringTableStart = HeaderSize + RecordsCount * RecordSize;
 
-                m_rows = new byte[RecordsCount][];
+                bool hasIndex = stringTableStart + StringTableSize + CopyTableSize < reader.BaseStream.Length;
+
+                m_records = new MemoryStream[RecordsCount];
 
                 for (int i = 0; i < RecordsCount; i++)
-                    m_rows[i] = reader.ReadBytes(RecordSize);
+                {
+                    reader.BaseStream.Position = HeaderSize + i * RecordSize;
 
-                int stringTableStart = (int)reader.BaseStream.Position;
+                    m_records[i] = new MemoryStream(RecordSize);
+                    byte[] recordBytes = reader.ReadBytes(RecordSize);
+
+                    if (hasIndex)
+                    {
+                        long oldpos = reader.BaseStream.Position;
+                        reader.BaseStream.Position = stringTableStart + StringTableSize + i * 4;
+                        byte[] indexBytes = reader.ReadBytes(4);
+                        m_records[i].Write(indexBytes, 0, indexBytes.Length);
+                        reader.BaseStream.Position = oldpos;
+
+                        Lookup.Add(BitConverter.ToInt32(indexBytes, 0), i);
+                    }
+                    else
+                    {
+                        Lookup.Add(BitConverter.ToInt32(recordBytes, 0), i);
+                    }
+
+                    m_records[i].Write(recordBytes, 0, recordBytes.Length);
+
+                    m_records[i].Position = 0;
+                }
 
                 StringTable = new Dictionary<int, string>();
 
-                while (reader.BaseStream.Position != reader.BaseStream.Length)
+                int stringTableEnd = HeaderSize + RecordsCount * RecordSize + StringTableSize;
+
+                while (reader.BaseStream.Position != stringTableEnd)
                 {
                     int index = (int)reader.BaseStream.Position - stringTableStart;
                     StringTable[index] = reader.ReadStringNull();
+                }
+
+                long copyTablePos = stringTableEnd;
+
+                if (copyTablePos != reader.BaseStream.Length && CopyTableSize != 0)
+                {
+                    reader.BaseStream.Position = copyTablePos;
+
+                    while (reader.BaseStream.Position != reader.BaseStream.Length)
+                    {
+                        int id = reader.ReadInt32();
+                        int idcopy = reader.ReadInt32();
+
+                        Lookup.Add(id, Lookup[idcopy]);
+                    }
                 }
             }
         }

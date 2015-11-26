@@ -114,9 +114,11 @@ namespace DBCViewer
             bool notWDB = !(m_dbreader is WDBReader);
             // hack for *.wdb files (because they don't have FieldsCount)
             bool notSTL = !(m_dbreader is STLReader);
+            // hack for *.db2 files v3 (because they don't have FieldsCount)
+            bool notDB3 = !(m_dbreader is DB3Reader);
 
             int fcount = GetFieldsCount(m_fields);
-            if (fcount != m_dbreader.FieldsCount && notADB && notWDB && notSTL)
+            if (fcount != m_dbreader.FieldsCount && notADB && notWDB && notSTL && notDB3)
             {
                 string msg = String.Format(CultureInfo.InvariantCulture, "{0} has invalid definition!\nFields count mismatch: got {1}, expected {2}", Path.GetFileName(file), fcount, m_dbreader.FieldsCount);
                 ShowErrorMessageBox(msg);
@@ -456,7 +458,7 @@ namespace DBCViewer
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("DBC Viewer @ 2013 TOM_RUS", "About DBC Viewer", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("DBC Viewer @ 2013-2015 TOM_RUS", "About DBC Viewer", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
