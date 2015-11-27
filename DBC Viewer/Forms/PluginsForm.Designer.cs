@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // listBox1
@@ -43,18 +44,29 @@
             this.toolTip1.SetToolTip(this.listBox1, "Double click on item from the list to use it.");
             this.listBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDoubleClick);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(12, 191);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 2;
+            this.button1.Text = "New Plugin";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // PluginsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(292, 199);
+            this.ClientSize = new System.Drawing.Size(292, 227);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.listBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "PluginsForm";
             this.ShowInTaskbar = false;
-            this.Text = Properties.Resources.selectPlugin;
+            this.Text = "Select Plugin";
             this.toolTip1.SetToolTip(this, "Double click on item from the list to use it.");
             this.ResumeLayout(false);
 
@@ -64,6 +76,6 @@
 
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.ToolTip toolTip1;
-
+        private System.Windows.Forms.Button button1;
     }
 }

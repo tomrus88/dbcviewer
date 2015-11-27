@@ -7364,7 +7364,7 @@
   <TextureFileData build="20740">
     <field type="int" name="field0" />
     <field type="int" name="field1" />
-    <field type="int" name="field2" />
+    <field type="byte" name="field2" />
   </TextureFileData>
   <CreatureDisplayInfo build="20740">
     <index>
@@ -7394,6 +7394,7 @@
     <field type="byte" name="newField21" />
   </CreatureDisplayInfo>
   <GameObjectArtKit build="20740">
+    <field type="int" name="m_Id" />
     <field type="int" name="field0" />
     <field type="int" name="field1" />
     <field type="int" name="field2" />
@@ -7403,16 +7404,20 @@
     <field type="string" name="field7" />
   </GameObjectArtKit>
   <ItemVisualEffects build="20740">
+    <field type="int" name="m_Id" />
     <field type="string" name="field1" />
   </ItemVisualEffects>
   <LoadingScreens build="20740">
+    <field type="int" name="m_Id" />
     <field type="int" name="field2" />
     <field type="int" name="field3" />
   </LoadingScreens>
   <SpellIcon build="20740">
+    <field type="int" name="m_Id" />
     <field type="string" name="icon" />
   </SpellIcon>
   <SpellVisualEffectName build="20740">
+    <field type="int" name="m_Id" />
     <field type="string" name="field0" />
     <field type="float" name="field1" />
     <field type="float" name="field2" />
@@ -7470,7 +7475,7 @@
   <CharHairGeosets build="20740">
     <field type="int" name="m_Id" />
     <field type="int" name="field0" />
-    <field type="int" name="m_fileDataId" />
+    <field type="int" name="m_dhFileDataId" />
     <field type="byte" name="m_RaceID" />
     <field type="byte" name="m_SexID" />
     <field type="byte" name="m_VariationID" />
@@ -7508,6 +7513,7 @@
     <field type="int" name="newField21" />
   </CreatureDisplayInfo>
   <Item build="20740">
+    <field type="int" name="m_Id" />
     <field type="uint" name="icon" />
     <field type="byte" name="class" />
     <field type="byte" name="subclass" />
@@ -7515,7 +7521,7 @@
     <field type="byte" name="material" />
     <field type="byte" name="inventorytype" />
     <field type="byte" name="sheatheType" />
-    <field type="short" name="newField7" />
+    <field type="byte" name="newField7" />
   </Item>
   <ItemModifiedAppearance build="20726">
     <index>
@@ -7532,13 +7538,14 @@
     <index>
       <primary>field0</primary>
     </index>
-    <field type="int" name="field0" />
-    <field type="int" name="field1" />
-    <field type="short" name="field2" />
-    <field type="byte" name="field3" />
-    <field type="byte" name="field4" />
+    <field type="int" name="m_Id" />
+    <field type="int" name="m_itemId" />
+    <field type="short" name="AppearanceId" />
+    <field type="byte" name="DifficultyMaybe" />
+    <field type="byte" name="VariationIndex" />
   </ItemModifiedAppearance>
   <CreatureDisplayInfoExtra build="20740">
+    <field type="int" name="m_Id" />
     <field type="int" name="m_NPCItemDisplay1" />
     <field type="int" name="m_NPCItemDisplay2" />
     <field type="int" name="m_NPCItemDisplay3" />
@@ -7633,11 +7640,13 @@
     <field type="float" name="newField35" />
   </CreatureModelData>
   <ItemAppearance build="20740">
+    <field type="int" name="m_Id" />
     <field type="int" name="field0" />
     <field type="int" name="field1" />
-    <field type="int" name="field2" />
+    <field type="byte" name="field2" />
   </ItemAppearance>
   <ItemDisplayInfo build="20740">
+    <field type="int" name="m_Id" />
     <field type="string" name="field0" />
     <field type="string" name="field1" />
     <field type="int" name="field2" />
@@ -7658,6 +7667,7 @@
     <field type="ushort" name="field17" />
   </ItemDisplayInfo>
   <HelmetGeosetVisData build="20740">
+    <field type="int" name="m_Id" />
     <field type="int" name="field0" />
     <field type="int" name="field1" />
     <field type="int" name="field2" />
@@ -7666,14 +7676,16 @@
     <field type="int" name="field5" />
     <field type="int" name="field6" />
     <field type="int" name="field7" />
-    <field type="int" name="newField" />
+    <field type="int" name="field8" />
   </HelmetGeosetVisData>
   <ItemDisplayInfoMaterialRes build="20740">
+    <field type="int" name="m_Id" />
     <field type="int" name="field0" />
     <field type="int" name="field1" />
-    <field type="int" name="field2" />
+    <field type="byte" name="field2" />
   </ItemDisplayInfoMaterialRes>
   <ComponentTextureFileData build="20740">
+    <field type="int" name="m_Id" />
     <field type="byte" name="field0" />
     <field type="byte" name="field1" />
     <field type="byte" name="field2" />
@@ -7784,4 +7796,49 @@
     <field type="int" name="m_variationIndex" />
     <field type="int" name="m_colorIndex" />
   </CharSections>
+  <Mount build="20740">
+    <index>
+      <primary>Id</primary>
+    </index>
+    <field type="int" name="Id" />
+    <field type="int" name="SpellId" />
+    <field type="int" name="Flags" />
+    <field type="int" name="ModelId" />
+    <field type="string" name="name" />
+    <field type="string" name="description" />
+    <field type="string" name="source" />
+    <field type="ushort" name="Unk1" />
+    <field type="ushort" name="Unk2" />
+    <field type="ushort" name="Unk3" />
+    <field type="byte" name="Unk4" />
+  </Mount>
+  <SoundKit build="20740">
+    <index>
+      <primary>m_Id</primary>
+    </index>
+    <field type="int" name="m_Id" />
+    <field type="string" name="field04" />
+    <field type="float" name="field08" />
+    <field type="float" name="field0C" />
+    <field type="float" name="field10" />
+    <field type="float" name="field14" />
+    <field type="float" name="field18" />
+    <field type="float" name="field1C" />
+    <field type="float" name="field20" />
+    <field type="float" name="field24" />
+    <field type="ushort" name="field28" />
+    <field type="ushort" name="field2A" />
+    <field type="byte" name="field2C" />
+    <field type="byte" name="field2D" />
+    <field type="byte" name="field2E" />
+    <field type="byte" name="field2F" />
+    <field type="byte" name="field30" />
+  </SoundKit>
+  <SoundKitEntry build="20740">
+    <field type="int" name="m_Id" />
+    <field type="int" name="m_fileDataId" />
+    <field type="float" name="field04" />
+    <field type="ushort" name="m_soundKitId" />
+    <field type="byte" name="field0A" />
+  </SoundKitEntry>
 </DBFilesClient>

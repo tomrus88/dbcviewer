@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.ComponentModel.Composition.Hosting;
 using System.Data;
 using System.Diagnostics;
 using System.Globalization;
@@ -307,7 +308,7 @@ namespace DBCViewer
                 return;
             }
 
-            m_catalog.Refresh();
+            //m_catalog.Refresh();
 
             if (Plugins.Count == 0)
             {
@@ -319,11 +320,14 @@ namespace DBCViewer
             selector.SetPlugins(Plugins);
             DialogResult result = selector.ShowDialog(this);
             selector.Dispose();
-            if (result != DialogResult.OK || selector.PluginIndex == -1)
+            if (result != DialogResult.OK)
             {
                 ShowErrorMessageBox("No plugin selected!");
                 return;
             }
+
+            if (selector.NewPlugin != null)
+                m_catalog.Catalogs.Add(new AssemblyCatalog(selector.NewPlugin));
 
             toolStripStatusLabel1.Text = "Plugin working...";
             Thread pluginThread = new Thread(RunPlugin);

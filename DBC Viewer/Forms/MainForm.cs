@@ -20,7 +20,7 @@ namespace DBCViewer
         private DefinitionSelect m_selector;
         private XmlDocument m_definitions;
         private XmlNodeList m_fields;
-        private DirectoryCatalog m_catalog;
+        private AggregateCatalog m_catalog;
         private XmlElement m_definition;        // definition for current file
         private string m_dbcName;               // file name without extension
         private string m_dbcFile;               // path to current file
@@ -271,7 +271,9 @@ namespace DBCViewer
 
         private void Compose()
         {
-            m_catalog = new DirectoryCatalog(m_workingFolder);
+            m_catalog = new AggregateCatalog();
+            m_catalog.Catalogs.Add(new DirectoryCatalog(m_workingFolder));
+            //m_catalog.Catalogs.Add(new AssemblyCatalog(m_workingFolder));
             var container = new CompositionContainer(m_catalog);
             container.ComposeParts(this);
         }

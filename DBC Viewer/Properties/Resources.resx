@@ -117,6 +117,52 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="pluginTemplate" xml:space="preserve">
+    <value>using System;
+using System.ComponentModel.Composition;
+using System.Data;
+using System.Diagnostics;
+using System.IO;
+using PluginInterface;
+
+namespace NewPlugin
+{
+    [Export(typeof(IPlugin))]
+    public class New : IPlugin
+    {
+        [Import("PluginFinished")]
+        public Action&lt;int&gt; Finished { get; set; }
+
+        public void Run(DataTable data)
+        {
+            int count = 0;
+
+            StreamWriter sqlWriter = new StreamWriter(Path.GetFileNameWithoutExtension(data.TableName) + ".txt");
+
+            sqlWriter.WriteLine("local treasures = {");
+
+            var c = System.Globalization.CultureInfo.InvariantCulture;
+            System.Threading.Thread.CurrentThread.CurrentCulture = c;
+            System.Threading.Thread.CurrentThread.CurrentUICulture = c;
+
+            foreach (DataRow row in data.Rows)
+            {
+                if ((int)row[4] == 1116 &amp;&amp; (int)row[6] == 197 )
+                {
+                    sqlWriter.WriteLine("    [{0}] = {{ {1}, {2}, \"{3}\" }},", row[0], row[7].ToString(), row[8].ToString(), row[9]);
+                }
+            }
+
+            sqlWriter.WriteLine("}");
+
+            sqlWriter.Flush();
+            sqlWriter.Close();
+
+            Finished(count);
+        }
+    }
+}</value>
+  </data>
   <data name="selectPlugin" xml:space="preserve">
     <value>Select Plugin</value>
   </data>

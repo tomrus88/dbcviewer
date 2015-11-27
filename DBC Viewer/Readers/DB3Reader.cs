@@ -17,8 +17,7 @@ namespace DBCViewer
 
         public Dictionary<int, string> StringTable { get; private set; }
 
-        private byte[][] m_records;
-        private SortedDictionary<int, int> Lookup = new SortedDictionary<int, int>();
+        private SortedDictionary<int, byte[]> Lookup = new SortedDictionary<int, byte[]>();
 
         public IEnumerable<BinaryReader> Rows
         {
@@ -26,7 +25,7 @@ namespace DBCViewer
             {
                 foreach(var row in Lookup)
                 {
-                    yield return new BinaryReader(new MemoryStream(m_records[row.Value]), Encoding.UTF8);
+                    yield return new BinaryReader(new MemoryStream(row.Value), Encoding.UTF8);
                 }
             }
         }
@@ -79,8 +78,6 @@ namespace DBCViewer
                 // Records table
                 reader.BaseStream.Position = HeaderSize;
 
-                m_records = new byte[RecordsCount][];
-
                 for (int i = 0; i < RecordsCount; i++)
                 {
                     byte[] recordBytes = reader.ReadBytes(RecordSize);
@@ -92,16 +89,12 @@ namespace DBCViewer
                         Array.Copy(BitConverter.GetBytes(m_indexes[i]), newRecordBytes, 4);
                         Array.Copy(recordBytes, 0, newRecordBytes, 4, recordBytes.Length);
 
-                        recordBytes = newRecordBytes;
-
-                        Lookup.Add(m_indexes[i], i);
+                        Lookup.Add(m_indexes[i], newRecordBytes);
                     }
                     else
                     {
-                        Lookup.Add(BitConverter.ToInt32(recordBytes, 0), i);
+                        Lookup.Add(BitConverter.ToInt32(recordBytes, 0), recordBytes);
                     }
-
-                    m_records[i] = recordBytes;
                 }
 
                 // Strings table
@@ -129,7 +122,12 @@ namespace DBCViewer
 
                         RecordsCount++;
 
-                        Lookup.Add(id, Lookup[idcopy]);
+                        byte[] copyRow = Lookup[idcopy];
+                        byte[] newRow = new byte[copyRow.Length];
+                        Array.Copy(copyRow, newRow, newRow.Length);
+                        Array.Copy(BitConverter.GetBytes(id), newRow, 4);
+
+                        Lookup.Add(id, newRow);
                     }
                 }
             }
