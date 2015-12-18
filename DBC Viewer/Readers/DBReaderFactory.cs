@@ -19,7 +19,14 @@ namespace DBCViewer
                 }
                 catch
                 {
-                    reader = new DB3Reader(file);
+                    try
+                    {
+                        reader = new DB3Reader(file);
+                    }
+                    catch
+                    {
+                        reader = new DB4Reader(file);
+                    }
                 }
             else if (ext == ".ADB")
                 reader = new ADBReader(file);

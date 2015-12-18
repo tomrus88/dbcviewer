@@ -7713,49 +7713,46 @@
     <field type="int" name="field9" />
   </CharSections>
   <ChrRaces build="20740">
-    <index>
-      <primary>field0</primary>
-    </index>
-    <field type="int" name="field0" />
+    <field type="int" name="m_Id" />
     <field type="int" name="field1" />
-    <field type="int" name="field2" />
-    <field type="int" name="field3" />
-    <field type="int" name="field4" />
-    <field type="int" name="field5" />
+    <field type="string" name="field2" />
+    <field type="string" name="field3" />
+    <field type="string" name="field4" />
+    <field type="string" name="field5" />
     <field type="string" name="field6" />
-    <field type="int" name="field7" />
-    <field type="int" name="field8" />
-    <field type="int" name="field9" />
-    <field type="int" name="field10" />
-    <field type="string" name="field11" />
-    <field type="int" name="field12" />
-    <field type="int" name="field13" />
-    <field type="string" name="field14" />
-    <field type="int" name="field55" />
+    <field type="string" name="field7" />
+    <field type="string" name="field8" />
+    <field type="string" name="field9" />
+    <field type="int" name="newField10" />
+    <field type="int" name="newField11" />
+    <field type="float" name="field12" />
+    <field type="float" name="field13" />
+    <field type="float" name="field14" />
+    <field type="float" name="field15" />
+    <field type="float" name="field16" />
+    <field type="float" name="field55" />
     <field type="int" name="field56" />
-    <field type="string" name="field62" />
-    <field type="string" name="field63" />
-    <field type="string" name="field64" />
-    <field type="int" name="field65" />
-    <field type="int" name="field66" />
-    <field type="int" name="field67" />
-    <field type="int" name="field68" />
-    <field type="int" name="field24" />
-    <field type="int" name="field25" />
-    <field type="int" name="field26" />
-    <field type="int" name="field27" />
-    <field type="int" name="field28" />
-    <field type="int" name="field29" />
-    <field type="int" name="field30" />
-    <field type="int" name="field31" />
-    <field type="int" name="field32" />
-    <field type="int" name="field33" />
-    <field type="int" name="field34" />
-    <field type="int" name="field35" />
-    <field type="int" name="newField36" />
-    <field type="int" name="newField37" />
-    <field type="int" name="newField38" />
-    <field type="int" name="newField39" />
+    <field type="ushort" name="field62" />
+    <field type="ushort" name="field63" />
+    <field type="ushort" name="field64" />
+    <field type="ushort" name="field65" />
+    <field type="ushort" name="field66" />
+    <field type="ushort" name="field67" />
+    <field type="ushort" name="field68" />
+    <field type="ushort" name="field24" />
+    <field type="ushort" name="field25" />
+    <field type="ushort" name="field26" />
+    <field type="ushort" name="field27" />
+    <field type="ushort" name="field28" />
+    <field type="byte" name="field29" />
+    <field type="byte" name="field30" />
+    <field type="byte" name="field31" />
+    <field type="byte" name="field32" />
+    <field type="byte" name="field33" />
+    <field type="byte" name="field34" />
+    <field type="byte" name="field35" />
+    <field type="byte" name="newField38" />
+    <field type="byte" name="newField39" />
   </ChrRaces>
   <ChrClasses build="20726">
     <index>
@@ -7841,4 +7838,192 @@
     <field type="ushort" name="m_soundKitId" />
     <field type="byte" name="field0A" />
   </SoundKitEntry>
+  <TactKey build="20740">
+    <field type="int" name="m_Id" />
+    <field type="byte" name="field04" />
+    <field type="byte" name="field05" />
+    <field type="byte" name="field06" />
+    <field type="byte" name="field07" />
+    <field type="byte" name="field08" />
+    <field type="byte" name="field09" />
+    <field type="byte" name="field0A" />
+    <field type="byte" name="field0B" />
+    <field type="byte" name="field0C" />
+    <field type="byte" name="field0D" />
+    <field type="byte" name="field0E" />
+    <field type="byte" name="field0F" />
+    <field type="byte" name="field10" />
+    <field type="byte" name="field11" />
+    <field type="byte" name="field12" />
+    <field type="byte" name="field13" />
+  </TactKey>
+  <TactKeyLookup build="20740">
+    <field type="int" name="m_Id" />
+    <field type="byte" name="field04" />
+    <field type="byte" name="field05" />
+    <field type="byte" name="field06" />
+    <field type="byte" name="field07" />
+    <field type="byte" name="field08" />
+    <field type="byte" name="field09" />
+    <field type="byte" name="field0A" />
+    <field type="byte" name="field0B" />
+  </TactKeyLookup>
+  <GameObjectDisplayInfo build="20740">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="m_ID" />
+    <field type="int" name="m_fileDataID" />
+    <field type="float" name="m_geoBoxMin1" />
+    <field type="float" name="m_geoBoxMin2" />
+    <field type="float" name="m_geoBoxMin3" />
+    <field type="float" name="m_geoBoxMax1" />
+    <field type="float" name="m_geoBoxMax2" />
+    <field type="float" name="m_geoBoxMax3" />
+    <field type="float" name="m_overrideLootEffectScale" />
+    <field type="float" name="m_overrideNameScale" />
+    <field type="ushort" name="m_Sound1" />
+    <field type="ushort" name="m_Sound2" />
+    <field type="ushort" name="m_Sound3" />
+    <field type="ushort" name="m_Sound4" />
+    <field type="ushort" name="m_Sound5" />
+    <field type="ushort" name="m_Sound6" />
+    <field type="ushort" name="m_Sound7" />
+    <field type="ushort" name="m_Sound8" />
+    <field type="ushort" name="m_Sound9" />
+    <field type="ushort" name="m_Sound10" />
+    <field type="int" name="m_objectEffectPackageID" />
+  </GameObjectDisplayInfo>
+  <Cfg_Configs build="12340">
+    <index>
+      <primary>m_ID</primary>
+    </index>
+    <field type="int" name="m_ID" />
+    <field type="int" name="m_realmType" />
+    <field type="int" name="m_playerKillingAllowed" />
+    <field type="int" name="m_roleplaying" />
+  </Cfg_Configs>
+  <Cfg_Categories build="12340">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="string" name="field4" />
+    <field type="int" name="field5" />
+    <field type="int" name="field6" />
+    <field type="int" name="field7" />
+    <field type="int" name="field8" />
+    <field type="int" name="field9" />
+    <field type="int" name="field10" />
+    <field type="int" name="field11" />
+    <field type="int" name="field12" />
+    <field type="int" name="field13" />
+    <field type="int" name="field14" />
+    <field type="int" name="field15" />
+    <field type="int" name="field16" />
+    <field type="int" name="field17" />
+    <field type="int" name="field18" />
+    <field type="int" name="field19" />
+    <field type="int" name="field20" />
+  </Cfg_Categories>
+  <Cfg_Configs build="18179">
+    <index>
+      <primary>m_generatedID</primary>
+    </index>
+    <field type="int" name="m_generatedID" />
+    <field type="int" name="m_ID" />
+    <field type="int" name="m_realmType" />
+    <field type="int" name="m_playerKillingAllowed" />
+    <field type="int" name="m_roleplaying" />
+    <field type="int" name="m_playerAttackSpeedBase" />
+    <field type="float" name="m_maxDamageReductionPctPhysical" />
+  </Cfg_Configs>
+  <FILEDATACOMPLETE build="20810">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="string" name="field1" />
+    <field type="string" name="field2" />
+  </FILEDATACOMPLETE>
+  <CharComponentTextureSections build="20810">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+    <field type="int" name="field5" />
+    <field type="int" name="field6" />
+    <field type="int" name="newField" />
+  </CharComponentTextureSections>
+  <Spell build="20756">
+    <index>
+      <primary>m_ID</primary>
+    </index>
+    <field type="int" name="m_ID" />
+    <field type="string" name="m_name" />
+    <field type="string" name="m_nameSubtext" />
+    <field type="string" name="m_description" />
+    <field type="string" name="m_auraDescription" />
+    <field type="int" name="field5" />
+    <field type="int" name="field6" />
+  </Spell>
+  <SpellMisc build="20726">
+    <index>
+      <primary>m_Id</primary>
+    </index>
+    <field type="int" name="m_Id" />
+    <field type="uint" name="m_spellId" />
+    <field type="uint" name="field2" />
+    <field type="uint" name="m_attributes" />
+    <field type="uint" name="m_attributesEx" />
+    <field type="uint" name="m_attributesExB" />
+    <field type="uint" name="m_attributesExC" />
+    <field type="uint" name="m_attributesExD" />
+    <field type="uint" name="m_attributesExE" />
+    <field type="uint" name="m_attributesExF" />
+    <field type="uint" name="m_attributesExG" />
+    <field type="uint" name="m_attributesExH" />
+    <field type="uint" name="m_attributesExI" />
+    <field type="uint" name="m_attributesExJ" />
+    <field type="uint" name="m_attributesExK" />
+    <field type="uint" name="m_attributesExL" />
+    <field type="int" name="field16" />
+    <field type="int" name="field17" />
+    <field type="float" name="field18" />
+    <field type="int" name="field19" />
+    <field type="int" name="field20" />
+    <field type="int" name="field21" />
+    <field type="int" name="field22" />
+  </SpellMisc>
+  <SpellXSpellVisual build="20726">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+    <field type="float" name="field5" />
+    <field type="int" name="field6" />
+    <field type="int" name="field7" />
+  </SpellXSpellVisual>
+  <ItemVisuals build="20726">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+    <field type="int" name="field5" />
+  </ItemVisuals>
 </DBFilesClient>
