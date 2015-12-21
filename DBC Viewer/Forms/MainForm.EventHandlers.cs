@@ -127,9 +127,10 @@ namespace DBCViewer
             bool notSTL = !(m_dbreader is STLReader);
             // hack for *.db2 files v3 (because they don't have FieldsCount)
             bool notDB3 = !(m_dbreader is DB3Reader);
+            bool notDB4 = !(m_dbreader is DB4Reader);
 
             int fcount = GetFieldsCount(m_fields);
-            if (fcount != m_dbreader.FieldsCount && notADB && notWDB && notSTL && notDB3)
+            if (fcount != m_dbreader.FieldsCount && notADB && notWDB && notSTL && notDB3 && notDB4)
             {
                 string msg = String.Format(CultureInfo.InvariantCulture, "{0} has invalid definition!\nFields count mismatch: got {1}, expected {2}", Path.GetFileName(file), fcount, m_dbreader.FieldsCount);
                 ShowErrorMessageBox(msg);
