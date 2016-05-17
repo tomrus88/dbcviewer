@@ -169,37 +169,125 @@ namespace DBCViewer
                 switch (field.Attributes["type"].Value)
                 {
                     case "long":
-                        m_dataTable.Columns.Add(colName, typeof(long));
+                        if (field.Attributes["arraysize"] != null)
+                        {
+                            int size = Convert.ToInt32(field.Attributes["arraysize"].Value);
+
+                            for (int i = 0; i < size; i++)
+                                m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(long));
+                        }
+                        else
+                            m_dataTable.Columns.Add(colName, typeof(long));
                         break;
                     case "ulong":
-                        m_dataTable.Columns.Add(colName, typeof(ulong));
+                        if (field.Attributes["arraysize"] != null)
+                        {
+                            int size = Convert.ToInt32(field.Attributes["arraysize"].Value);
+
+                            for (int i = 0; i < size; i++)
+                                m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(ulong));
+                        }
+                        else
+                            m_dataTable.Columns.Add(colName, typeof(ulong));
                         break;
                     case "int":
-                        m_dataTable.Columns.Add(colName, typeof(int));
+                        if (field.Attributes["arraysize"] != null)
+                        {
+                            int size = Convert.ToInt32(field.Attributes["arraysize"].Value);
+
+                            for (int i = 0; i < size; i++)
+                                m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(int));
+                        }
+                        else
+                            m_dataTable.Columns.Add(colName, typeof(int));
                         break;
                     case "uint":
-                        m_dataTable.Columns.Add(colName, typeof(uint));
+                        if (field.Attributes["arraysize"] != null)
+                        {
+                            int size = Convert.ToInt32(field.Attributes["arraysize"].Value);
+
+                            for (int i = 0; i < size; i++)
+                                m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(uint));
+                        }
+                        else
+                            m_dataTable.Columns.Add(colName, typeof(uint));
                         break;
                     case "short":
-                        m_dataTable.Columns.Add(colName, typeof(short));
+                        if (field.Attributes["arraysize"] != null)
+                        {
+                            int size = Convert.ToInt32(field.Attributes["arraysize"].Value);
+
+                            for (int i = 0; i < size; i++)
+                                m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(short));
+                        }
+                        else
+                            m_dataTable.Columns.Add(colName, typeof(short));
                         break;
                     case "ushort":
-                        m_dataTable.Columns.Add(colName, typeof(ushort));
+                        if (field.Attributes["arraysize"] != null)
+                        {
+                            int size = Convert.ToInt32(field.Attributes["arraysize"].Value);
+
+                            for (int i = 0; i < size; i++)
+                                m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(ushort));
+                        }
+                        else
+                            m_dataTable.Columns.Add(colName, typeof(ushort));
                         break;
                     case "sbyte":
-                        m_dataTable.Columns.Add(colName, typeof(sbyte));
+                        if (field.Attributes["arraysize"] != null)
+                        {
+                            int size = Convert.ToInt32(field.Attributes["arraysize"].Value);
+
+                            for (int i = 0; i < size; i++)
+                                m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(sbyte));
+                        }
+                        else
+                            m_dataTable.Columns.Add(colName, typeof(sbyte));
                         break;
                     case "byte":
-                        m_dataTable.Columns.Add(colName, typeof(byte));
+                        if (field.Attributes["arraysize"] != null)
+                        {
+                            int size = Convert.ToInt32(field.Attributes["arraysize"].Value);
+
+                            for (int i = 0; i < size; i++)
+                                m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(byte));
+                        }
+                        else
+                            m_dataTable.Columns.Add(colName, typeof(byte));
                         break;
                     case "float":
-                        m_dataTable.Columns.Add(colName, typeof(float));
+                        if (field.Attributes["arraysize"] != null)
+                        {
+                            int size = Convert.ToInt32(field.Attributes["arraysize"].Value);
+
+                            for (int i = 0; i < size; i++)
+                                m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(float));
+                        }
+                        else
+                            m_dataTable.Columns.Add(colName, typeof(float));
                         break;
                     case "double":
-                        m_dataTable.Columns.Add(colName, typeof(double));
+                        if (field.Attributes["arraysize"] != null)
+                        {
+                            int size = Convert.ToInt32(field.Attributes["arraysize"].Value);
+
+                            for (int i = 0; i < size; i++)
+                                m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(double));
+                        }
+                        else
+                            m_dataTable.Columns.Add(colName, typeof(double));
                         break;
                     case "string":
-                        m_dataTable.Columns.Add(colName, typeof(string));
+                        if (field.Attributes["arraysize"] != null)
+                        {
+                            int size = Convert.ToInt32(field.Attributes["arraysize"].Value);
+
+                            for (int i = 0; i < size; i++)
+                                m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(string));
+                        }
+                        else
+                            m_dataTable.Columns.Add(colName, typeof(string));
                         break;
                     default:
                         throw new ArgumentException(String.Format(CultureInfo.InvariantCulture, "Unknown field type {0}!", field.Attributes["type"].Value));
@@ -215,6 +303,7 @@ namespace DBCViewer
             {
                 var colName = field.Attributes["name"].Value;
                 var type = field.Attributes["type"].Value;
+                var arraySize = Convert.ToInt32(field.Attributes["arraysize"]?.Value ?? "1");
                 var format = field.Attributes["format"] != null ? field.Attributes["format"].Value : String.Empty;
                 var visible = field.Attributes["visible"] != null ? field.Attributes["visible"].Value == "true" : true;
                 var width = field.Attributes["width"] != null ? Convert.ToInt32(field.Attributes["width"].Value, CultureInfo.InvariantCulture) : 100;
@@ -226,10 +315,23 @@ namespace DBCViewer
                 item.Checked = !visible;
                 columnsFilterToolStripMenuItem.DropDownItems.Add(item);
 
-                dataGridView1.Columns[colName].Visible = visible;
-                dataGridView1.Columns[colName].Width = width;
-                dataGridView1.Columns[colName].AutoSizeMode = GetColumnAutoSizeMode(type, format);
-                dataGridView1.Columns[colName].SortMode = DataGridViewColumnSortMode.Automatic;
+                if (arraySize > 1)
+                {
+                    for(int i = 0; i < arraySize; i++)
+                    {
+                        dataGridView1.Columns[colName + "_" + (i + 1)].Visible = visible;
+                        dataGridView1.Columns[colName + "_" + (i + 1)].Width = width;
+                        dataGridView1.Columns[colName + "_" + (i + 1)].AutoSizeMode = GetColumnAutoSizeMode(type, format);
+                        dataGridView1.Columns[colName + "_" + (i + 1)].SortMode = DataGridViewColumnSortMode.Automatic;
+                    }
+                }
+                else
+                {
+                    dataGridView1.Columns[colName].Visible = visible;
+                    dataGridView1.Columns[colName].Width = width;
+                    dataGridView1.Columns[colName].AutoSizeMode = GetColumnAutoSizeMode(type, format);
+                    dataGridView1.Columns[colName].SortMode = DataGridViewColumnSortMode.Automatic;
+                }
             }
         }
 

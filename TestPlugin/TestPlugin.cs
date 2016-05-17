@@ -21,19 +21,25 @@ namespace TestPlugin
 
             //var lines = File.ReadAllLines("WorldMapOverlay.txt");
 
-            sqlWriter.WriteLine("local treasures = {");
+            //sqlWriter.WriteLine("local treasures = {");
 
-            var c = System.Globalization.CultureInfo.InvariantCulture;
-            System.Threading.Thread.CurrentThread.CurrentCulture = c;
-            // Sets the UI culture to French (France)
-            System.Threading.Thread.CurrentThread.CurrentUICulture = c;
+            //var c = System.Globalization.CultureInfo.InvariantCulture;
+            //System.Threading.Thread.CurrentThread.CurrentCulture = c;
+            //// Sets the UI culture to French (France)
+            //System.Threading.Thread.CurrentThread.CurrentUICulture = c;
 
             foreach (DataRow row in data.Rows)
             {
-                if ((int)row[4] == 1116 && (int)row[6] == 197 )
-                {
-                    sqlWriter.WriteLine("    [{0}] = {{ {1}, {2}, \"{3}\" }},", row[0], row[7].ToString(), row[8].ToString(), row[9]);
-                }
+                sqlWriter.WriteLine("{0} - {1:X2}{2:X2}{3:X2}{4:X2}{5:X2}{6:X2}{7:X2}{8:X2}{9:X2}{10:X2}{11:X2}{12:X2}{13:X2}{14:X2}{15:X2}{16:X2}", row[0],
+                    row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8],
+                    row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16]);
+
+                //sqlWriter.WriteLine("{8} - {7:X2}{6:X2}{5:X2}{4:X2}{3:X2}{2:X2}{1:X2}{0:X2}", row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[0]);
+
+                //if ((int)row[4] == 1116 && (int)row[6] == 197 )
+                //{
+                //    sqlWriter.WriteLine("    [{0}] = {{ {1}, {2}, \"{3}\" }},", row[0], row[7].ToString(), row[8].ToString(), row[9]);
+                //}
 
                 //Interface\WorldMap\%s\%s%d.blp WorldMapArea[3], WorldMapArea[3], 1-12
                 //Interface\WorldMap\%s\%s%d_%d.blp WorldMapArea[3], WorldMapArea[3], floor, 1-12
@@ -131,7 +137,7 @@ namespace TestPlugin
                 //}
             }
 
-            sqlWriter.WriteLine("}");
+            //sqlWriter.WriteLine("}");
 
             sqlWriter.Flush();
             sqlWriter.Close();

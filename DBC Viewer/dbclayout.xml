@@ -5689,14 +5689,14 @@
   </CharacterLoadoutItem>
   <AnimationData build="18156">
     <index>
-      <primary>newField0</primary>
+      <primary>m_ID</primary>
     </index>
-    <field type="int" name="newField0" />
-    <field type="string" name="newField1" />
-    <field type="int" name="newField2" />
-    <field type="int" name="newField3" />
-    <field type="int" name="newField4" />
-    <field type="int" name="newField5" />
+    <field type="int" name="m_ID" />
+    <field type="string" name="m_Name" />
+    <field type="int" name="m_Flags" />
+    <field type="int" name="m_Fallback" />
+    <field type="int" name="m_BehaviorID" />
+    <field type="int" name="m_BehaviorTier" />
   </AnimationData>
   <ItemVisualEffects build="18164">
     <index>
@@ -7535,13 +7535,10 @@
     <field type="int" name="field5" />
   </ItemModifiedAppearance>
   <ItemModifiedAppearance build="20740">
-    <index>
-      <primary>field0</primary>
-    </index>
     <field type="int" name="m_Id" />
     <field type="int" name="m_itemId" />
     <field type="short" name="AppearanceId" />
-    <field type="byte" name="DifficultyMaybe" />
+    <field type="byte" name="AppearanceModID" />
     <field type="byte" name="VariationIndex" />
   </ItemModifiedAppearance>
   <CreatureDisplayInfoExtra build="20740">
@@ -7641,9 +7638,9 @@
   </CreatureModelData>
   <ItemAppearance build="20740">
     <field type="int" name="m_Id" />
-    <field type="int" name="field0" />
-    <field type="int" name="field1" />
-    <field type="byte" name="field2" />
+    <field type="int" name="DisplayId" />
+    <field type="int" name="IconFileId" />
+    <field type="byte" name="Unk1" />
   </ItemAppearance>
   <ItemDisplayInfo build="20740">
     <field type="int" name="m_Id" />
@@ -7857,6 +7854,10 @@
     <field type="byte" name="field12" />
     <field type="byte" name="field13" />
   </TactKey>
+  <TactKey build="21691">
+    <field type="int" name="m_Id" />
+    <field type="byte" arraysize="16" name="field04" />
+  </TactKey>
   <TactKeyLookup build="20740">
     <field type="int" name="m_Id" />
     <field type="byte" name="field04" />
@@ -7867,6 +7868,10 @@
     <field type="byte" name="field09" />
     <field type="byte" name="field0A" />
     <field type="byte" name="field0B" />
+  </TactKeyLookup>
+  <TactKeyLookup build="21691">
+    <field type="int" name="m_Id" />
+    <field type="byte" arraysize="8" name="field04" />
   </TactKeyLookup>
   <GameObjectDisplayInfo build="20740">
     <index>
@@ -8026,4 +8031,876 @@
     <field type="int" name="field4" />
     <field type="int" name="field5" />
   </ItemVisuals>
+  <GameObjectDisplayInfo build="20810">
+    <field type="int" name="m_ID" />
+    <field type="int" name="m_fileDataID" />
+    <field type="float" name="m_geoBoxMin1" />
+    <field type="float" name="m_geoBoxMin2" />
+    <field type="float" name="m_geoBoxMin3" />
+    <field type="float" name="m_geoBoxMax1" />
+    <field type="float" name="m_geoBoxMax2" />
+    <field type="float" name="m_geoBoxMax3" />
+    <field type="float" name="m_overrideLootEffectScale" />
+    <field type="float" name="m_overrideNameScale" />
+    <field type="ushort" name="m_Sound1" />
+    <field type="ushort" name="m_Sound2" />
+    <field type="ushort" name="m_Sound3" />
+    <field type="ushort" name="m_Sound4" />
+    <field type="ushort" name="m_Sound5" />
+    <field type="ushort" name="m_Sound6" />
+    <field type="ushort" name="m_Sound7" />
+    <field type="ushort" name="m_Sound8" />
+    <field type="ushort" name="m_Sound9" />
+    <field type="ushort" name="m_Sound10" />
+    <field type="ushort" name="m_objectEffectPackageID" />
+  </GameObjectDisplayInfo>
+  <CreatureDisplayInfoExtra build="20914">
+    <field type="int" name="m_Id" />
+    <field type="int" name="m_fileDataID" />
+    <field type="int" name="m_hdFileDataID" />
+    <field type="byte" name="m_DisplayRaceID" />
+    <field type="byte" name="m_DisplaySexID" />
+    <field type="byte" name="field14" />
+    <field type="byte" name="m_SkinID" />
+    <field type="byte" name="m_FaceID" />
+    <field type="byte" name="m_HairStyleID" />
+    <field type="byte" name="m_HairColorID" />
+    <field type="byte" name="m_FacialHairID" />
+    <field type="byte" name="field20" />
+    <field type="byte" name="field21" />
+    <field type="byte" name="field22" />
+    <field type="byte" name="field23" />
+  </CreatureDisplayInfoExtra>
+  <NpcModelItemSlotDisplayInfo build="20914">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="newField" />
+    <field type="int" name="field1" />
+    <field type="byte" name="field2" />
+  </NpcModelItemSlotDisplayInfo>
+  <JournalEncounter build="20914">
+    <index>
+      <primary>m_id</primary>
+    </index>
+    <field type="int" name="m_id" />
+    <field type="float" name="m_unkFloat1" />
+    <field type="float" name="m_unkFloat2" />
+    <field type="string" name="m_name" />
+    <field type="string" name="m_description" />
+    <field type="ushort" name="newField5" />
+    <field type="ushort" name="newField6" />
+    <field type="ushort" name="newField7" />
+    <field type="ushort" name="newField8" />
+    <field type="byte" name="newField9" />
+    <field type="byte" name="newField10" />
+    <field type="byte" name="newField11" />
+  </JournalEncounter>
+  <JournalEncounterSection build="20914">
+    <index>
+      <primary>m_id</primary>
+    </index>
+    <field type="int" name="m_id" />
+    <field type="string" name="m_name" />
+    <field type="string" name="m_description" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+    <field type="int" name="field5" />
+    <field type="ushort" name="field6" />
+    <field type="ushort" name="field7" />
+    <field type="ushort" name="field8" />
+    <field type="ushort" name="field9" />
+    <field type="ushort" name="field10" />
+    <field type="ushort" name="field11" />
+    <field type="byte" name="field12" />
+    <field type="byte" name="field13" />
+    <field type="byte" name="field14" />
+  </JournalEncounterSection>
+  <LightData build="18179">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+    <field type="int" name="field5" />
+    <field type="int" name="field6" />
+    <field type="int" name="field7" />
+    <field type="int" name="field8" />
+    <field type="int" name="field9" />
+    <field type="int" name="field10" />
+    <field type="int" name="field11" />
+    <field type="int" name="field12" />
+    <field type="int" name="field13" />
+    <field type="int" name="field14" />
+    <field type="int" name="field15" />
+    <field type="int" name="field16" />
+    <field type="int" name="field17" />
+    <field type="int" name="field18" />
+    <field type="int" name="field19" />
+    <field type="int" name="field20" />
+    <field type="int" name="field21" />
+    <field type="int" name="field22" />
+    <field type="int" name="field23" />
+    <field type="int" name="field24" />
+  </LightData>
+  <Light build="18179">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+    <field type="int" name="field5" />
+    <field type="int" name="field6" />
+    <field type="int" name="field7" />
+    <field type="int" name="field8" />
+    <field type="int" name="field9" />
+    <field type="int" name="field10" />
+    <field type="int" name="field11" />
+    <field type="int" name="field12" />
+    <field type="int" name="field13" />
+    <field type="int" name="field14" />
+  </Light>
+  <LightParams build="18179">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+    <field type="int" name="field5" />
+    <field type="int" name="field6" />
+    <field type="int" name="field7" />
+    <field type="int" name="field8" />
+    <field type="int" name="field9" />
+  </LightParams>
+  <ItemClass build="20914">
+    <index>
+      <primary>m_id</primary>
+    </index>
+    <field type="int" name="m_id" />
+    <field type="float" name="field1" />
+    <field type="string" name="name" />
+    <field type="byte" name="field3" />
+  </ItemClass>
+  <ItemSubClass build="20914">
+    <index>
+      <primary>m_id</primary>
+    </index>
+    <field type="int" name="m_id" />
+    <field type="string" name="name" />
+    <field type="string" name="subname" />
+    <field type="ushort" name="flags" />
+    <field type="byte" name="class" />
+    <field type="byte" name="subclass" />
+    <field type="byte" name="field6" />
+    <field type="byte" name="field7" />
+    <field type="byte" name="field8" />
+    <field type="byte" name="field9" />
+    <field type="byte" name="field10" />
+  </ItemSubClass>
+  <JournalInstance build="20914">
+    <index>
+      <primary>m_id</primary>
+    </index>
+    <field type="int" name="m_id" />
+    <field type="int" name="newField1" />
+    <field type="int" name="newField2" />
+    <field type="int" name="m_unk1" />
+    <field type="int" name="m_unk2" />
+    <field type="string" name="m_name" />
+    <field type="string" name="m_description" />
+    <field type="ushort" name="m_mapId" />
+    <field type="ushort" name="m_areaId" />
+    <field type="byte" name="newField9" />
+    <field type="byte" name="newField10" />
+  </JournalInstance>
+  <itemdisplayinfo build="20979">
+    <field type="int" name="newField" />
+    <field type="int" name="newField1" />
+    <field type="int" name="newField2" />
+    <field type="int" name="newField3" />
+    <field type="int" name="newField4" />
+    <field type="ushort" name="newField5" />
+    <field type="ushort" name="newField6" />
+    <field type="ushort" name="newField7" />
+    <field type="ushort" name="newField8" />
+    <field type="ushort" name="newField9" />
+    <field type="ushort" name="newField10" />
+    <field type="byte" name="newField11" />
+    <field type="byte" name="newField12" />
+    <field type="byte" name="newField13" />
+    <field type="byte" name="newField14" />
+    <field type="byte" name="newField15" />
+    <field type="byte" name="newField16" />
+    <field type="byte" name="newField17" />
+    <field type="byte" name="newField18" />
+  </itemdisplayinfo>
+  <modelfiledata build="20979">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="byte" name="field2" />
+  </modelfiledata>
+  <componentmodelfiledata build="20979">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="byte" name="field1" />
+    <field type="byte" name="field2" />
+    <field type="byte" name="field3" />
+  </componentmodelfiledata>
+  <componenttexturefiledata build="20979">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="byte" name="field1" />
+    <field type="byte" name="field2" />
+    <field type="byte" name="newField" />
+  </componenttexturefiledata>
+  <GameObjectDisplayInfo build="20914">
+    <field type="int" name="m_ID" />
+    <field type="int" name="m_fileDataID" />
+    <field type="float" name="m_geoBoxMin1" />
+    <field type="float" name="m_geoBoxMin2" />
+    <field type="float" name="m_geoBoxMin3" />
+    <field type="float" name="m_geoBoxMax1" />
+    <field type="float" name="m_geoBoxMax2" />
+    <field type="float" name="m_geoBoxMax3" />
+    <field type="float" name="m_overrideLootEffectScale" />
+    <field type="float" name="m_overrideNameScale" />
+    <field type="ushort" name="m_objectEffectPackageID" />
+  </GameObjectDisplayInfo>
+  <ItemDisplayInfo build="20979">
+    <field type="int" name="m_Id" />
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+    <field type="ushort" name="field5" />
+    <field type="ushort" name="field6" />
+    <field type="ushort" name="field7" />
+    <field type="ushort" name="field8" />
+    <field type="ushort" name="field9" />
+    <field type="ushort" name="field10" />
+    <field type="byte" name="field11" />
+    <field type="byte" name="field12" />
+    <field type="byte" name="field13" />
+    <field type="byte" name="field14" />
+    <field type="byte" name="field15" />
+    <field type="byte" name="field16" />
+    <field type="byte" name="field17" />
+    <field type="byte" name="newField" />
+  </ItemDisplayInfo>
+  <DungeonEncounter build="20979">
+    <index>
+      <primary>m_Id</primary>
+    </index>
+    <field type="int" name="m_Id" />
+    <field type="string" name="m_name" />
+    <field type="int" name="field6" />
+    <field type="ushort" name="newField3" />
+    <field type="ushort" name="newField4" />
+    <field type="ushort" name="newField5" />
+    <field type="byte" name="newField6" />
+    <field type="byte" name="newField7" />
+    <field type="byte" name="newField8" />
+  </DungeonEncounter>
+  <CharSections build="21063">
+    <index>
+      <primary>m_ID</primary>
+    </index>
+    <field type="int" name="m_ID" />
+    <field type="int" name="m_TextureName1" />
+    <field type="int" name="m_TextureName2" />
+    <field type="int" name="m_TextureName3" />
+    <field type="ushort" name="m_flags" />
+    <field type="byte" name="m_raceID" />
+    <field type="byte" name="m_sexID" />
+    <field type="byte" name="m_baseSection" />
+    <field type="byte" name="m_variationIndex" />
+    <field type="byte" name="m_colorIndex" />
+  </CharSections>
+  <CreatureDisplayInfo build="21063">
+    <index>
+      <primary>m_ID</primary>
+    </index>
+    <field type="int" name="m_ID" />
+    <field type="int" name="m_extendedDisplayInfoID" />
+    <field type="float" name="m_creatureModelScale" />
+    <field type="float" name="m_field3" />
+    <field type="int" name="m_textureVariation1" />
+    <field type="int" name="m_textureVariation2" />
+    <field type="int" name="m_textureVariation3" />
+    <field type="string" name="m_portraitTextureName" />
+    <field type="int" name="m_portraitCreatureDisplayInfoID" />
+    <field type="int" name="m_creatureGeosetData" />
+    <field type="int" name="m_stateSpellVisualKitID" />
+    <field type="short" name="m_modelID" />
+    <field type="short" name="m_soundID" />
+    <field type="short" name="m_NPCSoundID" />
+    <field type="short" name="m_particleColorID" />
+    <field type="short" name="m_objectEffectPackageID" />
+    <field type="short" name="m_animReplacementSetID" />
+    <field type="byte" name="newField17" />
+    <field type="byte" name="m_sizeClass" />
+    <field type="byte" name="m_bloodID" />
+    <field type="byte" name="newField20" />
+    <field type="byte" name="newField21" />
+  </CreatureDisplayInfo>
+  <ItemAppearance build="21063">
+    <field type="int" name="m_Id" />
+    <field type="int" name="m_DisplayId" />
+    <field type="int" name="m_IconFileId" />
+    <field type="int" name="Unk1" />
+    <field type="byte" name="Unk2" />
+  </ItemAppearance>
+  <ItemDisplayInfo build="21063">
+    <field type="int" name="m_Id" />
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+    <field type="ushort" name="field5" />
+    <field type="ushort" name="field6" />
+    <field type="ushort" name="field7" />
+    <field type="ushort" name="field8" />
+    <field type="ushort" name="field9" />
+    <field type="byte" name="field10" />
+    <field type="byte" name="field11" />
+    <field type="byte" name="field12" />
+    <field type="byte" name="field13" />
+    <field type="byte" name="field14" />
+    <field type="byte" name="field15" />
+    <field type="byte" name="field16" />
+    <field type="byte" name="field17" />
+    <field type="byte" name="newField" />
+  </ItemDisplayInfo>
+  <CreatureModelData build="21063">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="newField" />
+    <field type="int" name="field1" />
+    <field type="float" name="field2" />
+    <field type="float" name="field3" />
+    <field type="float" name="field4" />
+    <field type="float" name="field5" />
+    <field type="float" name="field6" />
+    <field type="float" name="field7" />
+    <field type="float" name="field8" />
+    <field type="float" name="field9" />
+    <field type="float" name="field16" />
+    <field type="float" name="field17" />
+    <field type="float" name="field18" />
+    <field type="float" name="field19" />
+    <field type="float" name="field20" />
+    <field type="float" name="field21" />
+    <field type="float" name="field22" />
+    <field type="float" name="field23" />
+    <field type="float" name="field24" />
+    <field type="float" name="field25" />
+    <field type="float" name="field26" />
+    <field type="float" name="field27" />
+    <field type="float" name="field28" />
+    <field type="float" name="field29" />
+    <field type="float" name="field30" />
+    <field type="ushort" name="newField25" />
+    <field type="ushort" name="newField26" />
+    <field type="byte" name="newField27" />
+    <field type="byte" name="newField28" />
+    <field type="byte" name="newField29" />
+    <field type="byte" name="newField30" />
+    <field type="byte" name="newField31" />
+    <field type="byte" name="newField32" />
+    <field type="byte" name="newField33" />
+    <field type="byte" name="newField34" />
+  </CreatureModelData>
+  <CreatureModelData build="21491">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="float" name="field2" />
+    <field type="float" name="field3" />
+    <field type="float" name="field4" />
+    <field type="float" name="field5" />
+    <field type="float" name="field6" />
+    <field type="float" name="field7" />
+    <field type="float" name="field8" />
+    <field type="float" arraysize="6" name="field9" />
+    <field type="float" name="field21" />
+    <field type="float" name="field22" />
+    <field type="float" name="field23" />
+    <field type="float" name="field24" />
+    <field type="float" name="field25" />
+    <field type="float" name="field26" />
+    <field type="float" name="field27" />
+    <field type="float" name="field28" />
+    <field type="float" name="field29" />
+    <field type="float" name="field30" />
+    <field type="int" name="newField" />
+    <field type="int" name="field1" />
+    <field type="int" name="newField25" />
+    <field type="int" name="newField26" />
+    <field type="int" name="newField27" />
+    <field type="int" name="newField28" />
+    <field type="int" name="newField29" />
+    <field type="int" name="newField30" />
+    <field type="int" name="newField31" />
+    <field type="int" name="newField32" />
+    <field type="int" name="newField33" />
+    <field type="int" name="newField34" />
+  </CreatureModelData>
+  <FileDataComplete build="21073">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="string" name="field1" />
+    <field type="string" name="field2" />
+  </FileDataComplete>
+  <CharacterFacialHairStyles build="21108">
+    <index>
+      <primary>m_ID</primary>
+    </index>
+    <field type="int" name="m_ID" />
+    <field type="int" name="m_Geoset1" />
+    <field type="int" name="m_Geoset2" />
+    <field type="int" name="m_Geoset3" />
+    <field type="int" name="m_Geoset4" />
+    <field type="int" name="m_Geoset5" />
+    <field type="byte" name="m_raceID" />
+    <field type="byte" name="m_sexID" />
+    <field type="byte" name="m_VariationID" />
+  </CharacterFacialHairStyles>
+  <AnimationData build="21108">
+    <index>
+      <primary>m_ID</primary>
+    </index>
+    <field type="int" name="m_ID" />
+    <field type="string" name="m_Name" />
+    <field type="int" name="m_Flags" />
+    <field type="ushort" name="m_Fallback" />
+    <field type="ushort" name="m_BehaviorID" />
+    <field type="byte" name="m_BehaviorTier" />
+  </AnimationData>
+  <ItemDisplayInfo build="21108">
+    <field type="int" name="m_Id" />
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+    <field type="int" name="field6_5" />
+    <field type="int" name="field5" />
+    <field type="ushort" name="field6" />
+    <field type="ushort" name="field7" />
+    <field type="ushort" name="field8" />
+    <field type="ushort" name="field9" />
+    <field type="byte" name="field10" />
+    <field type="byte" name="field11" />
+    <field type="byte" name="field12" />
+    <field type="byte" name="field13" />
+    <field type="byte" name="field14" />
+    <field type="byte" name="field15" />
+    <field type="byte" name="field16" />
+    <field type="byte" name="field17" />
+    <field type="byte" name="newField" />
+  </ItemDisplayInfo>
+  <ItemModifiedAppearance build="21108">
+    <field type="int" name="m_Id" />
+    <field type="int" name="m_itemId" />
+    <field type="short" name="AppearanceId" />
+    <field type="byte" name="AppearanceModID" />
+    <field type="byte" name="VariationIndex" />
+    <field type="int" name="newField" />
+  </ItemModifiedAppearance>
+  <ChrRaces build="21108">
+    <field type="int" name="m_ID" />
+    <field type="int" name="m_flags" />
+    <field type="string" name="m_ClientPrefix" />
+    <field type="string" name="m_clientFileString" />
+    <field type="string" name="m_name_lang" />
+    <field type="string" name="m_name_female_lang" />
+    <field type="string" name="m_name_male_lang" />
+    <field type="string" name="m_facialHairCustomization1" />
+    <field type="string" name="m_facialHairCustomization2" />
+    <field type="string" name="m_hairCustomization" />
+    <field type="int" name="m_createScreenFileDataID" />
+    <field type="int" name="m_selectScreenFileDataID" />
+    <field type="float" name="m_maleCustomizeOffset1" />
+    <field type="float" name="m_maleCustomizeOffset2" />
+    <field type="float" name="m_maleCustomizeOffset3" />
+    <field type="float" name="m_femaleCustomizeOffset1" />
+    <field type="float" name="m_femaleCustomizeOffset2" />
+    <field type="float" name="m_femaleCustomizeOffset3" />
+    <field type="int" name="m_lowResScreenFileDataID" />
+    <field type="ushort" name="m_factionID" />
+    <field type="ushort" name="m_ExplorationSoundID" />
+    <field type="ushort" name="m_MaleDisplayId" />
+    <field type="ushort" name="m_FemaleDisplayId" />
+    <field type="ushort" name="m_ResSicknessSpellID" />
+    <field type="ushort" name="m_SplashSoundID" />
+    <field type="ushort" name="m_cinematicSequenceID" />
+    <field type="ushort" name="m_uaMaleCreatureSoundDataID" />
+    <field type="ushort" name="m_uaFemaleCreatureSoundDataID" />
+    <field type="ushort" name="m_HighResMaleDisplayId" />
+    <field type="ushort" name="m_HighResFemaleDisplayId" />
+    <field type="ushort" name="m_field62" />
+    <field type="byte" name="m_BaseLanguage" />
+    <field type="byte" name="m_creatureType" />
+    <field type="byte" name="m_alliance" />
+    <field type="byte" name="m_race_related" />
+    <field type="byte" name="m_unalteredVisualRaceID" />
+    <field type="byte" name="m_charComponentTextureLayoutID" />
+    <field type="byte" name="m_defaultClassID" />
+    <field type="byte" name="m_neutralRaceID" />
+    <field type="byte" name="m_somethingRaceID" />
+    <field type="byte" name="m_charComponentTexLayoutHiResID" />
+  </ChrRaces>
+  <ChrRaces build="21491">
+    <index>
+      <primary>m_ID</primary>
+    </index>
+    <field type="int" name="m_ID" />
+    <field type="int" name="m_flags" />
+    <field type="string" name="m_ClientPrefix" />
+    <field type="string" name="m_clientFileString" />
+    <field type="string" name="m_name_lang" />
+    <field type="string" name="m_name_female_lang" />
+    <field type="string" name="m_name_male_lang" />
+    <field type="string" arraysize="2" name="m_facialHairCustomization" />
+    <field type="string" name="m_hairCustomization" />
+    <field type="int" name="m_createScreenFileDataID" />
+    <field type="int" name="m_selectScreenFileDataID" />
+    <field type="float" arraysize="3" name="m_maleCustomizeOffset" />
+    <field type="float" arraysize="3" name="m_femaleCustomizeOffset" />
+    <field type="int" name="m_lowResScreenFileDataID" />
+    <field type="ushort" name="m_factionID" />
+    <field type="ushort" name="m_ExplorationSoundID" />
+    <field type="ushort" name="m_MaleDisplayId" />
+    <field type="ushort" name="m_FemaleDisplayId" />
+    <field type="ushort" name="m_ResSicknessSpellID" />
+    <field type="ushort" name="m_SplashSoundID" />
+    <field type="ushort" name="m_cinematicSequenceID" />
+    <field type="ushort" name="m_uaMaleCreatureSoundDataID" />
+    <field type="ushort" name="m_uaFemaleCreatureSoundDataID" />
+    <field type="ushort" name="m_field62" />
+    <field type="byte" name="m_BaseLanguage" />
+    <field type="byte" name="m_creatureType" />
+    <field type="byte" name="m_alliance" />
+    <field type="byte" name="m_race_related" />
+    <field type="byte" name="m_unalteredVisualRaceID" />
+    <field type="byte" name="m_charComponentTextureLayoutID" />
+    <field type="byte" name="m_defaultClassID" />
+    <field type="byte" name="m_neutralRaceID" />
+    <field type="byte" name="m_somethingRaceID" />
+    <field type="byte" name="m_charComponentTexLayoutHiResID" />
+    <field type="int" name="m_HighResMaleDisplayId" />
+    <field type="int" name="m_HighResFemaleDisplayId" />
+  </ChrRaces>
+  <ChrRaces build="18179">
+    <index>
+      <primary>m_ID</primary>
+    </index>
+    <field type="int" name="m_ID" />
+    <field type="int" name="m_flags" />
+    <field type="int" name="m_factionID" />
+    <field type="int" name="m_ExplorationSoundID" />
+    <field type="int" name="m_MaleDisplayId" />
+    <field type="int" name="m_FemaleDisplayId" />
+    <field type="string" name="m_ClientPrefix" />
+    <field type="int" name="m_BaseLanguage" />
+    <field type="int" name="m_creatureType" />
+    <field type="int" name="m_ResSicknessSpellID" />
+    <field type="int" name="m_SplashSoundID" />
+    <field type="string" name="m_clientFileString" />
+    <field type="int" name="m_cinematicSequenceID" />
+    <field type="int" name="m_alliance" />
+    <field type="string" name="m_name_lang" />
+    <field type="string" name="m_name_female_lang" />
+    <field type="string" name="m_name_male_lang" />
+    <field type="string" name="m_facialHairCustomization1" />
+    <field type="string" name="m_facialHairCustomization2" />
+    <field type="string" name="m_hairCustomization" />
+    <field type="int" name="m_race_related" />
+    <field type="int" name="m_unalteredVisualRaceID" />
+    <field type="int" name="m_uaMaleCreatureSoundDataID" />
+    <field type="int" name="m_uaFemaleCreatureSoundDataID" />
+    <field type="int" name="m_charComponentTextureLayoutID" />
+    <field type="int" name="m_defaultClassID" />
+    <field type="int" name="m_createScreenFileDataID" />
+    <field type="int" name="m_selectScreenFileDataID" />
+    <field type="float" name="m_maleCustomizeOffset1" />
+    <field type="float" name="m_maleCustomizeOffset2" />
+    <field type="float" name="m_maleCustomizeOffset3" />
+    <field type="float" name="m_femaleCustomizeOffset1" />
+    <field type="float" name="m_femaleCustomizeOffset2" />
+    <field type="float" name="m_femaleCustomizeOffset3" />
+    <field type="int" name="m_neutralRaceID" />
+    <field type="int" name="m_lowResScreenFileDataID" />
+    <field type="int" name="m_HighResMaleDisplayId" />
+    <field type="int" name="m_HighResFemaleDisplayId" />
+    <field type="int" name="m_charComponentTexLayoutHiResID" />
+  </ChrRaces>
+  <CharComponentTextureLayouts build="21108">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="ushort" name="field1" />
+    <field type="ushort" name="field2" />
+  </CharComponentTextureLayouts>
+  <CharComponentTextureSections build="21108">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="ushort" name="field1" />
+    <field type="ushort" name="field2" />
+    <field type="ushort" name="field3" />
+    <field type="ushort" name="field4" />
+    <field type="byte" name="field5" />
+    <field type="byte" name="field6" />
+    <field type="byte" name="field7" />
+  </CharComponentTextureSections>
+  <GarrAbility build="21134">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="string" name="field1" />
+    <field type="string" name="field2" />
+    <field type="int" name="field3" />
+    <field type="ushort" name="field4" />
+    <field type="byte" name="field5" />
+    <field type="byte" name="field6" />
+    <field type="byte" name="field7" />
+  </GarrAbility>
+  <GarrAbility build="21215">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="string" name="field1" />
+    <field type="string" name="field2" />
+    <field type="int" name="field3" />
+    <field type="ushort" name="field4" />
+    <field type="ushort" name="field5" />
+    <field type="byte" name="field6" />
+    <field type="byte" name="field7" />
+  </GarrAbility>
+  <SpellScaling build="21134">
+    <field type="int" name="m_id" />
+    <index>
+      <primary>field1</primary>
+    </index>
+    <field type="int" name="field1" />
+    <field type="ushort" name="field2" />
+    <field type="byte" name="field3" />
+    <field type="byte" name="field4" />
+  </SpellScaling>
+  <SpellScaling build="21215">
+    <field type="int" name="m_id" />
+    <index>
+      <primary>field1</primary>
+    </index>
+    <field type="int" name="field1" />
+    <field type="ushort" name="field2" />
+    <field type="byte" name="field3" />
+    <field type="byte" name="field4" />
+    <field type="int" name="field5" />
+  </SpellScaling>
+  <SpellItemEnchantment build="21287">
+    <index>
+      <primary>m_ID</primary>
+    </index>
+    <field type="int" name="m_ID" />
+    <field type="int" name="m_effect_1" />
+    <field type="int" name="m_effect_2" />
+    <field type="int" name="m_effect_3" />
+    <field type="string" name="m_name_lang_1" />
+    <field type="float" name="m_effectPointsMin_1" />
+    <field type="float" name="m_effectPointsMin_2" />
+    <field type="float" name="m_effectPointsMin_3" />
+    <field type="int" name="m_charges" />
+    <field type="ushort" name="m_effectPointsMax_1" />
+    <field type="ushort" name="m_effectPointsMax_2" />
+    <field type="ushort" name="m_effectPointsMax_3" />
+    <field type="ushort" name="m_itemVisual" />
+    <field type="ushort" name="m_effectArg_1" />
+    <field type="ushort" name="m_effectArg_2" />
+    <field type="ushort" name="m_effectArg_3" />
+    <field type="ushort" name="m_name_flags" />
+    <field type="byte" name="m_flags" />
+    <field type="byte" name="m_src_itemID" />
+    <field type="byte" name="m_condition_id" />
+    <field type="byte" name="m_requiredSkillID" />
+    <field type="byte" name="m_requiredSkillRank" />
+    <field type="byte" name="m_minLevel" />
+    <field type="byte" name="newField23" />
+    <field type="byte" name="newField24" />
+    <field type="byte" name="newField25" />
+    <field type="byte" name="newField26" />
+    <field type="byte" name="newField27" />
+  </SpellItemEnchantment>
+  <ItemVisuals build="21287">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="ushort" name="field1" />
+    <field type="ushort" name="field2" />
+    <field type="ushort" name="field3" />
+    <field type="ushort" name="field4" />
+    <field type="ushort" name="field5" />
+  </ItemVisuals>
+  <ItemDisplayInfo build="21384">
+    <field type="int" name="m_Id" />
+    <field type="int" name="field0" />
+    <field type="int" name="newField1" />
+    <field type="int" name="newField2" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+    <field type="int" name="field6_5" />
+    <field type="int" name="field5" />
+    <field type="ushort" name="field6" />
+    <field type="ushort" name="field7" />
+    <field type="ushort" name="field8" />
+    <field type="ushort" name="field9" />
+    <field type="ushort" name="field10" />
+    <field type="ushort" name="field11" />
+    <field type="ushort" name="field12" />
+    <field type="byte" name="field13" />
+    <field type="byte" name="field14" />
+    <field type="byte" name="field15" />
+    <field type="byte" name="field16" />
+    <field type="byte" name="field17" />
+    <field type="byte" name="field21" />
+  </ItemDisplayInfo>
+  <ItemDisplayInfo build="21249">
+    <field type="int" name="m_Id" />
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="newField1" />
+    <field type="int" name="newField2" />
+    <field type="int" name="field2" />
+    <field type="int" name="field3" />
+    <field type="int" name="field4" />
+    <field type="int" name="field6_5" />
+    <field type="int" name="field5" />
+    <field type="ushort" name="field6" />
+    <field type="ushort" name="field7" />
+    <field type="ushort" name="field8" />
+    <field type="ushort" name="field9" />
+    <field type="byte" name="field10" />
+    <field type="byte" name="field11" />
+    <field type="byte" name="field12" />
+    <field type="byte" name="field13" />
+    <field type="byte" name="field14" />
+    <field type="byte" name="field15" />
+    <field type="byte" name="field16" />
+    <field type="byte" name="field17" />
+    <field type="byte" name="field21" />
+  </ItemDisplayInfo>
+  <GlobalStrings build="21384">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="string" name="field1" />
+    <field type="string" name="field2" />
+  </GlobalStrings>
+  <ModelFileData build="21414">
+    <index>
+      <primary>field0</primary>
+    </index>
+    <field type="int" name="field0" />
+    <field type="int" name="field1" />
+    <field type="byte" name="newField" />
+  </ModelFileData>
+  <SpellItemEnchantment build="21414">
+    <index>
+      <primary>m_ID</primary>
+    </index>
+    <field type="int" name="m_ID" />
+    <field type="int" name="m_effect_1" />
+    <field type="int" name="m_effect_2" />
+    <field type="int" name="m_effect_3" />
+    <field type="string" name="m_name_lang_1" />
+    <field type="float" name="m_effectPointsMin_1" />
+    <field type="float" name="m_effectPointsMin_2" />
+    <field type="float" name="m_effectPointsMin_3" />
+    <field type="int" name="m_charges" />
+    <field type="int" name="newField9" />
+    <field type="int" name="newField10" />
+    <field type="ushort" name="m_effectPointsMax_1" />
+    <field type="ushort" name="m_effectPointsMax_2" />
+    <field type="ushort" name="m_effectPointsMax_3" />
+    <field type="ushort" name="m_itemVisual" />
+    <field type="ushort" name="m_effectArg_1" />
+    <field type="ushort" name="m_effectArg_2" />
+    <field type="ushort" name="m_effectArg_3" />
+    <field type="ushort" name="m_name_flags" />
+    <field type="byte" name="m_flags" />
+    <field type="byte" name="m_src_itemID" />
+    <field type="byte" name="m_condition_id" />
+    <field type="byte" name="m_requiredSkillID" />
+    <field type="byte" name="m_requiredSkillRank" />
+    <field type="byte" name="m_minLevel" />
+    <field type="byte" name="newField23" />
+    <field type="byte" name="newField24" />
+  </SpellItemEnchantment>
+  <TextureFileData build="21491">
+    <field type="int" name="field0" />
+    <field type="byte" name="field2" />
+    <field type="int" name="field1" />
+  </TextureFileData>
+  <CharacterFacialHairStyles build="21491">
+    <index>
+      <primary>m_ID</primary>
+    </index>
+    <field type="int" name="m_ID" />
+    <field type="int" arraysize="5" name="field00" />
+    <field type="byte" name="field14" />
+    <field type="byte" name="field15" />
+    <field type="byte" name="field16" />
+  </CharacterFacialHairStyles>
+  <ItemModifiedAppearance build="21491">
+    <index>
+      <primary>m_ID</primary>
+    </index>
+    <field type="int" name="field00" />
+    <field type="ushort" name="field04" />
+    <field type="byte" name="field06" />
+    <field type="byte" name="field07" />
+    <field type="byte" name="field08" />
+    <field type="int" name="m_ID" />
+  </ItemModifiedAppearance>
+  <ModelFileData build="21491">
+    <index>
+      <primary>field1</primary>
+    </index>
+    <field type="byte" name="field0" />
+    <field type="int" name="field1" />
+    <field type="int" name="field2" />
+  </ModelFileData>
 </DBFilesClient>

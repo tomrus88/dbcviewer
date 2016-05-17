@@ -9,6 +9,7 @@ namespace DBCViewer
     {
         private const int HeaderSize = 48;
         private const uint ADBFmtSig = 0x32484357;          // WCH2
+        private const uint ADB5FmtSig = 0x35484357;          // WCH5
 
         public int RecordsCount { get; private set; }
         public int FieldsCount { get; private set; }
@@ -41,7 +42,7 @@ namespace DBCViewer
 
                 var signature = reader.ReadUInt32();
 
-                if (signature != ADBFmtSig)
+                if (signature != ADBFmtSig && signature != ADB5FmtSig)
                 {
                     throw new InvalidDataException(String.Format("File {0} isn't valid DBC file!", fileName));
                 }
@@ -55,16 +56,27 @@ namespace DBCViewer
                 uint tableHash = reader.ReadUInt32(); // new field in WCH2
                 uint build = reader.ReadUInt32(); // new field in WCH2
 
-                int unk1 = reader.ReadInt32(); // Unix time in WCH2
-                int unk2 = reader.ReadInt32(); // new field in WCH2
-                int unk3 = reader.ReadInt32(); // new field in WCH2 (index table?)
+                int timestamp_last_written = reader.ReadInt32(); // Unix time in WCH2
+                int min_id = reader.ReadInt32(); // new field in WCH2
+                int max_id = reader.ReadInt32(); // new field in WCH2 (index table?)
                 int locale = reader.ReadInt32(); // new field in WCH2
-                int unk5 = reader.ReadInt32(); // new field in WCH2
 
-                if (unk3 != 0)
+                if(signature == ADBFmtSig)
                 {
-                    reader.ReadBytes(unk3 * 4 - HeaderSize);     // an index for rows
-                    reader.ReadBytes(unk3 * 2 - HeaderSize * 2); // a memory allocation bank
+                    int unk5 = reader.ReadInt32(); // new field in WCH2
+                    ;
+                }
+                else
+                {
+                    int copy_table_size = reader.ReadInt32(); // new field in WCH5
+                    int flags = reader.ReadInt32(); // new field in WCH5
+                    ;
+                }
+
+                if (max_id != 0)
+                {
+                    reader.ReadBytes(max_id * 4 - HeaderSize);     // an index for rows
+                    reader.ReadBytes(max_id * 2 - HeaderSize * 2); // a memory allocation bank
                 }
 
                 m_rows = new byte[RecordsCount][];

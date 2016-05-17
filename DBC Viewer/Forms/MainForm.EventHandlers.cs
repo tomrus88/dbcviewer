@@ -30,6 +30,8 @@ namespace DBCViewer
 
         private void dataGridView1_CellToolTipTextNeeded(object sender, DataGridViewCellToolTipTextNeededEventArgs e)
         {
+            return;
+
             if (e.RowIndex == -1)
                 return;
 
@@ -119,6 +121,16 @@ namespace DBCViewer
             for (int j = 0; j < m_fields.Count; ++j)
                 types[j] = m_fields[j].Attributes["type"].Value;
 
+            string[] colNames = new string[m_fields.Count];
+
+            for (int j = 0; j < m_fields.Count; ++j)
+                colNames[j] = m_fields[j].Attributes["name"].Value;
+
+            int[] arraySizes = new int[m_fields.Count];
+
+            for (int j = 0; j < m_fields.Count; ++j)
+                arraySizes[j] = Convert.ToInt32(m_fields[j].Attributes["arraysize"]?.Value ?? "1");
+
             // hack for *.adb files (because they don't have FieldsCount)
             bool notADB = !(m_dbreader is ADBReader);
             // hack for *.wdb files (because they don't have FieldsCount)
@@ -128,9 +140,11 @@ namespace DBCViewer
             // hack for *.db2 files v3 (because they don't have FieldsCount)
             bool notDB3 = !(m_dbreader is DB3Reader);
             bool notDB4 = !(m_dbreader is DB4Reader);
+            bool isDB5 = m_dbreader is DB5Reader;
+            bool notDB5 = !isDB5;
 
             int fcount = GetFieldsCount(m_fields);
-            if (fcount != m_dbreader.FieldsCount && notADB && notWDB && notSTL && notDB3 && notDB4)
+            if (fcount != m_dbreader.FieldsCount && notADB && notWDB && notSTL && notDB3 && notDB4 && notDB5)
             {
                 string msg = String.Format(CultureInfo.InvariantCulture, "{0} has invalid definition!\nFields count mismatch: got {1}, expected {2}", Path.GetFileName(file), fcount, m_dbreader.FieldsCount);
                 ShowErrorMessageBox(msg);
@@ -145,6 +159,8 @@ namespace DBCViewer
 
             CreateIndexes();                                // Add indexes
 
+            var meta = (m_dbreader as DB5Reader)?.Meta;
+
             //bool extraData = false;
 
             foreach (var row in m_dbreader.Rows) // Add rows
@@ -158,34 +174,94 @@ namespace DBCViewer
                         switch (types[j])
                         {
                             case "long":
-                                dataRow[j] = br.ReadInt64();
+                                if (arraySizes[j] > 1)
+                                {
+                                    for(int i = 0; i < arraySizes[j]; i++)
+                                        dataRow[colNames[j] + "_" + (i + 1)] = br.Read<long>(meta?[j]);
+                                }
+                                else
+                                    dataRow[colNames[j]] = br.Read<long>(meta?[j]);
                                 break;
                             case "ulong":
-                                dataRow[j] = br.ReadUInt64();
+                                if (arraySizes[j] > 1)
+                                {
+                                    for (int i = 0; i < arraySizes[j]; i++)
+                                        dataRow[colNames[j] + "_" + (i + 1)] = br.Read<ulong>(meta?[j]);
+                                }
+                                else
+                                    dataRow[colNames[j]] = br.Read<ulong>(meta?[j]);
                                 break;
                             case "int":
-                                dataRow[j] = br.ReadInt32();
+                                if (arraySizes[j] > 1)
+                                {
+                                    for (int i = 0; i < arraySizes[j]; i++)
+                                        dataRow[colNames[j] + "_" + (i + 1)] = br.Read<int>(meta?[j]);
+                                }
+                                else
+                                    dataRow[colNames[j]] = br.Read<int>(meta?[j]);
                                 break;
                             case "uint":
-                                dataRow[j] = br.ReadUInt32();
+                                if (arraySizes[j] > 1)
+                                {
+                                    for (int i = 0; i < arraySizes[j]; i++)
+                                        dataRow[colNames[j] + "_" + (i + 1)] = br.Read<uint>(meta?[j]);
+                                }
+                                else
+                                    dataRow[colNames[j]] = br.Read<uint>(meta?[j]);
                                 break;
                             case "short":
-                                dataRow[j] = br.ReadInt16();
+                                if (arraySizes[j] > 1)
+                                {
+                                    for (int i = 0; i < arraySizes[j]; i++)
+                                        dataRow[colNames[j] + "_" + (i + 1)] = br.Read<short>(meta?[j]);
+                                }
+                                else
+                                    dataRow[colNames[j]] = br.Read<short>(meta?[j]);
                                 break;
                             case "ushort":
-                                dataRow[j] = br.ReadUInt16();
+                                if (arraySizes[j] > 1)
+                                {
+                                    for (int i = 0; i < arraySizes[j]; i++)
+                                        dataRow[colNames[j] + "_" + (i + 1)] = br.Read<ushort>(meta?[j]);
+                                }
+                                else
+                                    dataRow[colNames[j]] = br.Read<ushort>(meta?[j]);
                                 break;
                             case "sbyte":
-                                dataRow[j] = br.ReadSByte();
+                                if (arraySizes[j] > 1)
+                                {
+                                    for (int i = 0; i < arraySizes[j]; i++)
+                                        dataRow[colNames[j] + "_" + (i + 1)] = br.Read<sbyte>(meta?[j]);
+                                }
+                                else
+                                    dataRow[colNames[j]] = br.Read<sbyte>(meta?[j]);
                                 break;
                             case "byte":
-                                dataRow[j] = br.ReadByte();
+                                if (arraySizes[j] > 1)
+                                {
+                                    for (int i = 0; i < arraySizes[j]; i++)
+                                        dataRow[colNames[j] + "_" + (i + 1)] = br.Read<byte>(meta?[j]);
+                                }
+                                else
+                                    dataRow[colNames[j]] = br.Read<byte>(meta?[j]);
                                 break;
                             case "float":
-                                dataRow[j] = br.ReadSingle();
+                                if (arraySizes[j] > 1)
+                                {
+                                    for (int i = 0; i < arraySizes[j]; i++)
+                                        dataRow[colNames[j] + "_" + (i + 1)] = br.Read<float>(meta?[j]);
+                                }
+                                else
+                                    dataRow[colNames[j]] = br.Read<float>(meta?[j]);
                                 break;
                             case "double":
-                                dataRow[j] = br.ReadDouble();
+                                if (arraySizes[j] > 1)
+                                {
+                                    for (int i = 0; i < arraySizes[j]; i++)
+                                        dataRow[colNames[j] + "_" + (i + 1)] = br.ReadDouble();
+                                }
+                                else
+                                    dataRow[colNames[j]] = br.ReadDouble();
                                 break;
                             case "string":
                                 if (m_dbreader is WDBReader)
@@ -197,13 +273,30 @@ namespace DBCViewer
                                 }
                                 else
                                 {
-                                    try
+                                    if (arraySizes[j] > 1)
                                     {
-                                        dataRow[j] = m_dbreader.StringTable[br.ReadInt32()];
+                                        for (int i = 0; i < arraySizes[j]; i++)
+                                        {
+                                            try
+                                            {
+                                                dataRow[colNames[j] + "_" + (i + 1)] = m_dbreader.StringTable[br.Read<int>(meta?[j])];
+                                            }
+                                            catch
+                                            {
+                                                dataRow[colNames[j]] = "Invalid string index!";
+                                            }
+                                        }
                                     }
-                                    catch
+                                    else
                                     {
-                                        dataRow[j] = "Invalid string index!";
+                                        try
+                                        {
+                                            dataRow[colNames[j]] = m_dbreader.StringTable[br.Read<int>(meta?[j])];
+                                        }
+                                        catch
+                                        {
+                                            dataRow[colNames[j]] = "Invalid string index!";
+                                        }
                                     }
                                 }
                                 break;
@@ -337,7 +430,7 @@ namespace DBCViewer
 
         private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            XmlAttribute attribute = m_fields[e.ColumnIndex].Attributes["format"];
+            XmlAttribute attribute = m_fields[e.ColumnIndex]?.Attributes["format"];
 
             if (attribute == null)
                 return;
