@@ -128,8 +128,6 @@ namespace DBCViewer
 
             if (!definitions.Any())
             {
-                var msg = string.Format(CultureInfo.InvariantCulture, "{0} missing definition!", m_dbcName);
-                ShowErrorMessageBox(msg);
                 return null;
             }
             else if (definitions.Count() == 1)

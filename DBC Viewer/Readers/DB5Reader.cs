@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Xml;
 
 namespace DBCViewer
 {
@@ -68,6 +67,7 @@ namespace DBCViewer
                 int CopyTableSize = reader.ReadInt32();
                 int metaFlags = reader.ReadInt32();
 
+                bool isSparse = (metaFlags & 0x1) != 0;
                 bool hasIndex = (metaFlags & 0x4) != 0;
                 int colMetaSize = FieldsCount * 4;
 
@@ -117,14 +117,10 @@ namespace DBCViewer
                     }
                     else
                     {
-                        int idxCol = 0;
+                        int idxCol = def.Fields.FindIndex(f => f.IsIndex);
 
-                        foreach (Field field in def.Fields)
-                        {
-                            if (field.IsIndex)
-                                break;
-                            idxCol++;
-                        }
+                        if (idxCol == -1)
+                            throw new Exception(string.Format("Definition for file {0} has no index field specified!", fileName));
 
                         int numBytes = (32 - columnMeta[idxCol].Bits) >> 3;
                         int offset = columnMeta[idxCol].Offset;

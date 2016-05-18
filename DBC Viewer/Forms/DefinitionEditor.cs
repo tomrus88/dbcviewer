@@ -64,7 +64,8 @@ namespace DBCViewer
 
             if (def == null)
             {
-                DialogResult result = MessageBox.Show(this, "Create default definition?", "Definition Missing!",
+                DialogResult result = MessageBox.Show(this, string.Format("Table {0} missing definition. Create default definition?", m_mainForm.DBCName),
+                    "Definition Missing!",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question,
                     MessageBoxDefaultButton.Button1);
@@ -95,9 +96,10 @@ namespace DBCViewer
             for (int i = 0; i < def.Fields.Count; i++)
                 def.Fields[i].Index = i;
 
-            editorDataGridView.DataSource = null;
+            BindingSource source = new BindingSource();
+            source.DataSource = def;
+            editorDataGridView.DataSource = source;
             editorDataGridView.DataMember = "Fields";
-            editorDataGridView.DataSource = def;
         }
 
         private Table CreateDefaultDefinition()
@@ -207,73 +209,22 @@ namespace DBCViewer
             }
         }
 
-        private void addButton_Click(object sender, EventArgs e)
+        private void editorDataGridView_UserAddedRow(object sender, DataGridViewRowEventArgs e)
         {
-            Field field = new Field();
-            field.Name = "newField";
-            field.Type = "int";
-
-            int index = -1;
-
-            if (editorDataGridView.SelectedRows.Count > 0)
-                index = editorDataGridView.SelectedRows[0].Index;
-            else if (editorDataGridView.SelectedCells.Count > 0)
-                index = editorDataGridView.SelectedCells[0].RowIndex;
-            else
-                index = editorDataGridView.RowCount;
-
-            editingTable.Fields.Insert(index + 1, field);
-
-            InitForm(editingTable);
-
-            editorDataGridView.Rows[index + 1].Selected = true;
-
             m_changed = true;
         }
 
-        private void cloneButton_Click(object sender, EventArgs e)
+        private void editorDataGridView_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
         {
-            if (editorDataGridView.SelectedRows.Count > 0)
-            {
-                int index = editorDataGridView.SelectedRows[0].Index;
-                Field field = editingTable.Fields[index];
-                Field cloned = field.Clone();
-                editingTable.Fields.Insert(index, cloned);
-
-                InitForm(editingTable);
-
-                editorDataGridView.Rows[index + 1].Selected = true;
-                editorDataGridView.Select();
-
-                m_changed = true;
-            }
+            m_changed = true;
         }
 
-        private void editorDataGridView_KeyUp(object sender, KeyEventArgs e)
+        private void editorDataGridView_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)
         {
-            if (e.KeyCode != Keys.Delete || (editorDataGridView.SelectedRows.Count == 0 && editorDataGridView.SelectedCells.Count == 0))
-                return;
-
-            int index = -1;
-
-            if (editorDataGridView.SelectedRows.Count > 0)
-                index = editorDataGridView.SelectedRows[0].Index;
-            else if (editorDataGridView.SelectedCells.Count > 0)
-                index = editorDataGridView.SelectedCells[0].RowIndex;
-            else
-                return;
-
-            editingTable.Fields.RemoveAt(index);
-
-            InitForm(editingTable);
-
-            index = editorDataGridView.RowCount > index ? index : editorDataGridView.RowCount - 1;
-
-            if (index == -1)
-                return;
-
-            editorDataGridView.Rows[index].Selected = true;
-            m_changed = true;
+            e.Row.Cells[0].Value = e.Row.Index;
+            e.Row.Cells[1].Value = string.Format("field{0}", e.Row.Index);
+            e.Row.Cells[2].Value = "int";
+            e.Row.Cells[4].Value = 1;
         }
     }
 }

@@ -427,14 +427,29 @@ namespace DBCViewer
 
         private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            string format = m_fields[e.ColumnIndex].Format;
+            int columnIndex = e.ColumnIndex;
+            int columnIndexFix = 0;
 
-            if (string.IsNullOrWhiteSpace(format))
-                return;
+            for (int i = 0; i < m_fields.Count; i++)
+            {
+                for (int j = 0; j < m_fields[i].ArraySize; j++)
+                {
+                    columnIndexFix++;
 
-            string fmtStr = "{0:" + format + "}";
-            e.Value = string.Format(new BinaryFormatter(), fmtStr, e.Value);
-            e.FormattingApplied = true;
+                    if (columnIndex == columnIndexFix)
+                    {
+                        string format = m_fields[i].Format;
+
+                        if (string.IsNullOrWhiteSpace(format))
+                            return;
+
+                        string fmtStr = "{0:" + format + "}";
+                        e.Value = string.Format(new BinaryFormatter(), fmtStr, e.Value);
+                        e.FormattingApplied = true;
+                        return;
+                    }
+                }
+            }
         }
 
         private void resetColumnsFilterToolStripMenuItem_Click(object sender, EventArgs e)
