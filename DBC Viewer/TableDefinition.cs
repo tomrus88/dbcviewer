@@ -59,5 +59,10 @@ namespace DBCViewer
         public bool Visible { get; set; } = true;
         [XmlAttribute, DefaultValue(100)]
         public int Width { get; set; } = 100;
+
+        public Field Clone()
+        {
+            return (Field)MemberwiseClone();
+        }
     }
 }

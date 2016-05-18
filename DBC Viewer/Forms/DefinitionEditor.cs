@@ -48,7 +48,7 @@ namespace DBCViewer
 
             Table newnode = new Table();
             newnode.Name = m_mainForm.DBCName;
-            newnode.Build = Convert.ToInt32(textBox1.Text);
+            newnode.Build = Convert.ToInt32(buildTextBox.Text);
             newnode.Fields = new List<Field>(editingTable.Fields);
 
             if (editingTable.Build != newnode.Build)
@@ -90,7 +90,7 @@ namespace DBCViewer
         {
             editingTable = def;
 
-            textBox1.Text = def.Build.ToString();
+            buildTextBox.Text = def.Build.ToString();
 
             for (int i = 0; i < def.Fields.Count; i++)
                 def.Fields[i].Index = i;
@@ -121,7 +121,7 @@ namespace DBCViewer
                 {
                     var doc = new Table();
 
-                    doc.Build = Convert.ToInt32(textBox1.Text);
+                    doc.Build = Convert.ToInt32(buildTextBox.Text);
 
                     for (int i = 0; i < fieldsCount; ++i)
                     {
@@ -205,6 +205,75 @@ namespace DBCViewer
                 else
                     DialogResult = DialogResult.Abort;
             }
+        }
+
+        private void addButton_Click(object sender, EventArgs e)
+        {
+            Field field = new Field();
+            field.Name = "newField";
+            field.Type = "int";
+
+            int index = -1;
+
+            if (editorDataGridView.SelectedRows.Count > 0)
+                index = editorDataGridView.SelectedRows[0].Index;
+            else if (editorDataGridView.SelectedCells.Count > 0)
+                index = editorDataGridView.SelectedCells[0].RowIndex;
+            else
+                index = editorDataGridView.RowCount;
+
+            editingTable.Fields.Insert(index + 1, field);
+
+            InitForm(editingTable);
+
+            editorDataGridView.Rows[index + 1].Selected = true;
+
+            m_changed = true;
+        }
+
+        private void cloneButton_Click(object sender, EventArgs e)
+        {
+            if (editorDataGridView.SelectedRows.Count > 0)
+            {
+                int index = editorDataGridView.SelectedRows[0].Index;
+                Field field = editingTable.Fields[index];
+                Field cloned = field.Clone();
+                editingTable.Fields.Insert(index, cloned);
+
+                InitForm(editingTable);
+
+                editorDataGridView.Rows[index + 1].Selected = true;
+                editorDataGridView.Select();
+
+                m_changed = true;
+            }
+        }
+
+        private void editorDataGridView_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.Delete || (editorDataGridView.SelectedRows.Count == 0 && editorDataGridView.SelectedCells.Count == 0))
+                return;
+
+            int index = -1;
+
+            if (editorDataGridView.SelectedRows.Count > 0)
+                index = editorDataGridView.SelectedRows[0].Index;
+            else if (editorDataGridView.SelectedCells.Count > 0)
+                index = editorDataGridView.SelectedCells[0].RowIndex;
+            else
+                return;
+
+            editingTable.Fields.RemoveAt(index);
+
+            InitForm(editingTable);
+
+            index = editorDataGridView.RowCount > index ? index : editorDataGridView.RowCount - 1;
+
+            if (index == -1)
+                return;
+
+            editorDataGridView.Rows[index].Selected = true;
+            m_changed = true;
         }
     }
 }

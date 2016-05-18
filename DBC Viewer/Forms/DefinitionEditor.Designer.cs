@@ -29,15 +29,17 @@
         private void InitializeComponent()
         {
             this.editorDataGridView = new System.Windows.Forms.DataGridView();
+            this.doneButton = new System.Windows.Forms.Button();
+            this.buildTextBox = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.IndexColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.NameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TypeColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.IsIndexColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.ArraySizeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FormatColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.doneButton = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.addButton = new System.Windows.Forms.Button();
+            this.cloneButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.editorDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -57,12 +59,43 @@
             this.ArraySizeColumn,
             this.FormatColumn});
             this.editorDataGridView.Location = new System.Drawing.Point(12, 12);
+            this.editorDataGridView.MultiSelect = false;
             this.editorDataGridView.Name = "editorDataGridView";
             this.editorDataGridView.Size = new System.Drawing.Size(682, 429);
             this.editorDataGridView.TabIndex = 0;
             this.editorDataGridView.DragDrop += new System.Windows.Forms.DragEventHandler(this.editorDataGridView_DragDrop);
             this.editorDataGridView.DragEnter += new System.Windows.Forms.DragEventHandler(this.editorDataGridView_DragEnter);
+            this.editorDataGridView.KeyUp += new System.Windows.Forms.KeyEventHandler(this.editorDataGridView_KeyUp);
             this.editorDataGridView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.editorDataGridView_MouseDown);
+            // 
+            // doneButton
+            // 
+            this.doneButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.doneButton.Location = new System.Drawing.Point(174, 447);
+            this.doneButton.Name = "doneButton";
+            this.doneButton.Size = new System.Drawing.Size(75, 23);
+            this.doneButton.TabIndex = 1;
+            this.doneButton.Text = "Done";
+            this.doneButton.UseVisualStyleBackColor = true;
+            this.doneButton.Click += new System.EventHandler(this.doneButton_Click);
+            // 
+            // buildTextBox
+            // 
+            this.buildTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buildTextBox.Location = new System.Drawing.Point(294, 449);
+            this.buildTextBox.Name = "buildTextBox";
+            this.buildTextBox.Size = new System.Drawing.Size(100, 20);
+            this.buildTextBox.TabIndex = 2;
+            // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(255, 452);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(33, 13);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "Build:";
             // 
             // IndexColumn
             // 
@@ -116,43 +149,37 @@
             this.FormatColumn.DataPropertyName = "Format";
             this.FormatColumn.HeaderText = "Format";
             this.FormatColumn.Name = "FormatColumn";
+            this.FormatColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
-            // doneButton
+            // addButton
             // 
-            this.doneButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.doneButton.Location = new System.Drawing.Point(12, 447);
-            this.doneButton.Name = "doneButton";
-            this.doneButton.Size = new System.Drawing.Size(75, 23);
-            this.doneButton.TabIndex = 1;
-            this.doneButton.Text = "Done";
-            this.doneButton.UseVisualStyleBackColor = true;
-            this.doneButton.Click += new System.EventHandler(this.doneButton_Click);
+            this.addButton.Location = new System.Drawing.Point(12, 447);
+            this.addButton.Name = "addButton";
+            this.addButton.Size = new System.Drawing.Size(75, 23);
+            this.addButton.TabIndex = 4;
+            this.addButton.Text = "Add";
+            this.addButton.UseVisualStyleBackColor = true;
+            this.addButton.Click += new System.EventHandler(this.addButton_Click);
             // 
-            // textBox1
+            // cloneButton
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.textBox1.Location = new System.Drawing.Point(132, 449);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 2;
-            // 
-            // label1
-            // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(93, 452);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(33, 13);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "Build:";
+            this.cloneButton.Location = new System.Drawing.Point(93, 447);
+            this.cloneButton.Name = "cloneButton";
+            this.cloneButton.Size = new System.Drawing.Size(75, 23);
+            this.cloneButton.TabIndex = 5;
+            this.cloneButton.Text = "Clone";
+            this.cloneButton.UseVisualStyleBackColor = true;
+            this.cloneButton.Click += new System.EventHandler(this.cloneButton_Click);
             // 
             // DefinitionEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(706, 482);
+            this.Controls.Add(this.cloneButton);
+            this.Controls.Add(this.addButton);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.buildTextBox);
             this.Controls.Add(this.doneButton);
             this.Controls.Add(this.editorDataGridView);
             this.Name = "DefinitionEditor";
@@ -169,13 +196,15 @@
 
         private System.Windows.Forms.DataGridView editorDataGridView;
         private System.Windows.Forms.Button doneButton;
+        private System.Windows.Forms.TextBox buildTextBox;
+        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridViewTextBoxColumn IndexColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn NameColumn;
         private System.Windows.Forms.DataGridViewComboBoxColumn TypeColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn IsIndexColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn ArraySizeColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn FormatColumn;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button addButton;
+        private System.Windows.Forms.Button cloneButton;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition.Hosting;
 using System.Data;
@@ -28,8 +29,6 @@ namespace DBCViewer
 
         private void dataGridView1_CellToolTipTextNeeded(object sender, DataGridViewCellToolTipTextNeededEventArgs e)
         {
-            return;
-
             if (e.RowIndex == -1)
                 return;
 
@@ -112,7 +111,7 @@ namespace DBCViewer
                 return;
             }
 
-            m_fields = m_definition.Fields;
+            m_fields = new List<Field>(m_definition.Fields);
 
             string[] types = new string[m_fields.Count];
 
