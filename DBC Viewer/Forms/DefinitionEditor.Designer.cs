@@ -32,14 +32,14 @@
             this.doneButton = new System.Windows.Forms.Button();
             this.buildTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.addButton = new System.Windows.Forms.Button();
+            this.cloneButton = new System.Windows.Forms.Button();
             this.IndexColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.NameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TypeColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.IsIndexColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.ArraySizeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FormatColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.addButton = new System.Windows.Forms.Button();
-            this.cloneButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.editorDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -97,6 +97,28 @@
             this.label1.TabIndex = 3;
             this.label1.Text = "Build:";
             // 
+            // addButton
+            // 
+            this.addButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.addButton.Location = new System.Drawing.Point(12, 447);
+            this.addButton.Name = "addButton";
+            this.addButton.Size = new System.Drawing.Size(75, 23);
+            this.addButton.TabIndex = 4;
+            this.addButton.Text = "Add";
+            this.addButton.UseVisualStyleBackColor = true;
+            this.addButton.Click += new System.EventHandler(this.addButton_Click);
+            // 
+            // cloneButton
+            // 
+            this.cloneButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cloneButton.Location = new System.Drawing.Point(93, 447);
+            this.cloneButton.Name = "cloneButton";
+            this.cloneButton.Size = new System.Drawing.Size(75, 23);
+            this.cloneButton.TabIndex = 5;
+            this.cloneButton.Text = "Clone";
+            this.cloneButton.UseVisualStyleBackColor = true;
+            this.cloneButton.Click += new System.EventHandler(this.cloneButton_Click);
+            // 
             // IndexColumn
             // 
             this.IndexColumn.DataPropertyName = "Index";
@@ -151,26 +173,6 @@
             this.FormatColumn.Name = "FormatColumn";
             this.FormatColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
-            // addButton
-            // 
-            this.addButton.Location = new System.Drawing.Point(12, 447);
-            this.addButton.Name = "addButton";
-            this.addButton.Size = new System.Drawing.Size(75, 23);
-            this.addButton.TabIndex = 4;
-            this.addButton.Text = "Add";
-            this.addButton.UseVisualStyleBackColor = true;
-            this.addButton.Click += new System.EventHandler(this.addButton_Click);
-            // 
-            // cloneButton
-            // 
-            this.cloneButton.Location = new System.Drawing.Point(93, 447);
-            this.cloneButton.Name = "cloneButton";
-            this.cloneButton.Size = new System.Drawing.Size(75, 23);
-            this.cloneButton.TabIndex = 5;
-            this.cloneButton.Text = "Clone";
-            this.cloneButton.UseVisualStyleBackColor = true;
-            this.cloneButton.Click += new System.EventHandler(this.cloneButton_Click);
-            // 
             // DefinitionEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -198,13 +200,13 @@
         private System.Windows.Forms.Button doneButton;
         private System.Windows.Forms.TextBox buildTextBox;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button addButton;
+        private System.Windows.Forms.Button cloneButton;
         private System.Windows.Forms.DataGridViewTextBoxColumn IndexColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn NameColumn;
         private System.Windows.Forms.DataGridViewComboBoxColumn TypeColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn IsIndexColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn ArraySizeColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn FormatColumn;
-        private System.Windows.Forms.Button addButton;
-        private System.Windows.Forms.Button cloneButton;
     }
 }
