@@ -32,6 +32,7 @@ namespace DBCViewer
         public DataTable DataTable { get { return m_dataTable; } }
         public string WorkingFolder { get { return m_workingFolder; } }
         public Table Definition { get { return m_definition; } }
+        public DBFilesClient Definitions { get { return m_definitions; } }
         public string DBCName { get { return m_dbcName; } }
         public int DefinitionIndex { get { return m_selector != null ? m_selector.DefinitionIndex : 0; } }
         public string DBCFile { get { return m_dbcFile; } }
@@ -107,20 +108,6 @@ namespace DBCViewer
             using (DefinitionEditor editor = new DefinitionEditor(this))
             {
                 var result = editor.ShowDialog();
-                if (result == DialogResult.Abort)
-                    return;
-                if (result == DialogResult.OK)
-                    LoadFile(m_dbcFile);
-                else
-                    MessageBox.Show("Editor canceled! You can't open that file until you add proper definitions");
-            }
-        }
-
-        private void StartEditorNew()
-        {
-            using (DefinitionEditorNew editor = new DefinitionEditorNew(this))
-            {
-                var result = editor.ShowDialog(this);
                 if (result == DialogResult.Abort)
                     return;
                 if (result == DialogResult.OK)

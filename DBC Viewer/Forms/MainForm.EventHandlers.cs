@@ -174,7 +174,7 @@ namespace DBCViewer
                             case "long":
                                 if (arraySizes[j] > 1)
                                 {
-                                    for(int i = 0; i < arraySizes[j]; i++)
+                                    for (int i = 0; i < arraySizes[j]; i++)
                                         dataRow[colNames[j] + "_" + (i + 1)] = br.Read<long>(meta?[j]);
                                 }
                                 else
@@ -518,14 +518,6 @@ namespace DBCViewer
                 return;
 
             StartEditor();
-        }
-
-        private void definitionsEditorNewToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (m_dbcName == null)
-                return;
-
-            StartEditorNew();
         }
 
         private void reloadDefinitionsToolStripMenuItem_Click(object sender, EventArgs e)

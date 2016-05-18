@@ -49,7 +49,6 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.dataGridView1 = new DBCViewer.MyDataGridView();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -68,14 +67,14 @@
             this.fillToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cellContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.filterThisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.definitionsEditorNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dataGridView1 = new DBCViewer.MyDataGridView();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.panel1.SuspendLayout();
             this.columnContextMenuStrip.SuspendLayout();
             this.cellContextMenuStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -144,8 +143,7 @@
             this.resetFilterToolStripMenuItem,
             this.columnsFilterToolStripMenuItem,
             this.resetColumnsFilterToolStripMenuItem,
-            this.difinitionEditorToolStripMenuItem,
-            this.definitionsEditorNewToolStripMenuItem});
+            this.difinitionEditorToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "Edit";
@@ -153,34 +151,34 @@
             // filterToolStripMenuItem
             // 
             this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
-            this.filterToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.filterToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
             this.filterToolStripMenuItem.Text = "Filter...";
             this.filterToolStripMenuItem.Click += new System.EventHandler(this.filterToolStripMenuItem_Click);
             // 
             // resetFilterToolStripMenuItem
             // 
             this.resetFilterToolStripMenuItem.Name = "resetFilterToolStripMenuItem";
-            this.resetFilterToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.resetFilterToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
             this.resetFilterToolStripMenuItem.Text = "Reset Filter";
             this.resetFilterToolStripMenuItem.Click += new System.EventHandler(this.resetFilterToolStripMenuItem_Click);
             // 
             // columnsFilterToolStripMenuItem
             // 
             this.columnsFilterToolStripMenuItem.Name = "columnsFilterToolStripMenuItem";
-            this.columnsFilterToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.columnsFilterToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
             this.columnsFilterToolStripMenuItem.Text = "Columns Filter...";
             // 
             // resetColumnsFilterToolStripMenuItem
             // 
             this.resetColumnsFilterToolStripMenuItem.Name = "resetColumnsFilterToolStripMenuItem";
-            this.resetColumnsFilterToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.resetColumnsFilterToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
             this.resetColumnsFilterToolStripMenuItem.Text = "Reset Columns Filter";
             this.resetColumnsFilterToolStripMenuItem.Click += new System.EventHandler(this.resetColumnsFilterToolStripMenuItem_Click);
             // 
             // difinitionEditorToolStripMenuItem
             // 
             this.difinitionEditorToolStripMenuItem.Name = "difinitionEditorToolStripMenuItem";
-            this.difinitionEditorToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.difinitionEditorToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
             this.difinitionEditorToolStripMenuItem.Text = "Definitions Editor";
             this.difinitionEditorToolStripMenuItem.Click += new System.EventHandler(this.difinitionEditorToolStripMenuItem_Click);
             // 
@@ -225,34 +223,6 @@
             // openFileDialog1
             // 
             this.openFileDialog1.Filter = "WoW Client DB Files|*.dbc;*.db2;*.adb;*.wdb|All files|*.*";
-            // 
-            // dataGridView1
-            // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.AllowUserToOrderColumns = true;
-            this.dataGridView1.AllowUserToResizeRows = false;
-            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dataGridView1.AutoGenerateColumns = false;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.DataSource = this.bindingSource1;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 0);
-            this.dataGridView1.MultiSelect = false;
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowHeadersVisible = false;
-            this.dataGridView1.RowTemplate.Height = 18;
-            this.dataGridView1.RowTemplate.ReadOnly = true;
-            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(691, 296);
-            this.dataGridView1.TabIndex = 2;
-            this.dataGridView1.VirtualMode = true;
-            this.dataGridView1.CellContextMenuStripNeeded += new System.Windows.Forms.DataGridViewCellContextMenuStripNeededEventHandler(this.dataGridView1_CellContextMenuStripNeeded);
-            this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView1_CellFormatting);
-            this.dataGridView1.CellToolTipTextNeeded += new System.Windows.Forms.DataGridViewCellToolTipTextNeededEventHandler(this.dataGridView1_CellToolTipTextNeeded);
-            this.dataGridView1.CurrentCellChanged += new System.EventHandler(this.dataGridView1_CurrentCellChanged);
-            this.dataGridView1.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dataGridView1_DataBindingComplete);
             // 
             // label1
             // 
@@ -410,12 +380,33 @@
             this.filterThisToolStripMenuItem.Text = "Filter this";
             this.filterThisToolStripMenuItem.Click += new System.EventHandler(this.filterThisToolStripMenuItem_Click);
             // 
-            // definitionsEditorNewToolStripMenuItem
+            // dataGridView1
             // 
-            this.definitionsEditorNewToolStripMenuItem.Name = "definitionsEditorNewToolStripMenuItem";
-            this.definitionsEditorNewToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
-            this.definitionsEditorNewToolStripMenuItem.Text = "Definitions Editor New";
-            this.definitionsEditorNewToolStripMenuItem.Click += new System.EventHandler(this.definitionsEditorNewToolStripMenuItem_Click);
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.AllowUserToOrderColumns = true;
+            this.dataGridView1.AllowUserToResizeRows = false;
+            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridView1.AutoGenerateColumns = false;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.DataSource = this.bindingSource1;
+            this.dataGridView1.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView1.MultiSelect = false;
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RowHeadersVisible = false;
+            this.dataGridView1.RowTemplate.Height = 18;
+            this.dataGridView1.RowTemplate.ReadOnly = true;
+            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.dataGridView1.Size = new System.Drawing.Size(691, 296);
+            this.dataGridView1.TabIndex = 2;
+            this.dataGridView1.VirtualMode = true;
+            this.dataGridView1.CellContextMenuStripNeeded += new System.Windows.Forms.DataGridViewCellContextMenuStripNeededEventHandler(this.dataGridView1_CellContextMenuStripNeeded);
+            this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView1_CellFormatting);
+            this.dataGridView1.CellToolTipTextNeeded += new System.Windows.Forms.DataGridViewCellToolTipTextNeededEventHandler(this.dataGridView1_CellToolTipTextNeeded);
+            this.dataGridView1.CurrentCellChanged += new System.EventHandler(this.dataGridView1_CurrentCellChanged);
+            this.dataGridView1.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dataGridView1_DataBindingComplete);
             // 
             // MainForm
             // 
@@ -435,12 +426,12 @@
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.columnContextMenuStrip.ResumeLayout(false);
             this.cellContextMenuStrip.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -486,7 +477,6 @@
         private System.Windows.Forms.ToolStripMenuItem filterThisToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem definitionsEditorNewToolStripMenuItem;
     }
 }
 

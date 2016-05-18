@@ -107,11 +107,11 @@
     <Compile Include="BinaryFormatter.cs" />
     <Compile Include="BinaryReaderExtensions.cs" />
     <Compile Include="FilterExpressions.cs" />
-    <Compile Include="Forms\DefinitionEditorNew.cs">
+    <Compile Include="Forms\DefinitionEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\DefinitionEditorNew.Designer.cs">
-      <DependentUpon>DefinitionEditorNew.cs</DependentUpon>
+    <Compile Include="Forms\DefinitionEditor.Designer.cs">
+      <DependentUpon>DefinitionEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="MyDataGridView.cs">
       <SubType>Component</SubType>
@@ -123,12 +123,6 @@
     <Compile Include="Readers\DB2Reader.cs" />
     <Compile Include="Readers\DBCReaderGeneric.cs" />
     <Compile Include="Readers\DBCReader.cs" />
-    <Compile Include="Forms\DefinitionEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\DefinitionEditor.Designer.cs">
-      <DependentUpon>DefinitionEditor.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\DefinitionSelect.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -171,9 +165,6 @@
     <Compile Include="TableDefinition.cs" />
     <EmbeddedResource Include="Forms\DefinitionEditor.resx">
       <DependentUpon>DefinitionEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DefinitionEditorNew.resx">
-      <DependentUpon>DefinitionEditorNew.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DefinitionSelect.resx">
       <DependentUpon>DefinitionSelect.cs</DependentUpon>
