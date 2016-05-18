@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Forms;
 using System.Xml;
@@ -16,16 +17,19 @@ namespace DBCViewer
 
         private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            DefinitionIndex = listBox1.SelectedIndex;
+            int index = listBox1.IndexFromPoint(e.Location);
+            if (index == -1)
+                return;
+            DefinitionIndex = index;
             DialogResult = DialogResult.OK;
             Close();
         }
 
-        public void SetDefinitions(XmlNodeList definitions)
+        public void SetDefinitions(IEnumerable<Table> definitions)
         {
-            foreach (XmlElement def in definitions)
+            foreach (Table def in definitions)
             {
-                var item = String.Format(CultureInfo.InvariantCulture, "{0} (build {1})", def.Name, def.Attributes["build"].Value);
+                var item = string.Format(CultureInfo.InvariantCulture, "{0} (build {1})", def.Name, def.Build);
                 listBox1.Items.Add(item);
             }
 

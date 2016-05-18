@@ -40,18 +40,18 @@ namespace DBCViewer
             }
         }
 
-        public DB5Reader(string fileName, XmlElement def)
+        public DB5Reader(string fileName, Table def)
         {
             using (var reader = BinaryReaderExtensions.FromFile(fileName))
             {
                 if (reader.BaseStream.Length < HeaderSize)
                 {
-                    throw new InvalidDataException(String.Format("File {0} is corrupted!", fileName));
+                    throw new InvalidDataException(string.Format("File {0} is corrupted!", fileName));
                 }
 
                 if (reader.ReadUInt32() != DB5FmtSig)
                 {
-                    throw new InvalidDataException(String.Format("File {0} isn't valid DB2 file!", fileName));
+                    throw new InvalidDataException(string.Format("File {0} isn't valid DB2 file!", fileName));
                 }
 
                 RecordsCount = reader.ReadInt32();
@@ -117,17 +117,11 @@ namespace DBCViewer
                     }
                     else
                     {
-                        XmlNodeList indexes = def.GetElementsByTagName("index");
-                        XmlNodeList fields = def.GetElementsByTagName("field");
-
-                        if (indexes.Count == 0)
-                            throw new Exception("index missing");
-
                         int idxCol = 0;
 
-                        foreach (XmlElement field in fields)
+                        foreach (Field field in def.Fields)
                         {
-                            if (field.Attributes["name"].Value == indexes[0]["primary"].InnerText)
+                            if (field.IsIndex)
                                 break;
                             idxCol++;
                         }

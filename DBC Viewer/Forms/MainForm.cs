@@ -6,6 +6,7 @@ using System.ComponentModel.Composition.Hosting;
 using System.Data;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -18,10 +19,10 @@ namespace DBCViewer
         private IWowClientDBReader m_dbreader;
         private FilterForm m_filterForm;
         private DefinitionSelect m_selector;
-        private XmlDocument m_definitions;
-        private XmlNodeList m_fields;
+        private DBFilesClient m_definitions;
+        private List<Field> m_fields;
         private AggregateCatalog m_catalog;
-        private XmlElement m_definition;        // definition for current file
+        private Table m_definition;             // definition for current file
         private string m_dbcName;               // file name without extension
         private string m_dbcFile;               // path to current file
         private DateTime m_startTime;
@@ -30,7 +31,7 @@ namespace DBCViewer
         // Properties
         public DataTable DataTable { get { return m_dataTable; } }
         public string WorkingFolder { get { return m_workingFolder; } }
-        public XmlElement Definition { get { return m_definition; } }
+        public Table Definition { get { return m_definition; } }
         public string DBCName { get { return m_dbcName; } }
         public int DefinitionIndex { get { return m_selector != null ? m_selector.DefinitionIndex : 0; } }
         public string DBCFile { get { return m_dbcFile; } }
@@ -45,7 +46,7 @@ namespace DBCViewer
         [Export("PluginFinished")]
         public void PluginFinished(int result)
         {
-            var msg = String.Format("Plugin finished! {0} rows affected.", result);
+            var msg = string.Format("Plugin finished! {0} rows affected.", result);
             toolStripStatusLabel1.Text = msg;
             MessageBox.Show(msg);
         }
@@ -103,7 +104,21 @@ namespace DBCViewer
 
         private void StartEditor()
         {
-            DefinitionEditor editor = new DefinitionEditor();
+            using (DefinitionEditor editor = new DefinitionEditor(this))
+            {
+                var result = editor.ShowDialog();
+                if (result == DialogResult.Abort)
+                    return;
+                if (result == DialogResult.OK)
+                    LoadFile(m_dbcFile);
+                else
+                    MessageBox.Show("Editor canceled! You can't open that file until you add proper definitions");
+            }
+        }
+
+        private void StartEditorNew()
+        {
+            DefinitionEditorNew editor = new DefinitionEditorNew(this);
             var result = editor.ShowDialog(this);
             editor.Dispose();
             if (result == DialogResult.Abort)
@@ -114,24 +129,24 @@ namespace DBCViewer
                 MessageBox.Show("Editor canceled! You can't open that file until you add proper definitions");
         }
 
-        private XmlElement GetDefinition()
+        private Table GetDefinition()
         {
-            XmlNodeList definitions = m_definitions["DBFilesClient"].GetElementsByTagName(m_dbcName);
+            var definitions = m_definitions.Tables.Where(t => t.Name == m_dbcName);
 
-            if (definitions.Count == 0)
+            if (!definitions.Any())
             {
-                definitions = m_definitions["DBFilesClient"].GetElementsByTagName(Path.GetFileName(m_dbcFile));
+                definitions = m_definitions.Tables.Where(t => t.Name == Path.GetFileName(m_dbcFile));
             }
 
-            if (definitions.Count == 0)
+            if (!definitions.Any())
             {
-                var msg = String.Format(CultureInfo.InvariantCulture, "{0} missing definition!", m_dbcName);
+                var msg = string.Format(CultureInfo.InvariantCulture, "{0} missing definition!", m_dbcName);
                 ShowErrorMessageBox(msg);
                 return null;
             }
-            else if (definitions.Count == 1)
+            else if (definitions.Count() == 1)
             {
-                return ((XmlElement)definitions[0]);
+                return definitions.First();
             }
             else
             {
@@ -140,157 +155,142 @@ namespace DBCViewer
                 var result = m_selector.ShowDialog(this);
                 if (result != DialogResult.OK || m_selector.DefinitionIndex == -1)
                     return null;
-                return ((XmlElement)definitions[m_selector.DefinitionIndex]);
+                return definitions.ElementAt(m_selector.DefinitionIndex);
             }
         }
 
         private static void ShowErrorMessageBox(string format, params object[] args)
         {
-            var msg = String.Format(CultureInfo.InvariantCulture, format, args);
+            var msg = string.Format(CultureInfo.InvariantCulture, format, args);
             MessageBox.Show(msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void CreateIndexes()
         {
-            XmlNodeList indexes = m_definition.GetElementsByTagName("index");
-            var columns = new DataColumn[indexes.Count];
-            var idx = 0;
-            foreach (XmlElement index in indexes)
-                columns[idx++] = m_dataTable.Columns[index["primary"].InnerText];
+            var indexes = m_definition.Fields.Where(f => f.IsIndex);
+
+            if (!indexes.Any())
+                return;
+
+            if (indexes.Count() > 1)
+                throw new Exception("Too many indexes!");
+
+            var columns = new DataColumn[1];
+
+            columns[0] = m_dataTable.Columns[indexes.First().Name];
+
             m_dataTable.PrimaryKey = columns;
         }
 
         private void CreateColumns()
         {
-            foreach (XmlElement field in m_fields)
+            foreach (Field field in m_fields)
             {
-                var colName = field.Attributes["name"].Value;
+                var colName = field.Name;
 
-                switch (field.Attributes["type"].Value)
+                switch (field.Type)
                 {
                     case "long":
-                        if (field.Attributes["arraysize"] != null)
+                        if (field.ArraySize > 1)
                         {
-                            int size = Convert.ToInt32(field.Attributes["arraysize"].Value);
-
-                            for (int i = 0; i < size; i++)
+                            for (int i = 0; i < field.ArraySize; i++)
                                 m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(long));
                         }
                         else
                             m_dataTable.Columns.Add(colName, typeof(long));
                         break;
                     case "ulong":
-                        if (field.Attributes["arraysize"] != null)
+                        if (field.ArraySize > 1)
                         {
-                            int size = Convert.ToInt32(field.Attributes["arraysize"].Value);
-
-                            for (int i = 0; i < size; i++)
+                            for (int i = 0; i < field.ArraySize; i++)
                                 m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(ulong));
                         }
                         else
                             m_dataTable.Columns.Add(colName, typeof(ulong));
                         break;
                     case "int":
-                        if (field.Attributes["arraysize"] != null)
+                        if (field.ArraySize > 1)
                         {
-                            int size = Convert.ToInt32(field.Attributes["arraysize"].Value);
-
-                            for (int i = 0; i < size; i++)
+                            for (int i = 0; i < field.ArraySize; i++)
                                 m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(int));
                         }
                         else
                             m_dataTable.Columns.Add(colName, typeof(int));
                         break;
                     case "uint":
-                        if (field.Attributes["arraysize"] != null)
+                        if (field.ArraySize > 1)
                         {
-                            int size = Convert.ToInt32(field.Attributes["arraysize"].Value);
-
-                            for (int i = 0; i < size; i++)
+                            for (int i = 0; i < field.ArraySize; i++)
                                 m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(uint));
                         }
                         else
                             m_dataTable.Columns.Add(colName, typeof(uint));
                         break;
                     case "short":
-                        if (field.Attributes["arraysize"] != null)
+                        if (field.ArraySize > 1)
                         {
-                            int size = Convert.ToInt32(field.Attributes["arraysize"].Value);
-
-                            for (int i = 0; i < size; i++)
+                            for (int i = 0; i < field.ArraySize; i++)
                                 m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(short));
                         }
                         else
                             m_dataTable.Columns.Add(colName, typeof(short));
                         break;
                     case "ushort":
-                        if (field.Attributes["arraysize"] != null)
+                        if (field.ArraySize > 1)
                         {
-                            int size = Convert.ToInt32(field.Attributes["arraysize"].Value);
-
-                            for (int i = 0; i < size; i++)
+                            for (int i = 0; i < field.ArraySize; i++)
                                 m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(ushort));
                         }
                         else
                             m_dataTable.Columns.Add(colName, typeof(ushort));
                         break;
                     case "sbyte":
-                        if (field.Attributes["arraysize"] != null)
+                        if (field.ArraySize > 1)
                         {
-                            int size = Convert.ToInt32(field.Attributes["arraysize"].Value);
-
-                            for (int i = 0; i < size; i++)
+                            for (int i = 0; i < field.ArraySize; i++)
                                 m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(sbyte));
                         }
                         else
                             m_dataTable.Columns.Add(colName, typeof(sbyte));
                         break;
                     case "byte":
-                        if (field.Attributes["arraysize"] != null)
+                        if (field.ArraySize > 1)
                         {
-                            int size = Convert.ToInt32(field.Attributes["arraysize"].Value);
-
-                            for (int i = 0; i < size; i++)
+                            for (int i = 0; i < field.ArraySize; i++)
                                 m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(byte));
                         }
                         else
                             m_dataTable.Columns.Add(colName, typeof(byte));
                         break;
                     case "float":
-                        if (field.Attributes["arraysize"] != null)
+                        if (field.ArraySize > 1)
                         {
-                            int size = Convert.ToInt32(field.Attributes["arraysize"].Value);
-
-                            for (int i = 0; i < size; i++)
+                            for (int i = 0; i < field.ArraySize; i++)
                                 m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(float));
                         }
                         else
                             m_dataTable.Columns.Add(colName, typeof(float));
                         break;
                     case "double":
-                        if (field.Attributes["arraysize"] != null)
+                        if (field.ArraySize > 1)
                         {
-                            int size = Convert.ToInt32(field.Attributes["arraysize"].Value);
-
-                            for (int i = 0; i < size; i++)
+                            for (int i = 0; i < field.ArraySize; i++)
                                 m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(double));
                         }
                         else
                             m_dataTable.Columns.Add(colName, typeof(double));
                         break;
                     case "string":
-                        if (field.Attributes["arraysize"] != null)
+                        if (field.ArraySize > 1)
                         {
-                            int size = Convert.ToInt32(field.Attributes["arraysize"].Value);
-
-                            for (int i = 0; i < size; i++)
+                            for (int i = 0; i < field.ArraySize; i++)
                                 m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(string));
                         }
                         else
                             m_dataTable.Columns.Add(colName, typeof(string));
                         break;
                     default:
-                        throw new ArgumentException(String.Format(CultureInfo.InvariantCulture, "Unknown field type {0}!", field.Attributes["type"].Value));
+                        throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Unknown field type {0}!", field.Type));
                 }
             }
         }
@@ -299,14 +299,14 @@ namespace DBCViewer
         {
             columnsFilterToolStripMenuItem.DropDownItems.Clear();
 
-            foreach (XmlElement field in m_fields)
+            foreach (Field field in m_fields)
             {
-                var colName = field.Attributes["name"].Value;
-                var type = field.Attributes["type"].Value;
-                var arraySize = Convert.ToInt32(field.Attributes["arraysize"]?.Value ?? "1");
-                var format = field.Attributes["format"] != null ? field.Attributes["format"].Value : String.Empty;
-                var visible = field.Attributes["visible"] != null ? field.Attributes["visible"].Value == "true" : true;
-                var width = field.Attributes["width"] != null ? Convert.ToInt32(field.Attributes["width"].Value, CultureInfo.InvariantCulture) : 100;
+                var colName = field.Name;
+                var type = field.Type;
+                var arraySize = field.ArraySize;
+                var format = field.Format;
+                var visible = field.Visible;
+                var width = field.Width == 0 ? 100 : field.Width;
 
                 var item = new ToolStripMenuItem(colName);
                 item.Click += new EventHandler(columnsFilterEventHandler);
@@ -317,7 +317,7 @@ namespace DBCViewer
 
                 if (arraySize > 1)
                 {
-                    for(int i = 0; i < arraySize; i++)
+                    for (int i = 0; i < arraySize; i++)
                     {
                         dataGridView1.Columns[colName + "_" + (i + 1)].Visible = visible;
                         dataGridView1.Columns[colName + "_" + (i + 1)].Width = width;
@@ -345,7 +345,7 @@ namespace DBCViewer
                     break;
             }
 
-            if (String.IsNullOrEmpty(format))
+            if (string.IsNullOrEmpty(format))
                 return DataGridViewAutoSizeColumnMode.DisplayedCells;
 
             switch (format.Substring(0, 1).ToUpper(CultureInfo.InvariantCulture))
@@ -366,9 +366,64 @@ namespace DBCViewer
 
         private void LoadDefinitions()
         {
-            m_definitions = new XmlDocument();
-            //var path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            m_definitions.Load(Path.Combine(m_workingFolder, "dbclayout.xml"));
+            string oldDefsPath = Path.Combine(m_workingFolder, "dbclayout.xml");
+
+            // convert...
+            if (File.Exists(oldDefsPath))
+            {
+                XmlDocument oldDefs = new XmlDocument();
+                //var path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                oldDefs.Load(oldDefsPath);
+
+                if (oldDefs["DBFilesClient"].GetElementsByTagName("Table").Count == 0)
+                {
+                    DBFilesClient db = new DBFilesClient();
+
+                    db.Tables = new List<Table>();
+
+                    foreach (XmlElement def in oldDefs["DBFilesClient"])
+                    {
+                        string name = def.Name;
+
+                        var fields = def.GetElementsByTagName("field");
+                        var index = def.GetElementsByTagName("index");
+                        var hasIndex = index.Count > 0;
+                        var build = Convert.ToInt32(def.Attributes["build"].Value);
+
+                        Table table = new Table();
+
+                        table.Name = name;
+                        table.Build = build;
+                        table.Fields = new List<Field>();
+
+                        for (int i = 0; i < fields.Count; i++)
+                        {
+                            var oldField = fields[i];
+
+                            Field field = new Field();
+
+                            field.Name = oldField.Attributes["name"].Value;
+                            field.ArraySize = Convert.ToInt32(oldField.Attributes["arraysize"]?.Value ?? "1");
+                            field.Format = oldField.Attributes["format"]?.Value ?? "";
+                            field.Type = oldField.Attributes["type"]?.Value ?? "int";
+                            field.Index = i;
+                            field.Visible = true;
+                            field.Width = 0;
+                            field.IsIndex = hasIndex ? index[0]["primary"].InnerText == field.Name : i == 0;
+
+                            table.Fields.Add(field);
+                        }
+
+                        db.Tables.Add(table);
+                    }
+
+                    DBFilesClient.Save(db, Path.Combine(m_workingFolder, "dblayout.xml"));
+
+                    File.Move(oldDefsPath, Path.Combine(m_workingFolder, "dbclayout.xml.bak"));
+                }
+            }
+
+            m_definitions = DBFilesClient.Load(Path.Combine(m_workingFolder, "dblayout.xml"));
         }
 
         private void Compose()
@@ -385,12 +440,12 @@ namespace DBCViewer
             Plugins[(int)obj].Run(m_dataTable);
         }
 
-        private static int GetFieldsCount(XmlNodeList fields)
+        private static int GetFieldsCount(List<Field> fields)
         {
             int count = 0;
-            foreach (XmlElement field in fields)
+            foreach (Field field in fields)
             {
-                switch (field.Attributes["type"].Value)
+                switch (field.Type)
                 {
                     case "long":
                     case "ulong":

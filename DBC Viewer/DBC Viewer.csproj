@@ -107,6 +107,12 @@
     <Compile Include="BinaryFormatter.cs" />
     <Compile Include="BinaryReaderExtensions.cs" />
     <Compile Include="FilterExpressions.cs" />
+    <Compile Include="Forms\DefinitionEditorNew.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DefinitionEditorNew.Designer.cs">
+      <DependentUpon>DefinitionEditorNew.cs</DependentUpon>
+    </Compile>
     <Compile Include="MyDataGridView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -162,8 +168,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Readers\STLReader.cs" />
     <Compile Include="Readers\WDBReader.cs" />
+    <Compile Include="TableDefinition.cs" />
     <EmbeddedResource Include="Forms\DefinitionEditor.resx">
       <DependentUpon>DefinitionEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DefinitionEditorNew.resx">
+      <DependentUpon>DefinitionEditorNew.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DefinitionSelect.resx">
       <DependentUpon>DefinitionSelect.cs</DependentUpon>
@@ -201,9 +211,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="dbc.ico" />
-    <Content Include="dbclayout.xml">
+    <Content Include="dblayout.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>

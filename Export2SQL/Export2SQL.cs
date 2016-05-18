@@ -66,7 +66,7 @@ namespace Export2SQL
                             result.Append("\"" + StripBadCharacters((string)row[i]) + "\"");
                             break;
                         default:
-                            throw new Exception(String.Format("Unknown field type {0}!", data.Columns[i].DataType.Name));
+                            throw new Exception(string.Format("Unknown field type {0}!", data.Columns[i].DataType.Name));
                     }
 
                     if (flds != data.Columns.Count - 1)
@@ -92,7 +92,7 @@ namespace Export2SQL
 
             for (var i = 0; i < data.Columns.Count; ++i)
             {
-                sqlWriter.Write("\t" + String.Format("`{0}`", data.Columns[i].ColumnName));
+                sqlWriter.Write("\t" + string.Format("`{0}`", data.Columns[i].ColumnName));
 
                 switch (data.Columns[i].DataType.Name)
                 {
@@ -130,7 +130,7 @@ namespace Export2SQL
                         sqlWriter.Write(" TEXT NOT NULL");
                         break;
                     default:
-                        throw new Exception(String.Format("Unknown field type {0}!", data.Columns[i].DataType.Name));
+                        throw new Exception(string.Format("Unknown field type {0}!", data.Columns[i].DataType.Name));
                 }
 
                 sqlWriter.WriteLine(",");

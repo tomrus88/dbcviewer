@@ -60,12 +60,12 @@ namespace DBCViewer
             {
                 if (reader.BaseStream.Length < HeaderSize)
                 {
-                    throw new InvalidDataException(String.Format("File {0} is corrupted!", fileName));
+                    throw new InvalidDataException(string.Format("File {0} is corrupted!", fileName));
                 }
 
                 if (reader.ReadUInt32() != DBCFmtSig)
                 {
-                    throw new InvalidDataException(String.Format("File {0} isn't valid DBC file!", fileName));
+                    throw new InvalidDataException(string.Format("File {0} isn't valid DBC file!", fileName));
                 }
 
                 RecordsCount = reader.ReadInt32();

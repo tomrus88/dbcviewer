@@ -119,7 +119,7 @@ namespace DBCViewer
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (String.IsNullOrEmpty(textBox2.Text))
+            if (string.IsNullOrEmpty(textBox2.Text))
             {
                 MessageBox.Show("Enter something first!");
                 textBox2.Focus();

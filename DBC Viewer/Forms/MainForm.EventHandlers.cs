@@ -2,14 +2,12 @@
 using System.ComponentModel;
 using System.ComponentModel.Composition.Hosting;
 using System.Data;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using System.Xml;
 
 namespace DBCViewer
 {
@@ -83,7 +81,7 @@ namespace DBCViewer
 
             try
             {
-                sb.AppendFormat(culture, "String: {0}{1}", !(m_dbreader is WDBReader) ? m_dbreader.StringTable[(int)val] : String.Empty, Environment.NewLine);
+                sb.AppendFormat(culture, "String: {0}{1}", !(m_dbreader is WDBReader) ? m_dbreader.StringTable[(int)val] : string.Empty, Environment.NewLine);
             }
             catch
             {
@@ -96,7 +94,7 @@ namespace DBCViewer
         private void dataGridView1_CurrentCellChanged(object sender, EventArgs e)
         {
             if (dataGridView1.CurrentCell != null)
-                label1.Text = String.Format(CultureInfo.InvariantCulture, "Current Cell: {0}x{1}", dataGridView1.CurrentCell.RowIndex, dataGridView1.CurrentCell.ColumnIndex);
+                label1.Text = string.Format(CultureInfo.InvariantCulture, "Current Cell: {0}x{1}", dataGridView1.CurrentCell.RowIndex, dataGridView1.CurrentCell.ColumnIndex);
         }
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
@@ -114,22 +112,22 @@ namespace DBCViewer
                 return;
             }
 
-            m_fields = m_definition.GetElementsByTagName("field");
+            m_fields = m_definition.Fields;
 
             string[] types = new string[m_fields.Count];
 
             for (int j = 0; j < m_fields.Count; ++j)
-                types[j] = m_fields[j].Attributes["type"].Value;
+                types[j] = m_fields[j].Type;
 
             string[] colNames = new string[m_fields.Count];
 
             for (int j = 0; j < m_fields.Count; ++j)
-                colNames[j] = m_fields[j].Attributes["name"].Value;
+                colNames[j] = m_fields[j].Name;
 
             int[] arraySizes = new int[m_fields.Count];
 
             for (int j = 0; j < m_fields.Count; ++j)
-                arraySizes[j] = Convert.ToInt32(m_fields[j].Attributes["arraysize"]?.Value ?? "1");
+                arraySizes[j] = m_fields[j].ArraySize;
 
             // hack for *.adb files (because they don't have FieldsCount)
             bool notADB = !(m_dbreader is ADBReader);
@@ -146,7 +144,7 @@ namespace DBCViewer
             int fcount = GetFieldsCount(m_fields);
             if (fcount != m_dbreader.FieldsCount && notADB && notWDB && notSTL && notDB3 && notDB4 && notDB5)
             {
-                string msg = String.Format(CultureInfo.InvariantCulture, "{0} has invalid definition!\nFields count mismatch: got {1}, expected {2}", Path.GetFileName(file), fcount, m_dbreader.FieldsCount);
+                string msg = string.Format(CultureInfo.InvariantCulture, "{0} has invalid definition!\nFields count mismatch: got {1}, expected {2}", Path.GetFileName(file), fcount, m_dbreader.FieldsCount);
                 ShowErrorMessageBox(msg);
                 e.Cancel = true;
                 return;
@@ -301,7 +299,7 @@ namespace DBCViewer
                                 }
                                 break;
                             default:
-                                throw new ArgumentException(String.Format(CultureInfo.InvariantCulture, "Unknown field type {0}!", types[j]));
+                                throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Unknown field type {0}!", types[j]));
                         }
                     }
                 }
@@ -360,8 +358,8 @@ namespace DBCViewer
             else
             {
                 TimeSpan total = DateTime.Now - m_startTime;
-                toolStripStatusLabel1.Text = String.Format(CultureInfo.InvariantCulture, "Ready. Loaded in {0} sec", total.TotalSeconds);
-                Text = String.Format(CultureInfo.InvariantCulture, "DBC Viewer - {0}", e.Result.ToString());
+                toolStripStatusLabel1.Text = string.Format(CultureInfo.InvariantCulture, "Ready. Loaded in {0} sec", total.TotalSeconds);
+                Text = string.Format(CultureInfo.InvariantCulture, "DBC Viewer - {0}", e.Result.ToString());
                 InitColumnsFilter();
             }
         }
@@ -430,13 +428,13 @@ namespace DBCViewer
 
         private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            XmlAttribute attribute = m_fields[e.ColumnIndex]?.Attributes["format"];
+            string format = m_fields[e.ColumnIndex].Format;
 
-            if (attribute == null)
+            if (string.IsNullOrWhiteSpace(format))
                 return;
 
-            string fmtStr = "{0:" + attribute.Value + "}";
-            e.Value = String.Format(new BinaryFormatter(), fmtStr, e.Value);
+            string fmtStr = "{0:" + format + "}";
+            e.Value = string.Format(new BinaryFormatter(), fmtStr, e.Value);
             e.FormattingApplied = true;
         }
 
@@ -522,6 +520,14 @@ namespace DBCViewer
             StartEditor();
         }
 
+        private void definitionsEditorNewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (m_dbcName == null)
+                return;
+
+            StartEditorNew();
+        }
+
         private void reloadDefinitionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             LoadDefinitions();
@@ -529,7 +535,7 @@ namespace DBCViewer
 
         private void dataGridView1_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
-            label2.Text = String.Format(CultureInfo.InvariantCulture, "Rows Displayed: {0}", dataGridView1.RowCount);
+            label2.Text = string.Format(CultureInfo.InvariantCulture, "Rows Displayed: {0}", dataGridView1.RowCount);
         }
 
         private void dataGridView1_CellContextMenuStripNeeded(object sender, DataGridViewCellContextMenuStripNeededEventArgs e)
@@ -550,7 +556,7 @@ namespace DBCViewer
             }
             else
             {
-                cellContextMenuStrip.Tag = String.Format("{0} {1}", e.ColumnIndex, e.RowIndex);
+                cellContextMenuStrip.Tag = string.Format("{0} {1}", e.ColumnIndex, e.RowIndex);
                 e.ContextMenuStrip = cellContextMenuStrip;
             }
         }
@@ -566,7 +572,7 @@ namespace DBCViewer
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("DBC Viewer @ 2013-2015 TOM_RUS", "About DBC Viewer", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("DBC Viewer @ 2010-2016 TOM_RUS", "About DBC Viewer", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

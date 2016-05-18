@@ -21,10 +21,10 @@ namespace DBCViewer
             // Handle format string.
             int baseNumber;
             // Handle null or empty format string, string with precision specifier.
-            string thisFmt = String.Empty;
+            string thisFmt = string.Empty;
             // Extract first character of format string (precision specifiers
             // are not supported).
-            if (!String.IsNullOrEmpty(format))
+            if (!string.IsNullOrEmpty(format))
                 thisFmt = format.Length > 1 ? format.Substring(0, 1) : format;
 
             // Get a byte array representing the numeric value.
@@ -74,7 +74,7 @@ namespace DBCViewer
                 }
                 catch (FormatException e)
                 {
-                    throw new FormatException(String.Format(CultureInfo.InvariantCulture, "The format of '{0}' is invalid.", format), e);
+                    throw new FormatException(string.Format(CultureInfo.InvariantCulture, "The format of '{0}' is invalid.", format), e);
                 }
             }
 
@@ -98,22 +98,22 @@ namespace DBCViewer
                     }
                     catch (FormatException e)
                     {
-                        throw new FormatException(String.Format(CultureInfo.InvariantCulture, "The format of '{0}' is invalid.", format), e);
+                        throw new FormatException(string.Format(CultureInfo.InvariantCulture, "The format of '{0}' is invalid.", format), e);
                     }
             }
 
             // Return a formatted string.
-            string numericString = String.Empty;
+            string numericString = string.Empty;
             for (int ctr = bytes.GetUpperBound(0); ctr >= bytes.GetLowerBound(0); ctr--)
             {
                 string byteString = Convert.ToString(bytes[ctr], baseNumber);
                 if (baseNumber == 2)
-                    byteString = new String('0', 8 - byteString.Length) + byteString;
+                    byteString = new string('0', 8 - byteString.Length) + byteString;
                 else if (baseNumber == 8)
-                    byteString = new String('0', 4 - byteString.Length) + byteString;
+                    byteString = new string('0', 4 - byteString.Length) + byteString;
                 // Base is 16.
                 else
-                    byteString = new String('0', 2 - byteString.Length) + byteString;
+                    byteString = new string('0', 2 - byteString.Length) + byteString;
 
                 numericString += byteString + " ";
             }
@@ -128,7 +128,7 @@ namespace DBCViewer
             else if (arg != null)
                 return arg.ToString();
             else
-                return String.Empty;
+                return string.Empty;
         }
     }
 }

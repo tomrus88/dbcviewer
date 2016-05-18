@@ -20,7 +20,7 @@ namespace DBCViewer
         /// </summary>
         public string GetCoords()
         {
-            string coords = String.Empty;
+            string coords = string.Empty;
 
             coords += X.ToString(CultureInfo.InvariantCulture);
             coords += " ";
@@ -47,7 +47,7 @@ namespace DBCViewer
         /// </summary>
         public string GetCoordsAsString()
         {
-            string coords = String.Empty;
+            string coords = string.Empty;
 
             coords += X.ToString(CultureInfo.InvariantCulture);
             coords += " ";
@@ -100,7 +100,7 @@ namespace DBCViewer
         /// </summary>
         public static string ReadStringNumber(this BinaryReader reader)
         {
-            string text = String.Empty;
+            string text = string.Empty;
             uint num = reader.ReadUInt32(); // string length
 
             for (uint i = 0; i < num; i++)
@@ -119,7 +119,7 @@ namespace DBCViewer
         public static string ReadStringNull(this BinaryReader reader)
         {
             byte num;
-            string text = String.Empty;
+            string text = string.Empty;
             System.Collections.Generic.List<byte> temp = new System.Collections.Generic.List<byte>();
 
             while ((num = reader.ReadByte()) != 0)

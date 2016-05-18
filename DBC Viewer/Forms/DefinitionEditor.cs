@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -17,8 +18,10 @@ namespace DBCViewer
         private bool m_saved;
         private MainForm m_mainForm;
 
-        public DefinitionEditor()
+        public DefinitionEditor(MainForm mainForm)
         {
+            m_mainForm = mainForm;
+
             InitializeComponent();
         }
 
@@ -43,48 +46,49 @@ namespace DBCViewer
 
         private void WriteXml()
         {
-            XmlDocument doc = new XmlDocument();
+            string docPath = Path.Combine(m_mainForm.WorkingFolder, "dblayout.xml");
 
-            string docPath = Path.Combine(m_mainForm.WorkingFolder, "dbclayout.xml");
+            DBFilesClient doc = DBFilesClient.Load(docPath);
 
-            doc.Load(docPath);
+            var nodes = doc.Tables.Where(t => t.Name == m_name);
 
-            XmlNodeList nodes = doc["DBFilesClient"].GetElementsByTagName(m_name);
+            Table oldnode;
 
-            XmlNode oldnode;
-
-            if (nodes.Count == 1)
-                oldnode = nodes[0];
-            else if (nodes.Count > 1)
-                oldnode = nodes[m_mainForm.DefinitionIndex];
+            if (nodes.Count() == 1)
+                oldnode = nodes.First();
+            else if (nodes.Count() > 1)
+                oldnode = nodes.ElementAt(m_mainForm.DefinitionIndex);
             else
                 oldnode = null;
 
-            XmlElement newnode = doc.CreateElement(m_name);
-            newnode.SetAttributeNode("build", "").Value = textBox1.Text;
+            Table newnode = new Table() { Name = m_name };
+            newnode.Build = Convert.ToInt32(textBox1.Text);
+            newnode.Fields = new List<Field>();
 
             foreach (ListViewItem item in listView1.Items)
             {
-                if (item.SubItems[3].Text == "True")
-                {
-                    XmlElement index = doc.CreateElement("index");
-                    XmlNode primary = index.AppendChild(doc.CreateElement("primary"));
-                    primary.InnerText = item.SubItems[1].Text;
-                    newnode.AppendChild(index);
-                }
+                Field ele = new Field();
+                ele.Name = item.SubItems[1].Text;
+                ele.Type = item.SubItems[2].Text;
+                ele.IsIndex = item.SubItems[3].Text == "True";
+                ele.ArraySize = 1;
+                ele.Format = string.Empty;
+                ele.Visible = true;
+                ele.Width = 0;
 
-                XmlElement ele = doc.CreateElement("field");
-                ele.SetAttributeNode("type", "").Value = item.SubItems[2].Text;
-                ele.SetAttributeNode("name", "").Value = item.SubItems[1].Text;
-                newnode.AppendChild(ele);
+                newnode.Fields.Add(ele);
             }
 
-            if (oldnode == null || oldnode.Attributes["build"].Value != textBox1.Text)
-                doc["DBFilesClient"].AppendChild(newnode);
+            if (oldnode == null || oldnode.Build != newnode.Build)
+                doc.Tables.Add(newnode);
             else
-                doc["DBFilesClient"].ReplaceChild(newnode, oldnode);
+            {
+                int index = doc.Tables.IndexOf(oldnode);
+                doc.Tables.RemoveAt(index);
+                doc.Tables.Insert(index, newnode);
+            }
 
-            doc.Save(docPath);
+            DBFilesClient.Save(doc, docPath);
             m_saved = true;
         }
 
@@ -92,7 +96,7 @@ namespace DBCViewer
         {
             m_name = m_mainForm.DBCName;
 
-            XmlElement def = m_mainForm.Definition;
+            Table def = m_mainForm.Definition;
 
             if (def == null)
             {
@@ -107,7 +111,7 @@ namespace DBCViewer
                 def = CreateDefaultDefinition();
                 if (def == null)
                 {
-                    MessageBox.Show(String.Format("Can't create default definitions for {0}", m_name));
+                    MessageBox.Show(string.Format("Can't create default definitions for {0}", m_name));
                     return;
                 }
             }
@@ -115,26 +119,23 @@ namespace DBCViewer
             InitForm(def);
         }
 
-        private void InitForm(XmlElement def)
+        private void InitForm(Table def)
         {
-            textBox1.Text = def.Attributes["build"].Value;
+            textBox1.Text = def.Build.ToString();
 
-            XmlNodeList fields = def.GetElementsByTagName("field");
-            XmlNodeList indexes = def.GetElementsByTagName("index");
-
-            var i = 0;
-            foreach (XmlNode field in fields)
+            for (int i = 0; i < def.Fields.Count; i++)
             {
-                listView1.Items.Add(new ListViewItem(new string[] {
+                listView1.Items.Add(new ListViewItem(new string[]
+                {
                     i.ToString(),
-                    field.Attributes["name"].Value,
-                    field.Attributes["type"].Value,
-                    IsIndexColumn(field.Attributes["name"].Value, indexes).ToString()}));
-                i++;
+                    def.Fields[i].Name,
+                    def.Fields[i].Type,
+                    def.Fields[i].IsIndex.ToString()
+                }));
             }
         }
 
-        private XmlElement CreateDefaultDefinition()
+        private Table CreateDefaultDefinition()
         {
             var file = m_mainForm.DBCFile;
 
@@ -150,32 +151,34 @@ namespace DBCViewer
                 var fieldsCount = br.ReadUInt32();
                 var recordsize = br.ReadUInt32();
 
-                if (recordsize % fieldsCount == 0) // only for files with 4 byte fields
+                // only for files with 4 byte fields (most of dbc's)
+                if ((recordsize % fieldsCount == 0) && (fieldsCount * 4 == recordsize))
                 {
-                    var doc = new XmlDocument();
+                    var doc = new Table();
 
-                    XmlElement newnode = doc.CreateElement(m_name);
-                    newnode.SetAttributeNode("build", "").Value = textBox1.Text;
+                    doc.Build = Convert.ToInt32(textBox1.Text);
 
                     for (int i = 0; i < fieldsCount; ++i)
                     {
+                        var field = new Field();
+
                         if (i == 0)
                         {
-                            XmlElement index = doc.CreateElement("index");
-                            XmlNode primary = index.AppendChild(doc.CreateElement("primary"));
-                            primary.InnerText = "field0";
-                            newnode.AppendChild(index);
+                            field.IsIndex = true;
+                            field.Name = "m_ID";
+                        }
+                        else
+                        {
+                            field.Name = string.Format("field{0}", i);
                         }
 
-                        XmlElement ele = doc.CreateElement("field");
-                        ele.SetAttributeNode("type", "").Value = "int";
-                        ele.SetAttributeNode("name", "").Value = String.Format("field{0}", i);
-                        newnode.AppendChild(ele);
+                        field.Type = "int";
+
+                        doc.Fields.Add(field);
                     }
 
-                    br.Close();
                     m_changed = true;
-                    return newnode;
+                    return doc;
                 }
             }
 
@@ -184,17 +187,7 @@ namespace DBCViewer
 
         private void DefinitionEditor_Load(object sender, EventArgs e)
         {
-            m_mainForm = (MainForm)Owner;
-
             InitDefinitions();
-        }
-
-        private static bool IsIndexColumn(string name, XmlNodeList indexes)
-        {
-            foreach (XmlNode index in indexes)
-                if (index["primary"].InnerText == name)
-                    return true;
-            return false;
         }
 
         private void listView1_DragDrop(object sender, DragEventArgs e)

@@ -23,7 +23,7 @@ namespace DBCViewer
         {
             foreach (IPlugin plugin in plugins)
             {
-                var item = String.Format(CultureInfo.InvariantCulture, "{0}", plugin.GetType().Name);
+                var item = string.Format(CultureInfo.InvariantCulture, "{0}", plugin.GetType().Name);
                 listBox1.Items.Add(item);
             }
 

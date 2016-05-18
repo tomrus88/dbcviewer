@@ -68,6 +68,7 @@
             this.fillToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cellContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.filterThisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.definitionsEditorNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -143,7 +144,8 @@
             this.resetFilterToolStripMenuItem,
             this.columnsFilterToolStripMenuItem,
             this.resetColumnsFilterToolStripMenuItem,
-            this.difinitionEditorToolStripMenuItem});
+            this.difinitionEditorToolStripMenuItem,
+            this.definitionsEditorNewToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "Edit";
@@ -151,34 +153,34 @@
             // filterToolStripMenuItem
             // 
             this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
-            this.filterToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.filterToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
             this.filterToolStripMenuItem.Text = "Filter...";
             this.filterToolStripMenuItem.Click += new System.EventHandler(this.filterToolStripMenuItem_Click);
             // 
             // resetFilterToolStripMenuItem
             // 
             this.resetFilterToolStripMenuItem.Name = "resetFilterToolStripMenuItem";
-            this.resetFilterToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.resetFilterToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
             this.resetFilterToolStripMenuItem.Text = "Reset Filter";
             this.resetFilterToolStripMenuItem.Click += new System.EventHandler(this.resetFilterToolStripMenuItem_Click);
             // 
             // columnsFilterToolStripMenuItem
             // 
             this.columnsFilterToolStripMenuItem.Name = "columnsFilterToolStripMenuItem";
-            this.columnsFilterToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.columnsFilterToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
             this.columnsFilterToolStripMenuItem.Text = "Columns Filter...";
             // 
             // resetColumnsFilterToolStripMenuItem
             // 
             this.resetColumnsFilterToolStripMenuItem.Name = "resetColumnsFilterToolStripMenuItem";
-            this.resetColumnsFilterToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.resetColumnsFilterToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
             this.resetColumnsFilterToolStripMenuItem.Text = "Reset Columns Filter";
             this.resetColumnsFilterToolStripMenuItem.Click += new System.EventHandler(this.resetColumnsFilterToolStripMenuItem_Click);
             // 
             // difinitionEditorToolStripMenuItem
             // 
             this.difinitionEditorToolStripMenuItem.Name = "difinitionEditorToolStripMenuItem";
-            this.difinitionEditorToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.difinitionEditorToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
             this.difinitionEditorToolStripMenuItem.Text = "Definitions Editor";
             this.difinitionEditorToolStripMenuItem.Click += new System.EventHandler(this.difinitionEditorToolStripMenuItem_Click);
             // 
@@ -408,6 +410,13 @@
             this.filterThisToolStripMenuItem.Text = "Filter this";
             this.filterThisToolStripMenuItem.Click += new System.EventHandler(this.filterThisToolStripMenuItem_Click);
             // 
+            // definitionsEditorNewToolStripMenuItem
+            // 
+            this.definitionsEditorNewToolStripMenuItem.Name = "definitionsEditorNewToolStripMenuItem";
+            this.definitionsEditorNewToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.definitionsEditorNewToolStripMenuItem.Text = "Definitions Editor New";
+            this.definitionsEditorNewToolStripMenuItem.Click += new System.EventHandler(this.definitionsEditorNewToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -477,6 +486,7 @@
         private System.Windows.Forms.ToolStripMenuItem filterThisToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem definitionsEditorNewToolStripMenuItem;
     }
 }
 

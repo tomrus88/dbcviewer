@@ -1,12 +1,10 @@
-﻿using System;
-using System.IO;
-using System.Xml;
+﻿using System.IO;
 
 namespace DBCViewer
 {
     class DBReaderFactory
     {
-        public static IWowClientDBReader GetReader(string file, XmlElement def)
+        public static IWowClientDBReader GetReader(string file, Table def)
         {
             IWowClientDBReader reader;
 
@@ -43,7 +41,7 @@ namespace DBCViewer
             else if (ext == ".STL")
                 reader = new STLReader(file);
             else
-                throw new InvalidDataException(String.Format("Unknown file type {0}", ext));
+                throw new InvalidDataException(string.Format("Unknown file type {0}", ext));
 
             return reader;
         }
