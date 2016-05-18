@@ -57,7 +57,7 @@ namespace DBCViewer
         public bool IsIndex { get; set; } = false;
         [XmlAttribute, DefaultValue(true)]
         public bool Visible { get; set; } = true;
-        [XmlAttribute, DefaultValue(0)]
-        public int Width { get; set; } = 0;
+        [XmlAttribute, DefaultValue(100)]
+        public int Width { get; set; } = 100;
     }
 }

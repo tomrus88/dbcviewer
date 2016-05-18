@@ -118,15 +118,16 @@ namespace DBCViewer
 
         private void StartEditorNew()
         {
-            DefinitionEditorNew editor = new DefinitionEditorNew(this);
-            var result = editor.ShowDialog(this);
-            editor.Dispose();
-            if (result == DialogResult.Abort)
-                return;
-            if (result == DialogResult.OK)
-                LoadFile(m_dbcFile);
-            else
-                MessageBox.Show("Editor canceled! You can't open that file until you add proper definitions");
+            using (DefinitionEditorNew editor = new DefinitionEditorNew(this))
+            {
+                var result = editor.ShowDialog(this);
+                if (result == DialogResult.Abort)
+                    return;
+                if (result == DialogResult.OK)
+                    LoadFile(m_dbcFile);
+                else
+                    MessageBox.Show("Editor canceled! You can't open that file until you add proper definitions");
+            }
         }
 
         private Table GetDefinition()
@@ -152,7 +153,7 @@ namespace DBCViewer
             {
                 m_selector = new DefinitionSelect();
                 m_selector.SetDefinitions(definitions);
-                var result = m_selector.ShowDialog(this);
+                var result = m_selector.ShowDialog();
                 if (result != DialogResult.OK || m_selector.DefinitionIndex == -1)
                     return null;
                 return definitions.ElementAt(m_selector.DefinitionIndex);
@@ -302,34 +303,29 @@ namespace DBCViewer
             foreach (Field field in m_fields)
             {
                 var colName = field.Name;
-                var type = field.Type;
-                var arraySize = field.ArraySize;
-                var format = field.Format;
-                var visible = field.Visible;
-                var width = field.Width == 0 ? 100 : field.Width;
 
                 var item = new ToolStripMenuItem(colName);
                 item.Click += new EventHandler(columnsFilterEventHandler);
                 item.CheckOnClick = true;
                 item.Name = colName;
-                item.Checked = !visible;
+                item.Checked = !field.Visible;
                 columnsFilterToolStripMenuItem.DropDownItems.Add(item);
 
-                if (arraySize > 1)
+                if (field.ArraySize > 1)
                 {
-                    for (int i = 0; i < arraySize; i++)
+                    for (int i = 0; i < field.ArraySize; i++)
                     {
-                        dataGridView1.Columns[colName + "_" + (i + 1)].Visible = visible;
-                        dataGridView1.Columns[colName + "_" + (i + 1)].Width = width;
-                        dataGridView1.Columns[colName + "_" + (i + 1)].AutoSizeMode = GetColumnAutoSizeMode(type, format);
+                        dataGridView1.Columns[colName + "_" + (i + 1)].Visible = field.Visible;
+                        dataGridView1.Columns[colName + "_" + (i + 1)].Width = field.Width;
+                        dataGridView1.Columns[colName + "_" + (i + 1)].AutoSizeMode = GetColumnAutoSizeMode(field.Type, field.Format);
                         dataGridView1.Columns[colName + "_" + (i + 1)].SortMode = DataGridViewColumnSortMode.Automatic;
                     }
                 }
                 else
                 {
-                    dataGridView1.Columns[colName].Visible = visible;
-                    dataGridView1.Columns[colName].Width = width;
-                    dataGridView1.Columns[colName].AutoSizeMode = GetColumnAutoSizeMode(type, format);
+                    dataGridView1.Columns[colName].Visible = field.Visible;
+                    dataGridView1.Columns[colName].Width = field.Width;
+                    dataGridView1.Columns[colName].AutoSizeMode = GetColumnAutoSizeMode(field.Type, field.Format);
                     dataGridView1.Columns[colName].SortMode = DataGridViewColumnSortMode.Automatic;
                 }
             }

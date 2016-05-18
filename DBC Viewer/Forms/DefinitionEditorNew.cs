@@ -65,21 +65,6 @@ namespace DBCViewer
             Table newnode = new Table() { Name = m_name };
             newnode.Build = Convert.ToInt32(textBox1.Text);
             newnode.Fields = (List<Field>)editorDataGridView.DataSource;
-            //newnode.Fields = new List<Field>();
-
-            //foreach (ListViewItem item in listView1.Items)
-            //{
-            //    Field ele = new Field();
-            //    ele.Name = item.SubItems[1].Text;
-            //    ele.Type = item.SubItems[2].Text;
-            //    ele.IsIndex = item.SubItems[3].Text == "True";
-            //    ele.ArraySize = 1;
-            //    ele.Format = string.Empty;
-            //    ele.Visible = true;
-            //    ele.Width = 0;
-
-            //    newnode.Fields.Add(ele);
-            //}
 
             if (oldnode == null || oldnode.Build != newnode.Build)
                 doc.Tables.Add(newnode);
