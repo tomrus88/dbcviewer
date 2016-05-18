@@ -181,6 +181,70 @@ namespace DBCViewer
         }
         #endregion
 
+        #region ReadPackedInt32
+        /// <summary>
+        ///  Reads the packed Int32 from the current stream and advances the current position of the stream by packed Int32 size.
+        /// </summary>
+        public static int ReadPackedInt32(this BinaryReader reader, int bits)
+        {
+            byte[] b = reader.ReadBytes((32 - bits) >> 3);
+
+            int i32 = 0;
+            for (int i = 0; i < b.Length; i++)
+                i32 |= b[i] << i * 8;
+
+            return i32;
+        }
+        #endregion
+
+        #region ReadPackedUInt32
+        /// <summary>
+        ///  Reads the packed UInt32 from the current stream and advances the current position of the stream by packed UInt32 size.
+        /// </summary>
+        public static uint ReadPackedUInt32(this BinaryReader reader, int bits)
+        {
+            byte[] b = reader.ReadBytes((32 - bits) >> 3);
+
+            uint u32 = 0;
+            for (int i = 0; i < b.Length; i++)
+                u32 |= (uint)b[i] << i * 8;
+
+            return u32;
+        }
+        #endregion
+
+        #region ReadPackedInt64
+        /// <summary>
+        ///  Reads the packed Int64 from the current stream and advances the current position of the stream by packed Int64 size.
+        /// </summary>
+        public static long ReadPackedInt64(this BinaryReader reader, int bits)
+        {
+            byte[] b = reader.ReadBytes((32 - bits) >> 3);
+
+            long i64 = 0;
+            for (int i = 0; i < b.Length; i++)
+                i64 |= (long)b[i] << i * 8;
+
+            return i64;
+        }
+        #endregion
+
+        #region ReadPackedUInt64
+        /// <summary>
+        ///  Reads the packed UInt64 from the current stream and advances the current position of the stream by packed UInt64 size.
+        /// </summary>
+        public static ulong ReadPackedUInt64(this BinaryReader reader, int bits)
+        {
+            byte[] b = reader.ReadBytes((32 - bits) >> 3);
+
+            ulong u64 = 0;
+            for (int i = 0; i < b.Length; i++)
+                u64 |= (ulong)b[i] << i * 8;
+
+            return u64;
+        }
+        #endregion
+
         public static T Read<T>(this BinaryReader reader, ColumnMeta meta) where T : struct
         {
             TypeCode code = Type.GetTypeCode(typeof(T));
@@ -213,57 +277,25 @@ namespace DBCViewer
                     if (meta == null)
                         value = reader.ReadInt32();
                     else
-                    {
-                        byte[] b = reader.ReadBytes((32 - meta.Bits) >> 3);
-
-                        int i32 = 0;
-                        for (int i = 0; i < b.Length; i++)
-                            i32 |= b[i] << i * 8;
-
-                        value = i32;
-                    }
+                        value = reader.ReadPackedInt32(meta.Bits);
                     break;
                 case TypeCode.UInt32:
                     if (meta == null)
                         value = reader.ReadUInt32();
                     else
-                    {
-                        byte[] b = reader.ReadBytes((32 - meta.Bits) >> 3);
-
-                        uint u32 = 0;
-                        for (int i = 0; i < b.Length; i++)
-                            u32 |= (uint)b[i] << i * 8;
-
-                        value = u32;
-                    }
+                        value = reader.ReadPackedUInt32(meta.Bits);
                     break;
                 case TypeCode.Int64:
                     if (meta == null)
                         value = reader.ReadInt64();
                     else
-                    {
-                        byte[] b = reader.ReadBytes((32 - meta.Bits) >> 3);
-
-                        long i64 = 0;
-                        for (int i = 0; i < b.Length; i++)
-                            i64 |= (long)b[i] << i * 8;
-
-                        value = i64;
-                    }
+                        value = reader.ReadPackedInt64(meta.Bits);
                     break;
                 case TypeCode.UInt64:
                     if (meta == null)
                         value = reader.ReadUInt64();
                     else
-                    {
-                        byte[] b = reader.ReadBytes((32 - meta.Bits) >> 3);
-
-                        ulong u64 = 0;
-                        for (int i = 0; i < b.Length; i++)
-                            u64 |= (ulong)b[i] << i * 8;
-
-                        value = u64;
-                    }
+                        value = reader.ReadPackedUInt64(meta.Bits);
                     break;
                 case TypeCode.String:
                     if (meta != null && meta.Bits != 0x00)
