@@ -210,46 +210,60 @@ namespace DBCViewer
                     value = reader.ReadUInt16();
                     break;
                 case TypeCode.Int32:
-                    if (meta == null || meta.Bits == 0x00)
+                    if (meta == null)
                         value = reader.ReadInt32();
-                    else if (meta.Bits == 0x08)
-                    {
-                        byte[] b = reader.ReadBytes(3);
-                        value = b[0] | b[1] << 8 | b[2] << 16;
-                    }
-                    else if (meta.Bits == 0x10)
-                    {
-                        byte[] b = reader.ReadBytes(2);
-                        value = b[0] | b[1] << 8;
-                    }
-                    else if (meta.Bits == 0x18)
-                        value = (int)reader.ReadByte();
                     else
-                        throw new Exception("TypeCode.Int32 Unknown meta.Flags");
+                    {
+                        byte[] b = reader.ReadBytes((32 - meta.Bits) >> 3);
+
+                        int i32 = 0;
+                        for (int i = 0; i < b.Length; i++)
+                            i32 |= b[i] << i * 8;
+
+                        value = i32;
+                    }
                     break;
                 case TypeCode.UInt32:
-                    if (meta == null || meta.Bits == 0x00)
+                    if (meta == null)
                         value = reader.ReadUInt32();
-                    else if (meta.Bits == 0x08)
-                    {
-                        byte[] b = reader.ReadBytes(3);
-                        value = b[0] | (uint)(b[1] << 8) | (uint)(b[2] << 16);
-                    }
-                    else if (meta.Bits == 0x10)
-                    {
-                        byte[] b = reader.ReadBytes(2);
-                        value = b[0] | (uint)(b[1] << 8);
-                    }
-                    else if (meta.Bits == 0x18)
-                        value = (uint)reader.ReadByte();
                     else
-                        throw new Exception("TypeCode.UInt32 Unknown meta.Flags");
+                    {
+                        byte[] b = reader.ReadBytes((32 - meta.Bits) >> 3);
+
+                        uint u32 = 0;
+                        for (int i = 0; i < b.Length; i++)
+                            u32 |= (uint)b[i] << i * 8;
+
+                        value = u32;
+                    }
                     break;
                 case TypeCode.Int64:
-                    value = reader.ReadInt64();
+                    if (meta == null)
+                        value = reader.ReadInt64();
+                    else
+                    {
+                        byte[] b = reader.ReadBytes((32 - meta.Bits) >> 3);
+
+                        long i64 = 0;
+                        for (int i = 0; i < b.Length; i++)
+                            i64 |= (long)b[i] << i * 8;
+
+                        value = i64;
+                    }
                     break;
                 case TypeCode.UInt64:
-                    value = reader.ReadUInt64();
+                    if (meta == null)
+                        value = reader.ReadUInt64();
+                    else
+                    {
+                        byte[] b = reader.ReadBytes((32 - meta.Bits) >> 3);
+
+                        ulong u64 = 0;
+                        for (int i = 0; i < b.Length; i++)
+                            u64 |= (ulong)b[i] << i * 8;
+
+                        value = u64;
+                    }
                     break;
                 case TypeCode.String:
                     if (meta != null && meta.Bits != 0x00)
