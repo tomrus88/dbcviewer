@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Xml;
 
 namespace DBCViewer
 {
     class DBReaderFactory
     {
-        public static IWowClientDBReader GetReader(string file)
+        public static IWowClientDBReader GetReader(string file, XmlElement def)
         {
             IWowClientDBReader reader;
 
@@ -31,7 +32,7 @@ namespace DBCViewer
                         }
                         catch
                         {
-                            reader = new DB5Reader(file);
+                            reader = new DB5Reader(file, def);
                         }
                     }
                 }

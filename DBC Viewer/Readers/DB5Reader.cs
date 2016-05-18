@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Xml;
 
 namespace DBCViewer
 {
     class ColumnMeta
     {
-        public ushort Flags;
+        public short Bits;
         public ushort Offset;
     }
 
@@ -39,7 +40,7 @@ namespace DBCViewer
             }
         }
 
-        public DB5Reader(string fileName)
+        public DB5Reader(string fileName, XmlElement def)
         {
             using (var reader = BinaryReaderExtensions.FromFile(fileName))
             {
@@ -60,7 +61,6 @@ namespace DBCViewer
 
                 uint tableHash = reader.ReadUInt32();
                 uint build = reader.ReadUInt32();
-                //uint unk1 = reader.ReadUInt32();
 
                 int MinId = reader.ReadInt32();
                 int MaxId = reader.ReadInt32();
@@ -70,7 +70,7 @@ namespace DBCViewer
 
                 bool hasIndex = (metaFlags & 0x4) != 0;
                 int colMetaSize = FieldsCount * 4;
-                //reader.BaseStream.Position += extraData;
+
                 columnMeta = new List<ColumnMeta>();
 
                 if (hasIndex)
@@ -80,7 +80,7 @@ namespace DBCViewer
 
                 for (int i = 0; i < FieldsCount; i++)
                 {
-                    columnMeta.Add(new ColumnMeta() { Flags = reader.ReadUInt16(), Offset = (ushort)(reader.ReadUInt16() + (hasIndex ? 4 : 0)) });
+                    columnMeta.Add(new ColumnMeta() { Bits = reader.ReadInt16(), Offset = (ushort)(reader.ReadUInt16() + (hasIndex ? 4 : 0)) });
                 }
 
                 int stringTableStart = HeaderSize + colMetaSize + RecordsCount * RecordSize;
@@ -117,18 +117,29 @@ namespace DBCViewer
                     }
                     else
                     {
-                        if (tableHash == 0xE491AC55)
+                        XmlNodeList indexes = def.GetElementsByTagName("index");
+                        XmlNodeList fields = def.GetElementsByTagName("field");
+
+                        if (indexes.Count == 0)
+                            throw new Exception("index missing");
+
+                        int idxCol = 0;
+
+                        foreach (XmlElement field in fields)
                         {
-                            int id = recordBytes[9] | recordBytes[10] << 8 | recordBytes[11] << 16;
-                            Lookup.Add(id, recordBytes);
+                            if (field.Attributes["name"].Value == indexes[0]["primary"].InnerText)
+                                break;
+                            idxCol++;
                         }
-                        else if (tableHash == 0x1a473014)
-                        {
-                            int id = recordBytes[5] | recordBytes[6] << 8 | recordBytes[7] << 16;
-                            Lookup.Add(id, recordBytes);
-                        }
-                        else
-                            Lookup.Add(BitConverter.ToInt32(recordBytes, 0), recordBytes);
+
+                        int numBytes = (32 - columnMeta[idxCol].Bits) >> 3;
+                        int offset = columnMeta[idxCol].Offset;
+                        int id = 0;
+
+                        for (int j = 0; j < numBytes; j++)
+                            id |= (recordBytes[offset + j] << (j * 8));
+
+                        Lookup.Add(id, recordBytes);
                     }
                 }
 

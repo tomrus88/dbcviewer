@@ -105,7 +105,7 @@ namespace DBCViewer
 
             try
             {
-                m_dbreader = DBReaderFactory.GetReader(file);
+                m_dbreader = DBReaderFactory.GetReader(file, m_definition);
             }
             catch (Exception ex)
             {

@@ -190,57 +190,57 @@ namespace DBCViewer
             switch (code)
             {
                 case TypeCode.Byte:
-                    if (meta != null && meta.Flags != 0x18)
+                    if (meta != null && meta.Bits != 0x18)
                         throw new Exception("TypeCode.Byte Unknown meta.Flags");
                     value = reader.ReadByte();
                     break;
                 case TypeCode.SByte:
-                    if (meta != null && meta.Flags != 0x18)
+                    if (meta != null && meta.Bits != 0x18)
                         throw new Exception("TypeCode.SByte Unknown meta.Flags");
                     value = reader.ReadSByte();
                     break;
                 case TypeCode.Int16:
-                    if (meta != null && meta.Flags != 0x10)
+                    if (meta != null && meta.Bits != 0x10)
                         throw new Exception("TypeCode.Int16 Unknown meta.Flags");
                     value = reader.ReadInt16();
                     break;
                 case TypeCode.UInt16:
-                    if (meta != null && meta.Flags != 0x10)
+                    if (meta != null && meta.Bits != 0x10)
                         throw new Exception("TypeCode.UInt16 Unknown meta.Flags");
                     value = reader.ReadUInt16();
                     break;
                 case TypeCode.Int32:
-                    if (meta == null || meta.Flags == 0x00)
+                    if (meta == null || meta.Bits == 0x00)
                         value = reader.ReadInt32();
-                    else if (meta.Flags == 0x08)
+                    else if (meta.Bits == 0x08)
                     {
                         byte[] b = reader.ReadBytes(3);
                         value = b[0] | b[1] << 8 | b[2] << 16;
                     }
-                    else if (meta.Flags == 0x10)
+                    else if (meta.Bits == 0x10)
                     {
                         byte[] b = reader.ReadBytes(2);
                         value = b[0] | b[1] << 8;
                     }
-                    else if (meta.Flags == 0x18)
+                    else if (meta.Bits == 0x18)
                         value = (int)reader.ReadByte();
                     else
                         throw new Exception("TypeCode.Int32 Unknown meta.Flags");
                     break;
                 case TypeCode.UInt32:
-                    if (meta == null || meta.Flags == 0x00)
+                    if (meta == null || meta.Bits == 0x00)
                         value = reader.ReadUInt32();
-                    else if (meta.Flags == 0x08)
+                    else if (meta.Bits == 0x08)
                     {
                         byte[] b = reader.ReadBytes(3);
                         value = b[0] | (uint)(b[1] << 8) | (uint)(b[2] << 16);
                     }
-                    else if (meta.Flags == 0x10)
+                    else if (meta.Bits == 0x10)
                     {
                         byte[] b = reader.ReadBytes(2);
                         value = b[0] | (uint)(b[1] << 8);
                     }
-                    else if (meta.Flags == 0x18)
+                    else if (meta.Bits == 0x18)
                         value = (uint)reader.ReadByte();
                     else
                         throw new Exception("TypeCode.UInt32 Unknown meta.Flags");
@@ -252,12 +252,12 @@ namespace DBCViewer
                     value = reader.ReadUInt64();
                     break;
                 case TypeCode.String:
-                    if (meta != null && meta.Flags != 0x00)
+                    if (meta != null && meta.Bits != 0x00)
                         throw new Exception("TypeCode.String Unknown meta.Flags");
                     value = reader.ReadStringNull();
                     break;
                 case TypeCode.Single:
-                    if (meta != null && meta.Flags != 0x00)
+                    if (meta != null && meta.Bits != 0x00)
                         throw new Exception("TypeCode.Single Unknown meta.Flags");
                     value = reader.ReadSingle();
                     break;
