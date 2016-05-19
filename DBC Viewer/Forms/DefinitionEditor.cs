@@ -15,6 +15,7 @@ namespace DBCViewer
         private bool m_saved;
         private MainForm m_mainForm;
         private Table editingTable;
+        private Table origTable;
 
         public DefinitionEditor(MainForm mainForm)
         {
@@ -25,11 +26,15 @@ namespace DBCViewer
 
         private void doneButton_Click(object sender, EventArgs e)
         {
+            if (!m_changed)
+                return;
+
             if (!CheckColumns())
             {
                 MessageBox.Show("Column names aren't unique. Please fix them first.");
                 return;
             }
+
             WriteXml();
             Close();
         }
@@ -49,10 +54,18 @@ namespace DBCViewer
             Table newnode = new Table();
             newnode.Name = m_mainForm.DBCName;
             newnode.Build = Convert.ToInt32(buildTextBox.Text);
-            newnode.Fields = new List<Field>(editingTable.Fields);
+            newnode.Fields = new List<Field>();
 
-            if (editingTable.Build != newnode.Build)
+            foreach (Field f in editingTable.Fields)
+                newnode.Fields.Add(f.Clone());
+
+            if (origTable == null || editingTable.Build != newnode.Build)
                 m_mainForm.Definitions.Tables.Add(newnode);
+            else
+            {
+                int index = m_mainForm.Definitions.Tables.IndexOf(origTable);
+                m_mainForm.Definitions.Tables[index] = newnode;
+            }
 
             DBFilesClient.Save(m_mainForm.Definitions, docPath);
             m_saved = true;
@@ -60,7 +73,9 @@ namespace DBCViewer
 
         public void InitDefinitions()
         {
-            Table def = m_mainForm.Definition;
+            origTable = m_mainForm.Definition;
+
+            var def = origTable?.Clone();
 
             if (def == null)
             {

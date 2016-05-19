@@ -3017,15 +3017,15 @@
     <Field Name="m_flags" Type="int" Format="X8" />
     <Field Name="m_reward" Type="string" />
     <Field Name="m_instance_id" Type="short" />
-    <Field Name="m_faction" Type="ushort" />
     <Field Name="m_supercedes" Type="ushort" />
-    <Field Name="m_criteria_tree" Type="ushort" />
-    <Field Name="m_ui_order" Type="ushort" />
     <Field Name="m_category" Type="ushort" />
+    <Field Name="m_ui_order" Type="ushort" />
     <Field Name="m_iconID" Type="ushort" />
-    <Field Name="m_minimum_criteria" Type="byte" />
-    <Field Name="m_shares_criteria" Type="byte" />
+    <Field Name="m_shares_criteria" Type="ushort" />
+    <Field Name="m_criteria_tree" Type="ushort" />
+    <Field Name="m_faction" Type="byte" />
     <Field Name="m_points" Type="byte" />
+    <Field Name="m_minimum_criteria" Type="byte" />
     <Field Name="m_ID" Type="uint" IsIndex="true" />
   </Table>
   <Table Name="Achievement_Criteria" Build="15882">
@@ -7917,5 +7917,9 @@
     <Field Name="field1" Type="int" />
     <Field Name="field2" Type="int" />
     <Field Name="field3" Type="int" />
+  </Table>
+  <Table Name="AreaTriggerBox" Build="21691">
+    <Field Name="m_ID" Type="int" IsIndex="true" />
+    <Field Name="m_box" Type="float" ArraySize="3" />
   </Table>
 </DBFilesClient>

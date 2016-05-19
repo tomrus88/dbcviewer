@@ -38,6 +38,17 @@ namespace DBCViewer
         public int Build { get; set; }
         [XmlElement("Field")]
         public List<Field> Fields { get; set; }
+
+        public Table Clone()
+        {
+            Table cloned = new Table();
+            cloned.Name = Name;
+            cloned.Build = Build;
+            cloned.Fields = new List<Field>();
+            foreach (Field f in Fields)
+                cloned.Fields.Add(f.Clone());
+            return cloned;
+        }
     }
 
     [Serializable]
