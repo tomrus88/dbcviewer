@@ -67,10 +67,10 @@ namespace DBCViewer
                 int MaxId = reader.ReadInt32();
                 int locale = reader.ReadInt32();
                 int CopyTableSize = reader.ReadInt32();
-                int metaFlags = reader.ReadInt32();
+                int flags = reader.ReadInt32();
 
-                IsSparseTable = (metaFlags & 0x1) != 0;
-                bool hasIndex = (metaFlags & 0x4) != 0;
+                IsSparseTable = (flags & 0x1) != 0;
+                bool hasIndex = (flags & 0x4) != 0;
                 int colMetaSize = FieldsCount * 4;
 
                 columnMeta = new List<ColumnMeta>();
