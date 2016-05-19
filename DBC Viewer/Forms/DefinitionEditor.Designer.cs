@@ -61,6 +61,7 @@
             this.editorDataGridView.Name = "editorDataGridView";
             this.editorDataGridView.Size = new System.Drawing.Size(682, 429);
             this.editorDataGridView.TabIndex = 0;
+            this.editorDataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.editorDataGridView_CellValueChanged);
             this.editorDataGridView.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.editorDataGridView_DefaultValuesNeeded);
             this.editorDataGridView.UserAddedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.editorDataGridView_UserAddedRow);
             this.editorDataGridView.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.editorDataGridView_UserDeletedRow);

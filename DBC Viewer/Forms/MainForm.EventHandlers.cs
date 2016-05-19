@@ -434,8 +434,6 @@ namespace DBCViewer
             {
                 for (int j = 0; j < m_fields[i].ArraySize; j++)
                 {
-                    columnIndexFix++;
-
                     if (columnIndex == columnIndexFix)
                     {
                         string format = m_fields[i].Format;
@@ -448,6 +446,8 @@ namespace DBCViewer
                         e.FormattingApplied = true;
                         return;
                     }
+
+                    columnIndexFix++;
                 }
             }
         }

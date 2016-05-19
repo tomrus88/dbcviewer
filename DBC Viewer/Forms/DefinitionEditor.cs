@@ -219,6 +219,13 @@ namespace DBCViewer
             m_changed = true;
         }
 
+        private void editorDataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex == -1)
+                return;
+            m_changed = true;
+        }
+
         private void editorDataGridView_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)
         {
             e.Row.Cells[0].Value = e.Row.Index;
