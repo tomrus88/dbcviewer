@@ -67,7 +67,7 @@ namespace DBCViewer
             }
             else
             {
-                if (!(m_dbreader is WDBReader) && !(m_dbreader is STLReader))
+                if (m_dbreader.StringTable != null)
                     val = (uint)(from k in m_dbreader.StringTable where string.Compare(k.Value, (string)value, StringComparison.Ordinal) == 0 select k.Key).FirstOrDefault();
             }
 
@@ -314,13 +314,13 @@ namespace DBCViewer
             //    MessageBox.Show("extra data detected!");
             //}
 
-            if (dataGridView1.InvokeRequired)
-            {
-                SetDataViewDelegate d = new SetDataViewDelegate(SetDataSource);
-                Invoke(d, new object[] { m_dataTable.DefaultView });
-            }
-            else
-                SetDataSource(m_dataTable.DefaultView);
+            //if (dataGridView1.InvokeRequired)
+            //{
+            //    SetDataViewDelegate d = new SetDataViewDelegate(SetDataSource);
+            //    Invoke(d, new object[] { m_dataTable.DefaultView });
+            //}
+            //else
+            //    SetDataSource(m_dataTable.DefaultView);
 
             e.Result = file;
         }
@@ -358,7 +358,8 @@ namespace DBCViewer
             {
                 TimeSpan total = DateTime.Now - m_startTime;
                 toolStripStatusLabel1.Text = string.Format(CultureInfo.InvariantCulture, "Ready. Loaded in {0} sec", total.TotalSeconds);
-                Text = string.Format(CultureInfo.InvariantCulture, "DBC Viewer - {0}", e.Result.ToString());
+                Text = string.Format(CultureInfo.InvariantCulture, "DBC Viewer - {0}", e.Result);
+                SetDataSource(m_dataTable.DefaultView);
                 InitColumnsFilter();
             }
         }
