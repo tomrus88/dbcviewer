@@ -30,6 +30,8 @@ namespace DBCViewer
             }
         }
 
+        public bool IsSparseTable { get { return false; } }
+
         public DB3Reader(string fileName)
         {
             using (var reader = BinaryReaderExtensions.FromFile(fileName))

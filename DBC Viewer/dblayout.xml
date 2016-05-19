@@ -7922,4 +7922,15 @@
     <Field Name="m_ID" Type="int" IsIndex="true" />
     <Field Name="m_box" Type="float" ArraySize="3" />
   </Table>
+  <Table Name="ConversationLine" Build="21691">
+    <Field Name="m_ID" Type="int" IsIndex="true" />
+    <Field Name="field00" Type="int" />
+    <Field Name="field04" Type="int" />
+    <Field Name="field08" Type="int" />
+    <Field Name="field0C" Type="ushort" />
+    <Field Name="field0E" Type="ushort" />
+    <Field Name="field10" Type="byte" />
+    <Field Name="field11" Type="byte" />
+    <Field Name="field12" Type="byte" />
+  </Table>
 </DBFilesClient>

@@ -8,7 +8,7 @@ namespace DBCViewer
     class ColumnMeta
     {
         public short Bits;
-        public ushort Offset;
+        public short Offset;
     }
 
     class DB5Reader : IWowClientDBReader
@@ -17,7 +17,7 @@ namespace DBCViewer
         private const uint DB5FmtSig = 0x35424457;          // WDB5
         List<ColumnMeta> columnMeta;
 
-        public int RecordsCount { get; private set; }
+        public int RecordsCount => Lookup.Count;
         public int FieldsCount { get; private set; }
         public int RecordSize { get; private set; }
         public int StringTableSize { get; private set; }
@@ -32,12 +32,14 @@ namespace DBCViewer
         {
             get
             {
-                foreach(var row in Lookup)
+                foreach (var row in Lookup)
                 {
                     yield return new BinaryReader(new MemoryStream(row.Value), Encoding.UTF8);
                 }
             }
         }
+
+        public bool IsSparseTable { get; private set; }
 
         public DB5Reader(string fileName, Table def)
         {
@@ -53,10 +55,10 @@ namespace DBCViewer
                     throw new InvalidDataException(string.Format("File {0} isn't valid DB2 file!", fileName));
                 }
 
-                RecordsCount = reader.ReadInt32();
+                int recordsCount = reader.ReadInt32();
                 FieldsCount = reader.ReadInt32();
                 RecordSize = reader.ReadInt32();
-                StringTableSize = reader.ReadInt32();
+                StringTableSize = reader.ReadInt32(); // also offset for sparse table
 
                 uint tableHash = reader.ReadUInt32();
                 uint build = reader.ReadUInt32();
@@ -67,7 +69,7 @@ namespace DBCViewer
                 int CopyTableSize = reader.ReadInt32();
                 int metaFlags = reader.ReadInt32();
 
-                bool isSparse = (metaFlags & 0x1) != 0;
+                IsSparseTable = (metaFlags & 0x1) != 0;
                 bool hasIndex = (metaFlags & 0x4) != 0;
                 int colMetaSize = FieldsCount * 4;
 
@@ -80,73 +82,112 @@ namespace DBCViewer
 
                 for (int i = 0; i < FieldsCount; i++)
                 {
-                    columnMeta.Add(new ColumnMeta() { Bits = reader.ReadInt16(), Offset = (ushort)(reader.ReadUInt16() + (hasIndex ? 4 : 0)) });
+                    columnMeta.Add(new ColumnMeta() { Bits = reader.ReadInt16(), Offset = (short)(reader.ReadInt16() + (hasIndex ? 4 : 0)) });
                 }
 
-                int stringTableStart = HeaderSize + colMetaSize + RecordsCount * RecordSize;
-                int stringTableEnd = stringTableStart + StringTableSize;
+                long recordsOffset = HeaderSize + colMetaSize;
+                long eof = reader.BaseStream.Length;
+                long copyTablePos = eof - CopyTableSize;
+                long indexTablePos = copyTablePos - (hasIndex ? recordsCount * 4 : 0);
+                long stringTablePos = indexTablePos - (IsSparseTable ? 0 : StringTableSize);
 
                 // Index table
                 int[] m_indexes = null;
 
                 if (hasIndex)
                 {
-                    reader.BaseStream.Position = stringTableEnd;
+                    reader.BaseStream.Position = indexTablePos;
 
-                    m_indexes = new int[RecordsCount];
+                    m_indexes = new int[recordsCount];
 
-                    for (int i = 0; i < RecordsCount; i++)
+                    for (int i = 0; i < recordsCount; i++)
                         m_indexes[i] = reader.ReadInt32();
                 }
 
-                // Records table
-                reader.BaseStream.Position = HeaderSize + colMetaSize;
-
-                for (int i = 0; i < RecordsCount; i++)
+                if (IsSparseTable)
                 {
-                    byte[] recordBytes = reader.ReadBytes(RecordSize);
+                    // Records table
+                    reader.BaseStream.Position = StringTableSize;
 
-                    if (hasIndex)
+                    int ofsTableSize = MaxId - MinId + 1;
+
+                    for (int i = 0; i < ofsTableSize; i++)
                     {
-                        byte[] newRecordBytes = new byte[RecordSize + 4];
+                        int offset = reader.ReadInt32();
+                        int length = reader.ReadInt16();
 
-                        Array.Copy(BitConverter.GetBytes(m_indexes[i]), newRecordBytes, 4);
+                        if (offset == 0 || length == 0)
+                            continue;
+
+                        int id = MinId + i;
+
+                        long oldPos = reader.BaseStream.Position;
+
+                        reader.BaseStream.Position = offset;
+
+                        byte[] recordBytes = reader.ReadBytes(length);
+
+                        byte[] newRecordBytes = new byte[recordBytes.Length + 4];
+
+                        Array.Copy(BitConverter.GetBytes(id), newRecordBytes, 4);
                         Array.Copy(recordBytes, 0, newRecordBytes, 4, recordBytes.Length);
 
-                        Lookup.Add(m_indexes[i], newRecordBytes);
-                    }
-                    else
-                    {
-                        int idxCol = def.Fields.FindIndex(f => f.IsIndex);
+                        Lookup.Add(id, newRecordBytes);
 
-                        if (idxCol == -1)
-                            throw new Exception(string.Format("Definition for file {0} has no index field specified!", fileName));
-
-                        int numBytes = (32 - columnMeta[idxCol].Bits) >> 3;
-                        int offset = columnMeta[idxCol].Offset;
-                        int id = 0;
-
-                        for (int j = 0; j < numBytes; j++)
-                            id |= (recordBytes[offset + j] << (j * 8));
-
-                        Lookup.Add(id, recordBytes);
+                        reader.BaseStream.Position = oldPos;
                     }
                 }
-
-                // Strings table
-                reader.BaseStream.Position = stringTableStart;
-
-                StringTable = new Dictionary<int, string>();
-
-                while (reader.BaseStream.Position != stringTableEnd)
+                else
                 {
-                    int index = (int)reader.BaseStream.Position - stringTableStart;
-                    StringTable[index] = reader.ReadStringNull();
+                    // Records table
+                    reader.BaseStream.Position = recordsOffset;
+
+                    for (int i = 0; i < recordsCount; i++)
+                    {
+                        reader.BaseStream.Position = recordsOffset + i * RecordSize;
+
+                        byte[] recordBytes = reader.ReadBytes(RecordSize);
+
+                        if (hasIndex)
+                        {
+                            byte[] newRecordBytes = new byte[RecordSize + 4];
+
+                            Array.Copy(BitConverter.GetBytes(m_indexes[i]), newRecordBytes, 4);
+                            Array.Copy(recordBytes, 0, newRecordBytes, 4, recordBytes.Length);
+
+                            Lookup.Add(m_indexes[i], newRecordBytes);
+                        }
+                        else
+                        {
+                            int idxCol = def.Fields.FindIndex(f => f.IsIndex);
+
+                            if (idxCol == -1)
+                                throw new Exception(string.Format("Definition for file {0} has no index field specified!", fileName));
+
+                            int numBytes = (32 - columnMeta[idxCol].Bits) >> 3;
+                            int offset = columnMeta[idxCol].Offset;
+                            int id = 0;
+
+                            for (int j = 0; j < numBytes; j++)
+                                id |= (recordBytes[offset + j] << (j * 8));
+
+                            Lookup.Add(id, recordBytes);
+                        }
+                    }
+
+                    // Strings table
+                    reader.BaseStream.Position = stringTablePos;
+
+                    StringTable = new Dictionary<int, string>();
+
+                    while (reader.BaseStream.Position != stringTablePos + StringTableSize)
+                    {
+                        int index = (int)(reader.BaseStream.Position - stringTablePos);
+                        StringTable[index] = reader.ReadStringNull();
+                    }
                 }
 
                 // Copy index table
-                long copyTablePos = stringTableEnd + (hasIndex ? 4 * RecordsCount : 0);
-
                 if (copyTablePos != reader.BaseStream.Length && CopyTableSize != 0)
                 {
                     reader.BaseStream.Position = copyTablePos;
@@ -156,7 +197,7 @@ namespace DBCViewer
                         int id = reader.ReadInt32();
                         int idcopy = reader.ReadInt32();
 
-                        RecordsCount++;
+                        recordsCount++;
 
                         byte[] copyRow = Lookup[idcopy];
                         byte[] newRow = new byte[copyRow.Length];

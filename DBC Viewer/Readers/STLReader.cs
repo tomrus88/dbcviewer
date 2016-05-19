@@ -69,6 +69,8 @@ namespace DBCViewer
             }
         }
 
+        public bool IsSparseTable { get { return false; } }
+
         private BinaryReader reader;
 
         public STLReader(string fileName)

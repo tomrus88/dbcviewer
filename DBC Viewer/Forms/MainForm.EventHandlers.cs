@@ -276,7 +276,7 @@ namespace DBCViewer
                                         {
                                             try
                                             {
-                                                dataRow[colNames[j] + "_" + (i + 1)] = m_dbreader.StringTable[br.Read<int>(meta?[j])];
+                                                dataRow[colNames[j] + "_" + (i + 1)] = m_dbreader.IsSparseTable ? br.ReadStringNull() : m_dbreader.StringTable[br.Read<int>(meta?[j])];
                                             }
                                             catch
                                             {
@@ -288,7 +288,7 @@ namespace DBCViewer
                                     {
                                         try
                                         {
-                                            dataRow[colNames[j]] = m_dbreader.StringTable[br.Read<int>(meta?[j])];
+                                            dataRow[colNames[j]] = m_dbreader.IsSparseTable ? br.ReadStringNull() : m_dbreader.StringTable[br.Read<int>(meta?[j])];
                                         }
                                         catch
                                         {

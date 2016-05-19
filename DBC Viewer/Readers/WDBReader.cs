@@ -42,6 +42,8 @@ namespace DBCViewer
             }
         }
 
+        public bool IsSparseTable { get { return false; } }
+
         public WDBReader(string fileName)
         {
             using (var reader = BinaryReaderExtensions.FromFile(fileName))
