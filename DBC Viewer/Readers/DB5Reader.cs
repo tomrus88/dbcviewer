@@ -61,25 +61,14 @@ namespace DBCViewer
                 StringTableSize = reader.ReadInt32(); // also offset for sparse table
 
                 uint tableHash = reader.ReadUInt32();
-                uint build = reader.ReadUInt32();
+                uint build = reader.ReadUInt32(); // 21737: no longer build number...
 
                 int MinId = reader.ReadInt32();
                 int MaxId = reader.ReadInt32();
                 int locale = reader.ReadInt32();
                 int CopyTableSize = reader.ReadInt32();
-
-                int flags;
-                short IDIndex = -1;
-
-                if (build > 21737)
-                {
-                    flags = reader.ReadUInt16();
-                    IDIndex = reader.ReadInt16();
-                }
-                else
-                {
-                    flags = reader.ReadInt32();
-                }
+                ushort flags = reader.ReadUInt16();
+                ushort IDIndex = reader.ReadUInt16();
 
                 IsSparseTable = (flags & 0x1) != 0;
                 bool hasIndex = (flags & 0x4) != 0;
@@ -171,13 +160,8 @@ namespace DBCViewer
                         }
                         else
                         {
-                            int idxCol = IDIndex != -1 ? IDIndex : def.Fields.FindIndex(f => f.IsIndex);
-
-                            if (idxCol == -1)
-                                throw new Exception(string.Format("Definition for file {0} has no index field specified!", fileName));
-
-                            int numBytes = (32 - columnMeta[idxCol].Bits) >> 3;
-                            int offset = columnMeta[idxCol].Offset;
+                            int numBytes = (32 - columnMeta[IDIndex].Bits) >> 3;
+                            int offset = columnMeta[IDIndex].Offset;
                             int id = 0;
 
                             for (int j = 0; j < numBytes; j++)
