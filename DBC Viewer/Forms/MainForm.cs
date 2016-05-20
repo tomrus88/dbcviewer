@@ -438,6 +438,9 @@ namespace DBCViewer
                         count++;
                         break;
                 }
+
+                if (field.ArraySize > 1)
+                    count += field.ArraySize - 1;
             }
             return count;
         }
