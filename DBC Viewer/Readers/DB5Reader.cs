@@ -67,7 +67,19 @@ namespace DBCViewer
                 int MaxId = reader.ReadInt32();
                 int locale = reader.ReadInt32();
                 int CopyTableSize = reader.ReadInt32();
-                int flags = reader.ReadInt32();
+
+                int flags;
+                short IDIndex = -1;
+
+                if (build > 21737)
+                {
+                    flags = reader.ReadUInt16();
+                    IDIndex = reader.ReadInt16();
+                }
+                else
+                {
+                    flags = reader.ReadInt32();
+                }
 
                 IsSparseTable = (flags & 0x1) != 0;
                 bool hasIndex = (flags & 0x4) != 0;
@@ -159,7 +171,7 @@ namespace DBCViewer
                         }
                         else
                         {
-                            int idxCol = def.Fields.FindIndex(f => f.IsIndex);
+                            int idxCol = IDIndex != -1 ? IDIndex : def.Fields.FindIndex(f => f.IsIndex);
 
                             if (idxCol == -1)
                                 throw new Exception(string.Format("Definition for file {0} has no index field specified!", fileName));
