@@ -66,19 +66,16 @@ namespace DBCViewer
                 if(signature == ADBFmtSig)
                 {
                     int unk5 = reader.ReadInt32(); // new field in WCH2
-                    ;
+
+                    if (max_id != 0)
+                    {
+                        reader.ReadBytes(max_id * 4 - HeaderSize);     // an index for rows
+                        reader.ReadBytes(max_id * 2 - HeaderSize * 2); // a memory allocation bank
+                    }
                 }
                 else
                 {
-                    int copy_table_size = reader.ReadInt32(); // new field in WCH5
-                    int flags = reader.ReadInt32(); // new field in WCH5
-                    ;
-                }
 
-                if (max_id != 0)
-                {
-                    reader.ReadBytes(max_id * 4 - HeaderSize);     // an index for rows
-                    reader.ReadBytes(max_id * 2 - HeaderSize * 2); // a memory allocation bank
                 }
 
                 m_rows = new byte[RecordsCount][];
