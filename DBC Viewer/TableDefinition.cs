@@ -12,19 +12,26 @@ namespace DBCViewer
         [XmlElement("Table")]
         public List<Table> Tables { get; set; }
 
+        [XmlIgnore]
+        public string File { get; set; }
+
         public static DBFilesClient Load(string path)
         {
             XmlSerializer deser = new XmlSerializer(typeof(DBFilesClient));
             using (var fs = new FileStream(path, FileMode.Open))
-                return (DBFilesClient)deser.Deserialize(fs);
+            {
+                DBFilesClient cat = (DBFilesClient)deser.Deserialize(fs);
+                cat.File = path;
+                return cat;
+            }
         }
 
-        public static void Save(DBFilesClient db, string path)
+        public static void Save(DBFilesClient db)
         {
             XmlSerializer ser = new XmlSerializer(typeof(DBFilesClient));
             XmlSerializerNamespaces namespaces = new XmlSerializerNamespaces();
             namespaces.Add(string.Empty, string.Empty);
-            using (var fs = new FileStream(path, FileMode.Create))
+            using (var fs = new FileStream(db.File, FileMode.Create))
                 ser.Serialize(fs, db, namespaces);
         }
     }

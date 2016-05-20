@@ -49,8 +49,6 @@ namespace DBCViewer
 
         private void WriteXml()
         {
-            string docPath = Path.Combine(m_mainForm.WorkingFolder, "dblayout.xml");
-
             Table newnode = new Table();
             newnode.Name = m_mainForm.DBCName;
             newnode.Build = Convert.ToInt32(buildTextBox.Text);
@@ -67,7 +65,7 @@ namespace DBCViewer
                 m_mainForm.Definitions.Tables[index] = newnode;
             }
 
-            DBFilesClient.Save(m_mainForm.Definitions, docPath);
+            DBFilesClient.Save(m_mainForm.Definitions);
             m_saved = true;
         }
 

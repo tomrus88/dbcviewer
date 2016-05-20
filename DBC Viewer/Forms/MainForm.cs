@@ -398,13 +398,14 @@ namespace DBCViewer
                         db.Tables.Add(table);
                     }
 
-                    DBFilesClient.Save(db, Path.Combine(m_workingFolder, "dblayout.xml"));
+                    db.File = Path.Combine(m_workingFolder, "definitions", "dblayout_old.xml");
+                    DBFilesClient.Save(db);
 
                     File.Move(oldDefsPath, Path.Combine(m_workingFolder, "dbclayout.xml.bak"));
                 }
             }
 
-            m_definitions = DBFilesClient.Load(Path.Combine(m_workingFolder, "dblayout.xml"));
+            m_definitions = DefinitionCatalog.SelectCatalog(m_workingFolder);
         }
 
         private void Compose()

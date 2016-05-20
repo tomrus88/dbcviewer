@@ -3506,8 +3506,8 @@
     <Field Name="field5C" Type="int" ArraySize="2" />
     <Field Name="field64" Type="int" />
     <Field Name="field68" Type="int" ArraySize="2" />
-    <Field Name="field70" Type="int" />
-    <Field Name="field74" Type="int" />
+    <Field Name="m_spellId" Type="int" />
+    <Field Name="m_effectIndex" Type="int" />
     <Field Name="field78" Type="int" />
   </Table>
   <Table Name="SpellEffectEmission" Build="21737">

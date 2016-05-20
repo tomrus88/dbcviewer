@@ -501,7 +501,7 @@ namespace DBCViewer
             m_workingFolder = Application.StartupPath;
             dataGridView1.AutoGenerateColumns = true;
 
-            LoadDefinitions();
+            //LoadDefinitions();
             Compose();
 
             string[] cmds = Environment.GetCommandLineArgs();
