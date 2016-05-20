@@ -424,25 +424,13 @@ namespace DBCViewer
 
         private static int GetFieldsCount(List<Field> fields)
         {
-            int count = 0;
-            foreach (Field field in fields)
-            {
-                switch (field.Type)
-                {
-                    case "long":
-                    case "ulong":
-                    case "double":
-                        count += 2;
-                        break;
-                    default:
-                        count++;
-                        break;
-                }
-
-                if (field.ArraySize > 1)
-                    count += field.ArraySize - 1;
-            }
-            return count;
+            return fields.Sum(f => f.ArraySize);
+            //int count = 0;
+            //foreach (Field field in fields)
+            //{
+            //    count += field.ArraySize;
+            //}
+            //return count;
         }
     }
 }

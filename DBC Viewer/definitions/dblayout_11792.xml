@@ -1650,12 +1650,12 @@
   </Table>
   <Table Name="SpellItemEnchantmentCondition" Build="11792">
     <Field Name="m_ID" Type="int" IsIndex="true" />
-    <Field Name="m_lt_operandType" Type="int" ArraySize="1" />
+    <Field Name="m_lt_operandType" Type="byte" ArraySize="5" />
     <Field Name="m_lt_operand" Type="int" ArraySize="5" />
-    <Field Name="m_operator" Type="int" ArraySize="1" />
-    <Field Name="m_rt_operandType" Type="int" ArraySize="1" />
+    <Field Name="m_operator" Type="byte" ArraySize="5" />
+    <Field Name="m_rt_operandType" Type="byte" ArraySize="5" />
     <Field Name="m_rt_operand" Type="int" ArraySize="5" />
-    <Field Name="m_logic" Type="int" ArraySize="1" />
+    <Field Name="m_logic" Type="byte" ArraySize="5" />
   </Table>
   <Table Name="SpellMechanic" Build="11792">
     <Field Name="m_ID" Type="int" IsIndex="true" />

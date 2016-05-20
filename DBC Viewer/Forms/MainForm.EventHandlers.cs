@@ -135,13 +135,14 @@ namespace DBCViewer
             // hack for *.wdb files (because they don't have FieldsCount)
             bool notSTL = !(m_dbreader is STLReader);
             // hack for *.db2 files v3 (because they don't have FieldsCount)
+            bool isDBCorDB2 = m_dbreader is DBCReader || m_dbreader is DB2Reader;
             bool notDB3 = !(m_dbreader is DB3Reader);
             bool notDB4 = !(m_dbreader is DB4Reader);
             bool isDB5 = m_dbreader is DB5Reader;
             bool notDB5 = !isDB5;
 
             int fcount = GetFieldsCount(m_fields);
-            if (fcount != m_dbreader.FieldsCount && notADB && notWDB && notSTL && notDB3 && notDB4 && notDB5)
+            if (fcount != m_dbreader.FieldsCount)
             {
                 string msg = string.Format(CultureInfo.InvariantCulture, "{0} has invalid definition!\nFields count mismatch: got {1}, expected {2}", Path.GetFileName(file), fcount, m_dbreader.FieldsCount);
                 ShowErrorMessageBox(msg);
@@ -241,6 +242,9 @@ namespace DBCViewer
                                 }
                                 else
                                     dataRow[colNames[j]] = br.Read<byte>(meta?[j]);
+                                // bytes are padded with zeros in old format versions if next field isn't byte
+                                if (isDBCorDB2 && (j + 1 < types.Length) && (br.BaseStream.Position % 4) != 0 && types[j + 1] != "byte")
+                                    br.BaseStream.Position += (4 - br.BaseStream.Position % 4);
                                 break;
                             case "float":
                                 if (arraySizes[j] > 1)
