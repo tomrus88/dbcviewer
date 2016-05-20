@@ -119,14 +119,12 @@ namespace DBCViewer
 
         private Table CreateDefaultDefinition()
         {
-            var file = m_mainForm.DBCFile;
-
-            var ext = Path.GetExtension(file).ToUpperInvariant();
+            var ext = Path.GetExtension(m_mainForm.DBCFile).ToUpperInvariant();
 
             if (ext != ".DBC" && ext != ".DB2") // only for dbc and db2, as other formats have no fields count stored
                 return null;
 
-            using (var br = new BinaryReader(new FileStream(file, FileMode.Open)))
+            using (var br = new BinaryReader(new FileStream(m_mainForm.DBCFile, FileMode.Open)))
             {
                 br.ReadUInt32();
                 br.ReadUInt32();
@@ -136,9 +134,10 @@ namespace DBCViewer
                 // only for files with 4 byte fields (most of dbc's)
                 if ((recordsize % fieldsCount == 0) && (fieldsCount * 4 == recordsize))
                 {
-                    var doc = new Table();
+                    var def = new Table();
 
-                    doc.Build = Convert.ToInt32(buildTextBox.Text);
+                    def.Name = m_mainForm.DBCName;
+                    def.Fields = new List<Field>();
 
                     for (int i = 0; i < fieldsCount; ++i)
                     {
@@ -156,11 +155,11 @@ namespace DBCViewer
 
                         field.Type = "int";
 
-                        doc.Fields.Add(field);
+                        def.Fields.Add(field);
                     }
 
                     m_changed = true;
-                    return doc;
+                    return def;
                 }
             }
 

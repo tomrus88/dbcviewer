@@ -5183,4 +5183,9 @@
     <Field Name="field08" Type="byte" />
     <Field Name="field09" Type="byte" />
   </Table>
+  <Table Name="FileDataComplete" Build="21737">
+    <Field Name="m_ID" Type="int" IsIndex="true" />
+    <Field Name="m_path" Type="string" />
+    <Field Name="m_name" Type="string" />
+  </Table>
 </DBFilesClient>
