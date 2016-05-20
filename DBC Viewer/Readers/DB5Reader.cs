@@ -61,7 +61,7 @@ namespace DBCViewer
                 StringTableSize = reader.ReadInt32(); // also offset for sparse table
 
                 uint tableHash = reader.ReadUInt32();
-                uint build = reader.ReadUInt32(); // 21737: no longer build number...
+                uint layoutHash = reader.ReadUInt32(); // 21737: changed from build number to layoutHash
 
                 int MinId = reader.ReadInt32();
                 int MaxId = reader.ReadInt32();
