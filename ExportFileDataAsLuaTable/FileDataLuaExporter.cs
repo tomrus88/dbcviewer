@@ -29,6 +29,19 @@ namespace ExportFileDataAsLuaTable
 
             int i1 = 0;
 
+            Func<string, string, bool> filter = (path, name) =>
+            {
+                if (path.ToLower().StartsWith("world\\maps\\"))
+                    return true;
+
+                // .wwe, .pd4, .anim, .skin, .wmo
+                //string namel = name.ToLower();
+                //if (namel.EndsWith(".wwe") || namel.EndsWith(".pd4") || namel.EndsWith(".anim") || namel.EndsWith(".skin") || namel.EndsWith(".wmo"))
+                //    return true;
+
+                return false;
+            };
+
             foreach (var row in table.Rows)
             {
                 using (BinaryReader br = row)
@@ -40,13 +53,8 @@ namespace ExportFileDataAsLuaTable
                     string path = table.StringTable[pathOffset];
                     string name = table.StringTable[nameOffset];
 
-                    if (path.ToLower().StartsWith("world\\maps\\"))
+                    if (filter(path, name))
                         continue;
-
-                    // .wwe, .pd4, .anim, .skin, .wmo
-                    //string namel = name.ToLower();
-                    //if (namel.EndsWith(".wwe") || namel.EndsWith(".pd4") || namel.EndsWith(".anim") || namel.EndsWith(".skin") || namel.EndsWith(".wmo"))
-                    //    continue;
 
                     if (!pathmap.ContainsKey(pathOffset))
                     {
@@ -80,13 +88,8 @@ namespace ExportFileDataAsLuaTable
                     string path = table.StringTable[pathOffset];
                     string name = table.StringTable[nameOffset];
 
-                    if (path.ToLower().StartsWith("world\\maps\\"))
+                    if (filter(path, name))
                         continue;
-
-                    // .wwe, .pd4, .anim, .skin, .wmo
-                    //string namel = name.ToLower();
-                    //if (namel.EndsWith(".wwe") || namel.EndsWith(".pd4") || namel.EndsWith(".anim") || namel.EndsWith(".skin") || namel.EndsWith(".wmo"))
-                    //    continue;
 
                     if (!namemap.ContainsKey(nameOffset))
                     {
@@ -157,13 +160,8 @@ namespace ExportFileDataAsLuaTable
                     string path = table.StringTable[pathOffset];
                     string name = table.StringTable[nameOffset];
 
-                    if (path.ToLower().StartsWith("world\\maps\\"))
+                    if (filter(path, name))
                         continue;
-
-                    // .wwe, .pd4, .anim, .skin, .wmo
-                    //string namel = name.ToLower();
-                    //if (namel.EndsWith(".wwe") || namel.EndsWith(".pd4") || namel.EndsWith(".anim") || namel.EndsWith(".skin") || namel.EndsWith(".wmo"))
-                    //    continue;
 
                     //sw.WriteLine("    [{0}] = \"{1},{2}\",", id, pathmap[pathOffset], namemap[nameOffset]);
 
