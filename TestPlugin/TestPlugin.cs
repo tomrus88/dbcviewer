@@ -17,7 +17,7 @@ namespace TestPlugin
         {
             int count = 0;
 
-            StreamWriter sqlWriter = new StreamWriter(Path.GetFileNameWithoutExtension(data.TableName) + ".txt");
+            //StreamWriter sqlWriter = new StreamWriter(Path.GetFileNameWithoutExtension(data.TableName) + ".txt");
 
             //var lines = File.ReadAllLines("WorldMapOverlay.txt");
 
@@ -30,9 +30,9 @@ namespace TestPlugin
 
             foreach (DataRow row in data.Rows)
             {
-                sqlWriter.WriteLine("{0} - {1:X2}{2:X2}{3:X2}{4:X2}{5:X2}{6:X2}{7:X2}{8:X2}{9:X2}{10:X2}{11:X2}{12:X2}{13:X2}{14:X2}{15:X2}{16:X2}", row[0],
-                    row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8],
-                    row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16]);
+                //sqlWriter.WriteLine("{0} - {1:X2}{2:X2}{3:X2}{4:X2}{5:X2}{6:X2}{7:X2}{8:X2}{9:X2}{10:X2}{11:X2}{12:X2}{13:X2}{14:X2}{15:X2}{16:X2}", row[0],
+                //    row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8],
+                //    row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16]);
 
                 //sqlWriter.WriteLine("{8} - {7:X2}{6:X2}{5:X2}{4:X2}{3:X2}{2:X2}{1:X2}{0:X2}", row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[0]);
 
@@ -139,8 +139,8 @@ namespace TestPlugin
 
             //sqlWriter.WriteLine("}");
 
-            sqlWriter.Flush();
-            sqlWriter.Close();
+            //sqlWriter.Flush();
+            //sqlWriter.Close();
 
             Finished(count);
         }

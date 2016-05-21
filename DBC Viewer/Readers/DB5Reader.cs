@@ -76,14 +76,15 @@ namespace DBCViewer
 
                 columnMeta = new List<ColumnMeta>();
 
-                if (hasIndex)
-                {
-                    columnMeta.Add(new ColumnMeta());
-                }
-
                 for (int i = 0; i < FieldsCount; i++)
                 {
                     columnMeta.Add(new ColumnMeta() { Bits = reader.ReadInt16(), Offset = (short)(reader.ReadInt16() + (hasIndex ? 4 : 0)) });
+                }
+
+                if (hasIndex)
+                {
+                    FieldsCount++;
+                    columnMeta.Insert(0, new ColumnMeta());
                 }
 
                 long recordsOffset = HeaderSize + colMetaSize;
