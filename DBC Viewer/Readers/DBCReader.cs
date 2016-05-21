@@ -1,11 +1,11 @@
-﻿using System;
+﻿using PluginInterface;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
 namespace DBCViewer
 {
-    class DBCReader : IWowClientDBReader
+    class DBCReader : IClientDBReader
     {
         private const uint HeaderSize = 20;
         private const uint DBCFmtSig = 0x43424457;          // WDBC

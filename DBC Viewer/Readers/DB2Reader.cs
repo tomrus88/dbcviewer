@@ -1,11 +1,11 @@
-﻿using System;
+﻿using PluginInterface;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
 namespace DBCViewer
 {
-    class DB2Reader : IWowClientDBReader
+    class DB2Reader : IClientDBReader
     {
         private const int HeaderSize = 48;
         private const uint DB2FmtSig = 0x32424457;          // WDB2

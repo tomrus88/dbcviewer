@@ -128,27 +128,7 @@ namespace DBCViewer
             for (int j = 0; j < m_fields.Count; ++j)
                 arraySizes[j] = m_fields[j].ArraySize;
 
-            // hack for *.adb files (because they don't have FieldsCount)
-            bool notADB = !(m_dbreader is ADBReader);
-            // hack for *.wdb files (because they don't have FieldsCount)
-            bool notWDB = !(m_dbreader is WDBReader);
-            // hack for *.wdb files (because they don't have FieldsCount)
-            bool notSTL = !(m_dbreader is STLReader);
-            // hack for *.db2 files v3 (because they don't have FieldsCount)
             bool isDBCorDB2 = m_dbreader is DBCReader || m_dbreader is DB2Reader;
-            bool notDB3 = !(m_dbreader is DB3Reader);
-            bool notDB4 = !(m_dbreader is DB4Reader);
-            bool isDB5 = m_dbreader is DB5Reader;
-            bool notDB5 = !isDB5;
-
-            int fcount = GetFieldsCount(m_fields);
-            if (fcount != m_dbreader.FieldsCount)
-            {
-                string msg = string.Format(CultureInfo.InvariantCulture, "{0} has invalid definition!\nFields count mismatch: got {1}, expected {2}", Path.GetFileName(file), fcount, m_dbreader.FieldsCount);
-                ShowErrorMessageBox(msg);
-                e.Cancel = true;
-                return;
-            }
 
             m_dataTable = new DataTable(Path.GetFileName(file));
             m_dataTable.Locale = CultureInfo.InvariantCulture;
@@ -158,8 +138,6 @@ namespace DBCViewer
             CreateIndexes();                                // Add indexes
 
             var meta = (m_dbreader as DB5Reader)?.Meta;
-
-            //bool extraData = false;
 
             foreach (var row in m_dbreader.Rows) // Add rows
             {
@@ -313,19 +291,6 @@ namespace DBCViewer
                 (sender as BackgroundWorker).ReportProgress(percent);
             }
 
-            //if (extraData)
-            //{
-            //    MessageBox.Show("extra data detected!");
-            //}
-
-            //if (dataGridView1.InvokeRequired)
-            //{
-            //    SetDataViewDelegate d = new SetDataViewDelegate(SetDataSource);
-            //    Invoke(d, new object[] { m_dataTable.DefaultView });
-            //}
-            //else
-            //    SetDataSource(m_dataTable.DefaultView);
-
             e.Result = file;
         }
 
@@ -426,8 +391,8 @@ namespace DBCViewer
                 m_catalog.Catalogs.Add(new AssemblyCatalog(selector.NewPlugin));
 
             toolStripStatusLabel1.Text = "Plugin working...";
-            Thread pluginThread = new Thread(RunPlugin);
-            pluginThread.Start(selector.PluginIndex);
+            Thread pluginThread = new Thread(() => RunPlugin(selector.PluginIndex));
+            pluginThread.Start();
         }
 
         private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -492,12 +457,6 @@ namespace DBCViewer
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            //Stopwatch sw = new Stopwatch();
-            //sw.Start();
-            //DBCReaderGeneric<AreaTableRecord> at = new DBCReaderGeneric<AreaTableRecord>(@"c:\my_old_files\Development\git\CASCExplorer\CASCConsole\bin\Debug\DBFilesClient\AreaTable.dbc");
-            //sw.Stop();
-            //MessageBox.Show(sw.Elapsed.ToString());
-
             WindowState = Properties.Settings.Default.WindowState;
             Size = Properties.Settings.Default.WindowSize;
             Location = Properties.Settings.Default.WindowLocation;
@@ -505,7 +464,6 @@ namespace DBCViewer
             m_workingFolder = Application.StartupPath;
             dataGridView1.AutoGenerateColumns = true;
 
-            //LoadDefinitions();
             Compose();
 
             string[] cmds = Environment.GetCommandLineArgs();

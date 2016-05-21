@@ -16,7 +16,7 @@ namespace DBCViewer
     {
         // Fields
         private DataTable m_dataTable;
-        private IWowClientDBReader m_dbreader;
+        private IClientDBReader m_dbreader;
         private FilterForm m_filterForm;
         private DefinitionSelect m_selector;
         private DBFilesClient m_definitions;
@@ -417,20 +417,10 @@ namespace DBCViewer
             container.ComposeParts(this);
         }
 
-        private void RunPlugin(object obj)
+        private void RunPlugin(int index)
         {
-            Plugins[(int)obj].Run(m_dataTable);
-        }
-
-        private static int GetFieldsCount(List<Field> fields)
-        {
-            return fields.Sum(f => f.ArraySize);
-            //int count = 0;
-            //foreach (Field field in fields)
-            //{
-            //    count += field.ArraySize;
-            //}
-            //return count;
+            Plugins[index].Run(m_dataTable);
+            Plugins[index].Run(m_dbreader);
         }
     }
 }

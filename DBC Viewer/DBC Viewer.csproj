@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DBCViewer</RootNamespace>
     <AssemblyName>DBC Viewer</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -157,7 +157,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Readers\DBReaderFactory.cs" />
-    <Compile Include="Readers\IWowClientDBReader.cs" />
     <Compile Include="Forms\PluginsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -220,6 +219,10 @@
     <ProjectReference Include="..\Export2SQL\Export2SQL.csproj">
       <Project>{34EFF3F2-00F6-4BAA-9694-33175B8F92D1}</Project>
       <Name>Export2SQL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExportFileDataAsLuaTable\ExportFileDataAsLuaTable.csproj">
+      <Project>{a57a5153-f9fd-412e-b256-1dc84d66ebec}</Project>
+      <Name>ExportFileDataAsLuaTable</Name>
     </ProjectReference>
     <ProjectReference Include="..\PluginInterface\PluginInterface.csproj">
       <Project>{1A2AD897-3AB7-4C6E-9071-B63D54D36E84}</Project>

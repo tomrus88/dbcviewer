@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBC Viewer", "DBC Viewer\DBC Viewer.csproj", "{04F8B0DA-4747-40DA-AA73-40BB50F6185C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginInterface", "PluginInterface\PluginInterface.csproj", "{1A2AD897-3AB7-4C6E-9071-B63D54D36E84}"
@@ -8,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Export2SQL", "Export2SQL\Export2SQL.csproj", "{34EFF3F2-00F6-4BAA-9694-33175B8F92D1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPlugin", "TestPlugin\TestPlugin.csproj", "{14DCBB3F-0ED0-425B-B0B0-72A67D9F5394}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExportFileDataAsLuaTable", "ExportFileDataAsLuaTable\ExportFileDataAsLuaTable.csproj", "{A57A5153-F9FD-412E-B256-1DC84D66EBEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +35,10 @@ Global
 		{14DCBB3F-0ED0-425B-B0B0-72A67D9F5394}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14DCBB3F-0ED0-425B-B0B0-72A67D9F5394}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14DCBB3F-0ED0-425B-B0B0-72A67D9F5394}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A57A5153-F9FD-412E-B256-1DC84D66EBEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A57A5153-F9FD-412E-B256-1DC84D66EBEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A57A5153-F9FD-412E-B256-1DC84D66EBEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A57A5153-F9FD-412E-B256-1DC84D66EBEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

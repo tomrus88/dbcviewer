@@ -151,5 +151,10 @@ namespace Export2SQL
             input = Regex.Replace(input, @"\""", @"\""");
             return input;
         }
+
+        public void Run(IClientDBReader data)
+        {
+
+        }
     }
 }

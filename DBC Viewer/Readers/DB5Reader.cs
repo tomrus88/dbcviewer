@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PluginInterface;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -11,7 +12,7 @@ namespace DBCViewer
         public short Offset;
     }
 
-    class DB5Reader : IWowClientDBReader
+    class DB5Reader : IClientDBReader
     {
         private const int HeaderSize = 48;
         private const uint DB5FmtSig = 0x35424457;          // WDB5

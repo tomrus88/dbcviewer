@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using PluginInterface;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
 namespace DBCViewer
 {
-    class ADBReader : IWowClientDBReader
+    class ADBReader : IClientDBReader
     {
         private const int HeaderSize = 48;
         private const uint ADBFmtSig = 0x32484357;          // WCH2

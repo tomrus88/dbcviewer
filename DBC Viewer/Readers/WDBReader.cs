@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PluginInterface;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace DBCViewer
 {
-    class WDBReader : IWowClientDBReader
+    class WDBReader : IClientDBReader
     {
         private const int HeaderSize = 24;
         private uint[] WDBSigs = new uint[]

@@ -1,11 +1,12 @@
-﻿using System;
+﻿using PluginInterface;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
 namespace DBCViewer
 {
-    class DB4Reader : IWowClientDBReader
+    class DB4Reader : IClientDBReader
     {
         private const int HeaderSize = 52;
         private const uint DB4FmtSig = 0x34424457;          // WDB4

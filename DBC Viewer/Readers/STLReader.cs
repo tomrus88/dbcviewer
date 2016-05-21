@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using PluginInterface;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -47,7 +48,7 @@ namespace DBCViewer
         public uint[] unknown6;	// always 0x00000000
     }
 
-    class STLReader : IWowClientDBReader
+    class STLReader : IClientDBReader
     {
         public int RecordsCount { get; private set; }
         public int FieldsCount { get; private set; }

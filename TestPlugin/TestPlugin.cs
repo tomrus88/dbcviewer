@@ -144,5 +144,10 @@ namespace TestPlugin
 
             Finished(count);
         }
+
+        public void Run(IClientDBReader data)
+        {
+
+        }
     }
 }

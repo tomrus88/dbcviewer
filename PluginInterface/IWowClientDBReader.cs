@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace DBCViewer
+namespace PluginInterface
 {
-    interface IWowClientDBReader
+    public interface IClientDBReader
     {
         int RecordsCount { get; }
         int FieldsCount { get; }

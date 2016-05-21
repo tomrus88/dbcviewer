@@ -1,12 +1,13 @@
-﻿using System.IO;
+﻿using PluginInterface;
+using System.IO;
 
 namespace DBCViewer
 {
     class DBReaderFactory
     {
-        public static IWowClientDBReader GetReader(string file, Table def)
+        public static IClientDBReader GetReader(string file, Table def)
         {
-            IWowClientDBReader reader;
+            IClientDBReader reader;
 
             var ext = Path.GetExtension(file).ToUpperInvariant();
             if (ext == ".DBC")
