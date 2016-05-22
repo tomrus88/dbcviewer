@@ -176,108 +176,53 @@ namespace DBCViewer
                 switch (field.Type)
                 {
                     case "long":
-                        if (field.ArraySize > 1)
-                        {
-                            for (int i = 0; i < field.ArraySize; i++)
-                                m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(long));
-                        }
-                        else
-                            m_dataTable.Columns.Add(colName, typeof(long));
+                        CreateColumn<long>(field, colName);
                         break;
                     case "ulong":
-                        if (field.ArraySize > 1)
-                        {
-                            for (int i = 0; i < field.ArraySize; i++)
-                                m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(ulong));
-                        }
-                        else
-                            m_dataTable.Columns.Add(colName, typeof(ulong));
+                        CreateColumn<ulong>(field, colName);
                         break;
                     case "int":
-                        if (field.ArraySize > 1)
-                        {
-                            for (int i = 0; i < field.ArraySize; i++)
-                                m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(int));
-                        }
-                        else
-                            m_dataTable.Columns.Add(colName, typeof(int));
+                        CreateColumn<int>(field, colName);
                         break;
                     case "uint":
-                        if (field.ArraySize > 1)
-                        {
-                            for (int i = 0; i < field.ArraySize; i++)
-                                m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(uint));
-                        }
-                        else
-                            m_dataTable.Columns.Add(colName, typeof(uint));
+                        CreateColumn<uint>(field, colName);
                         break;
                     case "short":
-                        if (field.ArraySize > 1)
-                        {
-                            for (int i = 0; i < field.ArraySize; i++)
-                                m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(short));
-                        }
-                        else
-                            m_dataTable.Columns.Add(colName, typeof(short));
+                        CreateColumn<short>(field, colName);
                         break;
                     case "ushort":
-                        if (field.ArraySize > 1)
-                        {
-                            for (int i = 0; i < field.ArraySize; i++)
-                                m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(ushort));
-                        }
-                        else
-                            m_dataTable.Columns.Add(colName, typeof(ushort));
+                        CreateColumn<ushort>(field, colName);
                         break;
                     case "sbyte":
-                        if (field.ArraySize > 1)
-                        {
-                            for (int i = 0; i < field.ArraySize; i++)
-                                m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(sbyte));
-                        }
-                        else
-                            m_dataTable.Columns.Add(colName, typeof(sbyte));
+                        CreateColumn<sbyte>(field, colName);
                         break;
                     case "byte":
-                        if (field.ArraySize > 1)
-                        {
-                            for (int i = 0; i < field.ArraySize; i++)
-                                m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(byte));
-                        }
-                        else
-                            m_dataTable.Columns.Add(colName, typeof(byte));
+                        CreateColumn<byte>(field, colName);
                         break;
                     case "float":
-                        if (field.ArraySize > 1)
-                        {
-                            for (int i = 0; i < field.ArraySize; i++)
-                                m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(float));
-                        }
-                        else
-                            m_dataTable.Columns.Add(colName, typeof(float));
+                        CreateColumn<float>(field, colName);
                         break;
                     case "double":
-                        if (field.ArraySize > 1)
-                        {
-                            for (int i = 0; i < field.ArraySize; i++)
-                                m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(double));
-                        }
-                        else
-                            m_dataTable.Columns.Add(colName, typeof(double));
+                        CreateColumn<double>(field, colName);
                         break;
                     case "string":
-                        if (field.ArraySize > 1)
-                        {
-                            for (int i = 0; i < field.ArraySize; i++)
-                                m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(string));
-                        }
-                        else
-                            m_dataTable.Columns.Add(colName, typeof(string));
+                        CreateColumn<string>(field, colName);
                         break;
                     default:
                         throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Unknown field type {0}!", field.Type));
                 }
             }
+        }
+
+        private void CreateColumn<T>(Field field, string colName)
+        {
+            if (field.ArraySize > 1)
+            {
+                for (int i = 0; i < field.ArraySize; i++)
+                    m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(T));
+            }
+            else
+                m_dataTable.Columns.Add(colName, typeof(T));
         }
 
         private void InitColumnsFilter()
