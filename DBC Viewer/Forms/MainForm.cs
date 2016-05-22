@@ -155,16 +155,12 @@ namespace DBCViewer
             var indexes = m_definition.Fields.Where(f => f.IsIndex);
 
             if (!indexes.Any())
-                return;
+                throw new Exception("No indexes!");
 
             if (indexes.Count() > 1)
                 throw new Exception("Too many indexes!");
 
-            var columns = new DataColumn[1];
-
-            columns[0] = m_dataTable.Columns[indexes.First().Name];
-
-            m_dataTable.PrimaryKey = columns;
+            m_dataTable.PrimaryKey = new DataColumn[] { m_dataTable.Columns[indexes.First().Name] };
         }
 
         private void CreateColumns()

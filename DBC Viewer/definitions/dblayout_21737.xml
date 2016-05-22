@@ -4528,7 +4528,7 @@
   <Table Name="AnimationData" Build="21737">
     <Field Name="m_ID" Type="int" IsIndex="true" />
     <Field Name="field00" Type="string" />
-    <Field Name="field04" Type="int" />
+    <Field Name="flags" Type="int" Format="X8" />
     <Field Name="field08" Type="ushort" />
     <Field Name="field0A" Type="ushort" />
     <Field Name="field0C" Type="byte" />
