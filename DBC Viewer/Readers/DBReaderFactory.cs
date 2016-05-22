@@ -1,5 +1,6 @@
 ﻿using PluginInterface;
 using System.IO;
+using System.Text;
 
 namespace DBCViewer
 {
@@ -14,23 +15,25 @@ namespace DBCViewer
                 reader = new DBCReader(file);
             else if (ext == ".DB2")
             {
-                using (var br = Extensions.FromFile(file))
+                uint magic = 0xFFFFFFFF;
+
+                // we may as well reuse that stream for DBXReader's someday...
+                using (var fs = new FileStream(file, FileMode.Open))
+                using (var br = new BinaryReader(fs, Encoding.UTF8))
                 {
-                    uint magic = br.ReadUInt32();
+                    magic = br.ReadUInt32();
+                }
 
-                    br.Close();
-
-                    switch (magic)
-                    {
-                        case DB2Reader.DB2FmtSig:
-                            return new DB2Reader(file);
-                        case DB3Reader.DB3FmtSig:
-                            return new DB3Reader(file);
-                        case DB4Reader.DB4FmtSig:
-                            return new DB4Reader(file);
-                        case DB5Reader.DB5FmtSig:
-                            return new DB5Reader(file);
-                    }
+                switch (magic)
+                {
+                    case DB2Reader.DB2FmtSig:
+                        return new DB2Reader(file);
+                    case DB3Reader.DB3FmtSig:
+                        return new DB3Reader(file);
+                    case DB4Reader.DB4FmtSig:
+                        return new DB4Reader(file);
+                    case DB5Reader.DB5FmtSig:
+                        return new DB5Reader(file);
                 }
             }
             else if (ext == ".ADB")

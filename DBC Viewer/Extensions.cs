@@ -245,7 +245,7 @@ namespace DBCViewer
         }
         #endregion
 
-        public static T Read<T>(this BinaryReader reader, ColumnMeta meta) where T : struct
+        public static T Read<T>(this BinaryReader reader, ColumnMeta meta)
         {
             TypeCode code = Type.GetTypeCode(typeof(T));
 
@@ -306,6 +306,9 @@ namespace DBCViewer
                     if (meta != null && meta.Bits != 0x00)
                         throw new Exception("TypeCode.Single Unknown meta.Flags");
                     value = reader.ReadSingle();
+                    break;
+                case TypeCode.Double:
+                    value = reader.ReadDouble();
                     break;
                 default:
                     throw new Exception("Unknown TypeCode " + code);

@@ -66,7 +66,7 @@ namespace DBCViewer
             else
             {
                 if (m_dbreader.StringTable != null)
-                    val = (uint)(from k in m_dbreader.StringTable where string.Compare(k.Value, (string)value, StringComparison.Ordinal) == 0 select k.Key).FirstOrDefault();
+                    val = (uint)m_dbreader.StringTable.Where(kv => string.Compare(kv.Value, (string)value, StringComparison.Ordinal) == 0).Select(kv => kv.Key).FirstOrDefault();
             }
 
             StringBuilder sb = new StringBuilder();
@@ -77,7 +77,7 @@ namespace DBCViewer
             sb.AppendFormatLine(culture, "Double: {0}", BitConverter.ToDouble(BitConverter.GetBytes(val), 0));
 
             string strValue;
-            if( m_dbreader.StringTable != null && m_dbreader.StringTable.TryGetValue((int)val, out strValue))
+            if (m_dbreader.StringTable != null && m_dbreader.StringTable.TryGetValue((int)val, out strValue))
             {
                 sb.AppendFormatLine(culture, "String: {0}", strValue);
             }
@@ -142,134 +142,40 @@ namespace DBCViewer
                         switch (types[j])
                         {
                             case "long":
-                                if (arraySizes[j] > 1)
-                                {
-                                    for (int i = 0; i < arraySizes[j]; i++)
-                                        dataRow[colNames[j] + "_" + (i + 1)] = br.Read<long>(meta?[j]);
-                                }
-                                else
-                                    dataRow[colNames[j]] = br.Read<long>(meta?[j]);
+                                ReadField<long>(colNames[j], arraySizes[j], meta?[j], dataRow, br);
                                 break;
                             case "ulong":
-                                if (arraySizes[j] > 1)
-                                {
-                                    for (int i = 0; i < arraySizes[j]; i++)
-                                        dataRow[colNames[j] + "_" + (i + 1)] = br.Read<ulong>(meta?[j]);
-                                }
-                                else
-                                    dataRow[colNames[j]] = br.Read<ulong>(meta?[j]);
+                                ReadField<ulong>(colNames[j], arraySizes[j], meta?[j], dataRow, br);
                                 break;
                             case "int":
-                                if (arraySizes[j] > 1)
-                                {
-                                    for (int i = 0; i < arraySizes[j]; i++)
-                                        dataRow[colNames[j] + "_" + (i + 1)] = br.Read<int>(meta?[j]);
-                                }
-                                else
-                                    dataRow[colNames[j]] = br.Read<int>(meta?[j]);
+                                ReadField<int>(colNames[j], arraySizes[j], meta?[j], dataRow, br);
                                 break;
                             case "uint":
-                                if (arraySizes[j] > 1)
-                                {
-                                    for (int i = 0; i < arraySizes[j]; i++)
-                                        dataRow[colNames[j] + "_" + (i + 1)] = br.Read<uint>(meta?[j]);
-                                }
-                                else
-                                    dataRow[colNames[j]] = br.Read<uint>(meta?[j]);
+                                ReadField<uint>(colNames[j], arraySizes[j], meta?[j], dataRow, br);
                                 break;
                             case "short":
-                                if (arraySizes[j] > 1)
-                                {
-                                    for (int i = 0; i < arraySizes[j]; i++)
-                                        dataRow[colNames[j] + "_" + (i + 1)] = br.Read<short>(meta?[j]);
-                                }
-                                else
-                                    dataRow[colNames[j]] = br.Read<short>(meta?[j]);
+                                ReadField<short>(colNames[j], arraySizes[j], meta?[j], dataRow, br);
                                 break;
                             case "ushort":
-                                if (arraySizes[j] > 1)
-                                {
-                                    for (int i = 0; i < arraySizes[j]; i++)
-                                        dataRow[colNames[j] + "_" + (i + 1)] = br.Read<ushort>(meta?[j]);
-                                }
-                                else
-                                    dataRow[colNames[j]] = br.Read<ushort>(meta?[j]);
+                                ReadField<ushort>(colNames[j], arraySizes[j], meta?[j], dataRow, br);
                                 break;
                             case "sbyte":
-                                if (arraySizes[j] > 1)
-                                {
-                                    for (int i = 0; i < arraySizes[j]; i++)
-                                        dataRow[colNames[j] + "_" + (i + 1)] = br.Read<sbyte>(meta?[j]);
-                                }
-                                else
-                                    dataRow[colNames[j]] = br.Read<sbyte>(meta?[j]);
+                                ReadField<sbyte>(colNames[j], arraySizes[j], meta?[j], dataRow, br);
                                 break;
                             case "byte":
-                                if (arraySizes[j] > 1)
-                                {
-                                    for (int i = 0; i < arraySizes[j]; i++)
-                                        dataRow[colNames[j] + "_" + (i + 1)] = br.Read<byte>(meta?[j]);
-                                }
-                                else
-                                    dataRow[colNames[j]] = br.Read<byte>(meta?[j]);
+                                ReadField<byte>(colNames[j], arraySizes[j], meta?[j], dataRow, br);
                                 // bytes are padded with zeros in old format versions if next field isn't byte
                                 if (isDBCorDB2 && (j + 1 < types.Length) && (br.BaseStream.Position % 4) != 0 && types[j + 1] != "byte")
                                     br.BaseStream.Position += (4 - br.BaseStream.Position % 4);
                                 break;
                             case "float":
-                                if (arraySizes[j] > 1)
-                                {
-                                    for (int i = 0; i < arraySizes[j]; i++)
-                                        dataRow[colNames[j] + "_" + (i + 1)] = br.Read<float>(meta?[j]);
-                                }
-                                else
-                                    dataRow[colNames[j]] = br.Read<float>(meta?[j]);
+                                ReadField<float>(colNames[j], arraySizes[j], meta?[j], dataRow, br);
                                 break;
                             case "double":
-                                if (arraySizes[j] > 1)
-                                {
-                                    for (int i = 0; i < arraySizes[j]; i++)
-                                        dataRow[colNames[j] + "_" + (i + 1)] = br.ReadDouble();
-                                }
-                                else
-                                    dataRow[colNames[j]] = br.ReadDouble();
+                                ReadField<float>(colNames[j], arraySizes[j], meta?[j], dataRow, br);
                                 break;
                             case "string":
-                                if (m_dbreader is WDBReader)
-                                    dataRow[j] = br.ReadStringNull();
-                                else if (m_dbreader is STLReader)
-                                {
-                                    int offset = br.ReadInt32();
-                                    dataRow[j] = (m_dbreader as STLReader).ReadString(offset);
-                                }
-                                else
-                                {
-                                    if (arraySizes[j] > 1)
-                                    {
-                                        for (int i = 0; i < arraySizes[j]; i++)
-                                        {
-                                            try
-                                            {
-                                                dataRow[colNames[j] + "_" + (i + 1)] = m_dbreader.IsSparseTable ? br.ReadStringNull() : m_dbreader.StringTable[br.Read<int>(meta?[j])];
-                                            }
-                                            catch
-                                            {
-                                                dataRow[colNames[j]] = "Invalid string index!";
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        try
-                                        {
-                                            dataRow[colNames[j]] = m_dbreader.IsSparseTable ? br.ReadStringNull() : m_dbreader.StringTable[br.Read<int>(meta?[j])];
-                                        }
-                                        catch
-                                        {
-                                            dataRow[colNames[j]] = "Invalid string index!";
-                                        }
-                                    }
-                                }
+                                ReadStringField(colNames[j], arraySizes[j], meta?[j], dataRow, br);
                                 break;
                             default:
                                 throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Unknown field type {0}!", types[j]));
@@ -284,6 +190,56 @@ namespace DBCViewer
             }
 
             e.Result = file;
+        }
+
+        private static void ReadField<T>(string colName, int arraySize, ColumnMeta meta, DataRow dataRow, BinaryReader br)
+        {
+            if (arraySize > 1)
+            {
+                for (int i = 0; i < arraySize; i++)
+                    dataRow[colName + "_" + (i + 1)] = br.Read<T>(meta);
+            }
+            else
+                dataRow[colName] = br.Read<T>(meta);
+        }
+
+        private void ReadStringField(string colName, int arraySize, ColumnMeta meta, DataRow dataRow, BinaryReader br)
+        {
+            if (m_dbreader is WDBReader)
+                dataRow[colName] = br.ReadStringNull();
+            else if (m_dbreader is STLReader)
+            {
+                int offset = br.ReadInt32();
+                dataRow[colName] = (m_dbreader as STLReader).ReadString(offset);
+            }
+            else
+            {
+                if (arraySize > 1)
+                {
+                    for (int i = 0; i < arraySize; i++)
+                    {
+                        try
+                        {
+                            dataRow[colName + "_" + (i + 1)] = m_dbreader.IsSparseTable ? br.ReadStringNull() : m_dbreader.StringTable[br.Read<int>(meta)];
+                        }
+                        catch
+                        {
+                            dataRow[colName] = "Invalid string index!";
+                        }
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        dataRow[colName] = m_dbreader.IsSparseTable ? br.ReadStringNull() : m_dbreader.StringTable[br.Read<int>(meta)];
+                    }
+                    catch
+                    {
+                        dataRow[colName] = "Invalid string index!";
+                    }
+                }
+            }
         }
 
         private void columnsFilterEventHandler(object sender, EventArgs e)
