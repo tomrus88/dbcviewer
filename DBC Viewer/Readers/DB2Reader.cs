@@ -8,7 +8,7 @@ namespace DBCViewer
     class DB2Reader : IClientDBReader
     {
         private const int HeaderSize = 48;
-        private const uint DB2FmtSig = 0x32424457;          // WDB2
+        public const uint DB2FmtSig = 0x32424457;          // WDB2
 
         public int RecordsCount { get; private set; }
         public int FieldsCount { get; private set; }
@@ -31,10 +31,13 @@ namespace DBCViewer
         }
 
         public bool IsSparseTable { get { return false; } }
+        public string FileName { get; private set; }
 
         public DB2Reader(string fileName)
         {
-            using (var reader = BinaryReaderExtensions.FromFile(fileName))
+            FileName = fileName;
+
+            using (var reader = Extensions.FromFile(fileName))
             {
                 if (reader.BaseStream.Length < HeaderSize)
                 {

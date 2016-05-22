@@ -62,7 +62,7 @@ namespace DBCViewer
     }
     #endregion
 
-    static class BinaryReaderExtensions
+    static class Extensions
     {
         public static BinaryReader FromFile(string fileName)
         {
@@ -312,6 +312,18 @@ namespace DBCViewer
             }
 
             return (T)value;
+        }
+
+        public static void AppendFormatLine(this StringBuilder sb, string format, params object[] args)
+        {
+            sb.AppendFormat(format, args);
+            sb.AppendLine();
+        }
+
+        public static void AppendFormatLine(this StringBuilder sb, IFormatProvider provider, string format, params object[] args)
+        {
+            sb.AppendFormat(provider, format, args);
+            sb.AppendLine();
         }
     }
 }

@@ -56,7 +56,7 @@ namespace DBCViewer
 
         public DBCReaderGeneric(string fileName)
         {
-            using (var reader = BinaryReaderExtensions.FromFile(fileName))
+            using (var reader = Extensions.FromFile(fileName))
             {
                 if (reader.BaseStream.Length < HeaderSize)
                 {

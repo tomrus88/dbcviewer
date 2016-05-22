@@ -9,7 +9,7 @@ namespace DBCViewer
     class DB3Reader : IClientDBReader
     {
         private const int HeaderSize = 48;
-        private const uint DB3FmtSig = 0x33424457;          // WDB3
+        public const uint DB3FmtSig = 0x33424457;          // WDB3
 
         public int RecordsCount { get; private set; }
         public int FieldsCount { get; private set; }
@@ -32,10 +32,13 @@ namespace DBCViewer
         }
 
         public bool IsSparseTable { get { return false; } }
+        public string FileName { get; private set; }
 
         public DB3Reader(string fileName)
         {
-            using (var reader = BinaryReaderExtensions.FromFile(fileName))
+            FileName = fileName;
+
+            using (var reader = Extensions.FromFile(fileName))
             {
                 if (reader.BaseStream.Length < HeaderSize)
                 {

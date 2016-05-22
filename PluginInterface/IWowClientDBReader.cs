@@ -5,6 +5,7 @@ namespace PluginInterface
 {
     public interface IClientDBReader
     {
+        string FileName { get; }
         int RecordsCount { get; }
         int FieldsCount { get; }
         int RecordSize { get; }

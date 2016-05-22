@@ -48,7 +48,7 @@ namespace DBCViewer
         public void PluginFinished(int result)
         {
             var msg = string.Format("Plugin finished! {0} rows affected.", result);
-            toolStripStatusLabel1.Text = msg;
+            statusToolStripLabel.Text = msg;
             MessageBox.Show(msg);
         }
 
@@ -79,9 +79,8 @@ namespace DBCViewer
             }
 
             toolStripProgressBar1.Visible = true;
-            toolStripStatusLabel1.Text = "Loading...";
+            statusToolStripLabel.Text = "Loading...";
 
-            m_startTime = DateTime.Now;
             backgroundWorker1.RunWorkerAsync(file);
         }
 

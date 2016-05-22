@@ -15,7 +15,7 @@ namespace DBCViewer
     class DB5Reader : IClientDBReader
     {
         private const int HeaderSize = 48;
-        private const uint DB5FmtSig = 0x35424457;          // WDB5
+        public const uint DB5FmtSig = 0x35424457;          // WDB5
         List<ColumnMeta> columnMeta;
 
         public int RecordsCount => Lookup.Count;
@@ -41,19 +41,20 @@ namespace DBCViewer
         }
 
         public bool IsSparseTable { get; private set; }
+        public string FileName { get; private set; }
 
-        public DB5Reader(string fileName, Table def)
+        public DB5Reader(Stream stream)
         {
-            using (var reader = BinaryReaderExtensions.FromFile(fileName))
+            using (var reader = new BinaryReader(stream, Encoding.UTF8))
             {
                 if (reader.BaseStream.Length < HeaderSize)
                 {
-                    throw new InvalidDataException(string.Format("File {0} is corrupted!", fileName));
+                    throw new InvalidDataException(string.Format("File {0} is corrupted!", FileName));
                 }
 
                 if (reader.ReadUInt32() != DB5FmtSig)
                 {
-                    throw new InvalidDataException(string.Format("File {0} isn't valid DB2 file!", fileName));
+                    throw new InvalidDataException(string.Format("File {0} isn't valid DB2 file!", FileName));
                 }
 
                 int recordsCount = reader.ReadInt32();
@@ -206,6 +207,11 @@ namespace DBCViewer
                     }
                 }
             }
+        }
+
+        public DB5Reader(string fileName) : this(new FileStream(fileName, FileMode.Open))
+        {
+            FileName = fileName;
         }
     }
 }

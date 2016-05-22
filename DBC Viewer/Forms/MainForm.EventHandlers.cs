@@ -38,8 +38,6 @@ namespace DBCViewer
             CultureInfo culture = CultureInfo.InvariantCulture;
             object value = dataGridView1[e.ColumnIndex, e.RowIndex].Value;
 
-            //val = (ulong)Convert.ChangeType(value, dataType);
-
             if (dataType != typeof(string))
             {
                 if (dataType == typeof(sbyte))
@@ -72,19 +70,20 @@ namespace DBCViewer
             }
 
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat(culture, "Integer: {0:D}{1}", val, Environment.NewLine);
-            sb.AppendFormat(new BinaryFormatter(), "HEX: {0:X}{1}", val, Environment.NewLine);
-            sb.AppendFormat(new BinaryFormatter(), "BIN: {0:B}{1}", val, Environment.NewLine);
-            sb.AppendFormat(culture, "Float: {0}{1}", BitConverter.ToSingle(BitConverter.GetBytes(val), 0), Environment.NewLine);
-            sb.AppendFormat(culture, "Double: {0}{1}", BitConverter.ToDouble(BitConverter.GetBytes(val), 0), Environment.NewLine);
+            sb.AppendFormatLine(culture, "Integer: {0:D}", val);
+            sb.AppendFormatLine(new BinaryFormatter(), "HEX: {0:X}", val);
+            sb.AppendFormatLine(new BinaryFormatter(), "BIN: {0:B}", val);
+            sb.AppendFormatLine(culture, "Float: {0}", BitConverter.ToSingle(BitConverter.GetBytes(val), 0));
+            sb.AppendFormatLine(culture, "Double: {0}", BitConverter.ToDouble(BitConverter.GetBytes(val), 0));
 
-            try
+            string strValue;
+            if( m_dbreader.StringTable != null && m_dbreader.StringTable.TryGetValue((int)val, out strValue))
             {
-                sb.AppendFormat(culture, "String: {0}{1}", !(m_dbreader is WDBReader) ? m_dbreader.StringTable[(int)val] : string.Empty, Environment.NewLine);
+                sb.AppendFormatLine(culture, "String: {0}", strValue);
             }
-            catch
+            else
             {
-                sb.AppendFormat(culture, "String: <empty>{0}", Environment.NewLine);
+                sb.AppendFormatLine(culture, "String: <empty>");
             }
 
             e.ToolTipText = sb.ToString();
@@ -98,18 +97,11 @@ namespace DBCViewer
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
+            m_startTime = DateTime.Now;
+
             string file = (string)e.Argument;
 
-            try
-            {
-                m_dbreader = DBReaderFactory.GetReader(file, m_definition);
-            }
-            catch (Exception ex)
-            {
-                ShowErrorMessageBox(ex.Message);
-                e.Cancel = true;
-                return;
-            }
+            m_dbreader = DBReaderFactory.GetReader(file, m_definition);
 
             m_fields = new List<Field>(m_definition.Fields);
 
@@ -315,18 +307,21 @@ namespace DBCViewer
 
             if (e.Error != null)
             {
-                ShowErrorMessageBox(e.Error.ToString());
-                toolStripStatusLabel1.Text = "Error.";
-            }
-            else if (e.Cancelled == true)
-            {
-                toolStripStatusLabel1.Text = "Error in definitions.";
-                StartEditor();
+                if (e.Error is InvalidDataException)
+                {
+                    ShowErrorMessageBox(e.Error.ToString());
+                    statusToolStripLabel.Text = "Error.";
+                }
+                else
+                {
+                    statusToolStripLabel.Text = "Error in definitions.";
+                    StartEditor();
+                }
             }
             else
             {
                 TimeSpan total = DateTime.Now - m_startTime;
-                toolStripStatusLabel1.Text = string.Format(CultureInfo.InvariantCulture, "Ready. Loaded in {0} sec", total.TotalSeconds);
+                statusToolStripLabel.Text = string.Format(CultureInfo.InvariantCulture, "Ready. Loaded in {0} sec", total.TotalSeconds);
                 Text = string.Format(CultureInfo.InvariantCulture, "DBC Viewer - {0}", e.Result);
                 SetDataSource(m_dataTable.DefaultView);
                 InitColumnsFilter();
@@ -390,7 +385,7 @@ namespace DBCViewer
             if (selector.NewPlugin != null)
                 m_catalog.Catalogs.Add(new AssemblyCatalog(selector.NewPlugin));
 
-            toolStripStatusLabel1.Text = "Plugin working...";
+            statusToolStripLabel.Text = "Plugin working...";
             Thread pluginThread = new Thread(() => RunPlugin(selector.PluginIndex));
             pluginThread.Start();
         }

@@ -71,12 +71,15 @@ namespace DBCViewer
         }
 
         public bool IsSparseTable { get { return false; } }
+        public string FileName { get; private set; }
 
         private BinaryReader reader;
 
         public STLReader(string fileName)
         {
-            reader = BinaryReaderExtensions.FromFile(fileName);
+            FileName = fileName;
+
+            reader = Extensions.FromFile(fileName);
 
             MPQHeader mHdr = reader.ReadStruct<MPQHeader>();
             StlHeader sHdr = reader.ReadStruct<StlHeader>();
