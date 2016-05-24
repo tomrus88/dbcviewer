@@ -245,76 +245,113 @@ namespace DBCViewer
         }
         #endregion
 
-        public static T Read<T>(this BinaryReader reader, ColumnMeta meta)
+        public static object Read<T>(this BinaryReader reader, ColumnMeta meta)
         {
             TypeCode code = Type.GetTypeCode(typeof(T));
-
-            object value = null;
 
             switch (code)
             {
                 case TypeCode.Byte:
                     if (meta != null && meta.Bits != 0x18)
                         throw new Exception("TypeCode.Byte Unknown meta.Flags");
-                    value = reader.ReadByte();
-                    break;
+                    return reader.ReadByte();
                 case TypeCode.SByte:
                     if (meta != null && meta.Bits != 0x18)
                         throw new Exception("TypeCode.SByte Unknown meta.Flags");
-                    value = reader.ReadSByte();
-                    break;
+                    return reader.ReadSByte();
                 case TypeCode.Int16:
                     if (meta != null && meta.Bits != 0x10)
                         throw new Exception("TypeCode.Int16 Unknown meta.Flags");
-                    value = reader.ReadInt16();
-                    break;
+                    return reader.ReadInt16();
                 case TypeCode.UInt16:
                     if (meta != null && meta.Bits != 0x10)
                         throw new Exception("TypeCode.UInt16 Unknown meta.Flags");
-                    value = reader.ReadUInt16();
-                    break;
+                    return reader.ReadUInt16();
                 case TypeCode.Int32:
                     if (meta == null)
-                        value = reader.ReadInt32();
+                        return reader.ReadInt32();
                     else
-                        value = reader.ReadPackedInt32(meta.Bits);
-                    break;
+                        return reader.ReadPackedInt32(meta.Bits);
                 case TypeCode.UInt32:
                     if (meta == null)
-                        value = reader.ReadUInt32();
+                        return reader.ReadUInt32();
                     else
-                        value = reader.ReadPackedUInt32(meta.Bits);
-                    break;
+                        return reader.ReadPackedUInt32(meta.Bits);
                 case TypeCode.Int64:
                     if (meta == null)
-                        value = reader.ReadInt64();
+                        return reader.ReadInt64();
                     else
-                        value = reader.ReadPackedInt64(meta.Bits);
-                    break;
+                        return reader.ReadPackedInt64(meta.Bits);
                 case TypeCode.UInt64:
                     if (meta == null)
-                        value = reader.ReadUInt64();
+                        return reader.ReadUInt64();
                     else
-                        value = reader.ReadPackedUInt64(meta.Bits);
-                    break;
-                case TypeCode.String:
-                    if (meta != null && meta.Bits != 0x00)
-                        throw new Exception("TypeCode.String Unknown meta.Flags");
-                    value = reader.ReadStringNull();
-                    break;
+                        return reader.ReadPackedUInt64(meta.Bits);
                 case TypeCode.Single:
                     if (meta != null && meta.Bits != 0x00)
                         throw new Exception("TypeCode.Single Unknown meta.Flags");
-                    value = reader.ReadSingle();
+                    return reader.ReadSingle();
+                case TypeCode.Double:
+                    return reader.ReadDouble();
+                case TypeCode.String:
+                    if (meta != null && meta.Bits != 0x00)
+                        throw new Exception("TypeCode.String Unknown meta.Flags");
+                    return reader.ReadStringNull();
+                default:
+                    throw new Exception("Unknown TypeCode " + code);
+            }
+        }
+
+        public static void Write<T>(this BinaryWriter writer, object value, ColumnMeta meta)
+        {
+            TypeCode code = Type.GetTypeCode(typeof(T));
+
+            switch (code)
+            {
+                case TypeCode.Byte:
+                    writer.Write((byte)value);
+                    break;
+                case TypeCode.SByte:
+                    writer.Write((sbyte)value);
+                    break;
+                case TypeCode.Int16:
+                    writer.Write((short)value);
+                    break;
+                case TypeCode.UInt16:
+                    writer.Write((ushort)value);
+                    break;
+                case TypeCode.Int32:
+                    int count1 = (32 - meta.Bits) >> 3;
+                    byte[] bytes1 = BitConverter.GetBytes((int)value);
+                    writer.Write(bytes1, 0, count1);
+                    break;
+                case TypeCode.UInt32:
+                    int count2 = (32 - meta.Bits) >> 3;
+                    byte[] bytes2 = BitConverter.GetBytes((uint)value);
+                    writer.Write(bytes2, 0, count2);
+                    break;
+                case TypeCode.Int64:
+                    int count3 = (32 - meta.Bits) >> 3;
+                    byte[] bytes3 = BitConverter.GetBytes((long)value);
+                    writer.Write(bytes3, 0, count3);
+                    break;
+                case TypeCode.UInt64:
+                    int count4 = (32 - meta.Bits) >> 3;
+                    byte[] bytes4 = BitConverter.GetBytes((ulong)value);
+                    writer.Write(bytes4, 0, count4);
+                    break;
+                case TypeCode.Single:
+                    writer.Write((float)value);
                     break;
                 case TypeCode.Double:
-                    value = reader.ReadDouble();
+                    writer.Write((double)value);
+                    break;
+                case TypeCode.String:
+                    writer.Write((int)value);
                     break;
                 default:
                     throw new Exception("Unknown TypeCode " + code);
             }
-
-            return (T)value;
         }
 
         public static void AppendFormatLine(this StringBuilder sb, string format, params object[] args)

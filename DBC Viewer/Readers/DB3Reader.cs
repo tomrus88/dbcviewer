@@ -1,6 +1,7 @@
 ﻿using PluginInterface;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Text;
 
@@ -137,6 +138,11 @@ namespace DBCViewer
                     }
                 }
             }
+        }
+
+        public void Save(DataTable table, string path)
+        {
+            throw new NotImplementedException();
         }
     }
 }

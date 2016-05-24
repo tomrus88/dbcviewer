@@ -1,5 +1,7 @@
 ﻿using PluginInterface;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -129,6 +131,11 @@ namespace DBCViewer
             //        int offset = (int)reader.BaseStream.Position;
             //        StringTable[offset] = reader.ReadStringNull();
             //    }
+        }
+
+        public void Save(DataTable table, string path)
+        {
+            throw new NotImplementedException();
         }
     }
 }

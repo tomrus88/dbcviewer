@@ -1,6 +1,7 @@
 ﻿using PluginInterface;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Text;
 
@@ -182,6 +183,11 @@ namespace DBCViewer
         public DB4Reader(string fileName) : this(new FileStream(fileName, FileMode.Open))
         {
             FileName = fileName;
+        }
+
+        public void Save(DataTable table, string path)
+        {
+            throw new NotImplementedException();
         }
     }
 }

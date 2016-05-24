@@ -8,9 +8,9 @@ namespace DBCViewer
 {
     public partial class FilterForm : Form
     {
-        private EnumerableRowCollection<DataRow> m_filter;
+        private DataTable m_filter;
 
-        private Object[] decimalOperators = new Object[]
+        private object[] decimalOperators = new object[]
         {
             ComparisonType.And,
             ComparisonType.AndNot,
@@ -20,7 +20,7 @@ namespace DBCViewer
             ComparisonType.Greater
         };
 
-        private Object[] stringOperators = new Object[]
+        private object[] stringOperators = new object[]
         {
             ComparisonType.Equal,
             ComparisonType.NotEqual,
@@ -29,7 +29,7 @@ namespace DBCViewer
             ComparisonType.Contains
         };
 
-        private Object[] floatOperators = new Object[]
+        private object[] floatOperators = new object[]
         {
             ComparisonType.Equal,
             ComparisonType.NotEqual,
@@ -62,22 +62,22 @@ namespace DBCViewer
                 return;
             }
 
-            var dt = m_mainForm.DataTable;
+            DataTable dt = m_mainForm.DataTable;
 
             if (m_filter == null)
-                m_filter = dt.AsEnumerable();
+                m_filter = dt;
 
             if (!checkBox1.Checked)
-                m_filter = dt.AsEnumerable();
+                m_filter = dt;
 
-            var temp = m_filter.AsParallel().AsOrdered().Where(Compare);
+            var temp = dt.AsEnumerable().AsParallel().Where(Compare);
 
             if (temp.Count() != 0)
-                m_filter = temp.CopyToDataTable().AsEnumerable();
+                m_filter = temp.CopyToDataTable();
             else
-                m_filter = new DataTable().AsEnumerable();
+                m_filter = new DataTable();
 
-            m_mainForm.SetDataSource(m_filter.AsDataView());
+            m_mainForm.SetDataSource(m_filter);
         }
 
         private void FilterForm_FormClosing(object sender, FormClosingEventArgs e)

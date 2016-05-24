@@ -1,7 +1,9 @@
 ﻿using PluginInterface;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace DBCViewer
@@ -16,7 +18,7 @@ namespace DBCViewer
     {
         private const int HeaderSize = 48;
         public const uint DB5FmtSig = 0x35424457;          // WDB5
-        List<ColumnMeta> columnMeta;
+        private List<ColumnMeta> columnMeta;
 
         public int RecordsCount => Lookup.Count;
         public int FieldsCount { get; private set; }
@@ -41,6 +43,10 @@ namespace DBCViewer
         }
 
         public bool IsSparseTable { get; private set; }
+        public bool HasIndexTable { get; private set; }
+        public uint TableHash { get; private set; }
+        public uint LayoutHash { get; private set; }
+        public int Locale { get; private set; }
         public string FileName { get; private set; }
 
         public DB5Reader(Stream stream)
@@ -62,28 +68,28 @@ namespace DBCViewer
                 RecordSize = reader.ReadInt32();
                 StringTableSize = reader.ReadInt32(); // also offset for sparse table
 
-                uint tableHash = reader.ReadUInt32();
-                uint layoutHash = reader.ReadUInt32(); // 21737: changed from build number to layoutHash
+                TableHash = reader.ReadUInt32();
+                LayoutHash = reader.ReadUInt32(); // 21737: changed from build number to layoutHash
 
                 int MinId = reader.ReadInt32();
                 int MaxId = reader.ReadInt32();
-                int locale = reader.ReadInt32();
+                Locale = reader.ReadInt32();
                 int CopyTableSize = reader.ReadInt32();
                 ushort flags = reader.ReadUInt16();
                 ushort IDIndex = reader.ReadUInt16();
 
                 IsSparseTable = (flags & 0x1) != 0;
-                bool hasIndex = (flags & 0x4) != 0;
+                HasIndexTable = (flags & 0x4) != 0;
                 int colMetaSize = FieldsCount * 4;
 
                 columnMeta = new List<ColumnMeta>();
 
                 for (int i = 0; i < FieldsCount; i++)
                 {
-                    columnMeta.Add(new ColumnMeta() { Bits = reader.ReadInt16(), Offset = (short)(reader.ReadInt16() + (hasIndex ? 4 : 0)) });
+                    columnMeta.Add(new ColumnMeta() { Bits = reader.ReadInt16(), Offset = (short)(reader.ReadInt16() + (HasIndexTable ? 4 : 0)) });
                 }
 
-                if (hasIndex)
+                if (HasIndexTable)
                 {
                     FieldsCount++;
                     columnMeta.Insert(0, new ColumnMeta());
@@ -92,13 +98,13 @@ namespace DBCViewer
                 long recordsOffset = HeaderSize + colMetaSize;
                 long eof = reader.BaseStream.Length;
                 long copyTablePos = eof - CopyTableSize;
-                long indexTablePos = copyTablePos - (hasIndex ? recordsCount * 4 : 0);
+                long indexTablePos = copyTablePos - (HasIndexTable ? recordsCount * 4 : 0);
                 long stringTablePos = indexTablePos - (IsSparseTable ? 0 : StringTableSize);
 
                 // Index table
                 int[] m_indexes = null;
 
-                if (hasIndex)
+                if (HasIndexTable)
                 {
                     reader.BaseStream.Position = indexTablePos;
 
@@ -152,7 +158,7 @@ namespace DBCViewer
 
                         byte[] recordBytes = reader.ReadBytes(RecordSize);
 
-                        if (hasIndex)
+                        if (HasIndexTable)
                         {
                             byte[] newRecordBytes = new byte[RecordSize + 4];
 
@@ -212,6 +218,117 @@ namespace DBCViewer
         public DB5Reader(string fileName) : this(new FileStream(fileName, FileMode.Open))
         {
             FileName = fileName;
+        }
+
+        public void Save(DataTable table, string path)
+        {
+            int IDColumn = table.Columns.IndexOf(table.PrimaryKey[0]);
+            int minId = table.Rows.Cast<DataRow>().Select(r => (int)r[IDColumn]).Min();
+            int maxId = table.Rows.Cast<DataRow>().Select(r => (int)r[IDColumn]).Max();
+            bool hasStrings = table.Columns.Cast<DataColumn>().Any(c => c.DataType == typeof(string));
+
+            using (var fs = new FileStream(path, FileMode.Create))
+            using (var bw = new BinaryWriter(fs))
+            {
+                bw.Write(DB5FmtSig); // magic
+                bw.Write(table.Rows.Count);
+                bw.Write(FieldsCount);
+                bw.Write(RecordSize);
+                bw.Write(0); // stringTableSize placeholder
+                bw.Write(TableHash);
+                bw.Write(LayoutHash);
+                bw.Write(minId);
+                bw.Write(maxId);
+                bw.Write(Locale);
+                bw.Write(0); // CopyTableSize
+                bw.Write((ushort)0); // flags
+                bw.Write((ushort)IDColumn); // IDIndex
+
+                foreach (var meta in columnMeta)
+                {
+                    bw.Write(meta.Bits);
+                    bw.Write(meta.Offset);
+                }
+
+                var columnTypeCodes = table.Columns.Cast<DataColumn>().Select(c => Type.GetTypeCode(c.DataType)).ToArray();
+
+                var stringTable = hasStrings ? new MemoryStream() : null;
+
+                if (hasStrings)
+                {
+                    stringTable.WriteByte(0);
+                }
+
+                for (int i = 0; i < table.Rows.Count; i++)
+                {
+                    for (int j = 0; j < table.Columns.Count; j++)
+                    {
+                        switch (columnTypeCodes[j])
+                        {
+                            case TypeCode.Byte:
+                                bw.Write<byte>(table.Rows[i][j], columnMeta[j]);
+                                break;
+                            case TypeCode.SByte:
+                                bw.Write<sbyte>(table.Rows[i][j], columnMeta[j]);
+                                break;
+                            case TypeCode.Int16:
+                                bw.Write<short>(table.Rows[i][j], columnMeta[j]);
+                                break;
+                            case TypeCode.UInt16:
+                                bw.Write<ushort>(table.Rows[i][j], columnMeta[j]);
+                                break;
+                            case TypeCode.Int32:
+                                bw.Write<int>(table.Rows[i][j], columnMeta[j]);
+                                break;
+                            case TypeCode.UInt32:
+                                bw.Write<uint>(table.Rows[i][j], columnMeta[j]);
+                                break;
+                            case TypeCode.Int64:
+                                bw.Write<long>(table.Rows[i][j], columnMeta[j]);
+                                break;
+                            case TypeCode.UInt64:
+                                bw.Write<ulong>(table.Rows[i][j], columnMeta[j]);
+                                break;
+                            case TypeCode.Single:
+                                bw.Write<float>(table.Rows[i][j], columnMeta[j]);
+                                break;
+                            case TypeCode.Double:
+                                bw.Write<double>(table.Rows[i][j], columnMeta[j]);
+                                break;
+                            case TypeCode.String:
+                                byte[] strBytes = Encoding.UTF8.GetBytes((string)table.Rows[i][j]);
+                                if (strBytes.Length == 0)
+                                {
+                                    bw.Write<string>(0, columnMeta[j]);
+                                }
+                                else
+                                {
+                                    bw.Write<string>((int)stringTable.Position, columnMeta[j]);
+                                    stringTable.Write(strBytes, 0, strBytes.Length);
+                                    stringTable.WriteByte(0);
+                                }
+                                break;
+                            default:
+                                throw new Exception("Unknown TypeCode " + columnTypeCodes[j]);
+                        }
+                    }
+
+                    // padding at the end of the row
+                    long rem = fs.Position % 4;
+                    if (rem != 0)
+                        fs.Position += (4 - rem);
+                }
+
+                if (hasStrings)
+                {
+                    stringTable.Position = 0;
+                    stringTable.CopyTo(fs);
+
+                    fs.Position = 0x10;
+
+                    bw.Write((int)stringTable.Length);
+                }
+            }
         }
     }
 }

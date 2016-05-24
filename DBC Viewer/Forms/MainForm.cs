@@ -37,9 +37,6 @@ namespace DBCViewer
         public int DefinitionIndex { get { return m_selector != null ? m_selector.DefinitionIndex : 0; } }
         public string DBCFile { get { return m_dbcFile; } }
 
-        // Delegates
-        delegate void SetDataViewDelegate(DataView view);
-
         // Plugins
         [ImportMany(AllowRecomposition = true)]
         List<IPlugin> Plugins { get; set; }
@@ -280,7 +277,7 @@ namespace DBCViewer
             }
         }
 
-        public void SetDataSource(DataView dataView)
+        public void SetDataSource(DataTable dataView)
         {
             bindingSource1.DataSource = dataView;
         }

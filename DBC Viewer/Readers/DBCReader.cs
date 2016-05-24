@@ -1,5 +1,7 @@
 ﻿using PluginInterface;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Text;
 
@@ -90,6 +92,11 @@ namespace DBCViewer
                     return new string((sbyte*)b, offset, len, Encoding.UTF8);
                 }
             }
+        }
+
+        public void Save(DataTable table, string path)
+        {
+            throw new NotImplementedException();
         }
     }
 }

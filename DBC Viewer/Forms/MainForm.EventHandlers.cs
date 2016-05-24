@@ -29,7 +29,7 @@ namespace DBCViewer
 
         private void dataGridView1_CellToolTipTextNeeded(object sender, DataGridViewCellToolTipTextNeededEventArgs e)
         {
-            if (e.RowIndex == -1)
+            if (e.ColumnIndex == -1 || e.RowIndex == -1 || e.RowIndex >= m_dataTable.Rows.Count)
                 return;
 
             ulong val = 0;
@@ -220,7 +220,7 @@ namespace DBCViewer
                     {
                         try
                         {
-                            dataRow[colName + "_" + (i + 1)] = m_dbreader.IsSparseTable ? br.ReadStringNull() : m_dbreader.StringTable[br.Read<int>(meta)];
+                            dataRow[colName + "_" + (i + 1)] = m_dbreader.IsSparseTable ? br.ReadStringNull() : m_dbreader.StringTable[(int)br.Read<int>(meta)];
                         }
                         catch
                         {
@@ -232,7 +232,7 @@ namespace DBCViewer
                 {
                     try
                     {
-                        dataRow[colName] = m_dbreader.IsSparseTable ? br.ReadStringNull() : m_dbreader.StringTable[br.Read<int>(meta)];
+                        dataRow[colName] = m_dbreader.IsSparseTable ? br.ReadStringNull() : m_dbreader.StringTable[(int)br.Read<int>(meta)];
                     }
                     catch
                     {
@@ -279,7 +279,7 @@ namespace DBCViewer
                 TimeSpan total = DateTime.Now - m_startTime;
                 statusToolStripLabel.Text = string.Format(CultureInfo.InvariantCulture, "Ready. Loaded in {0} sec", total.TotalSeconds);
                 Text = string.Format(CultureInfo.InvariantCulture, "DBC Viewer - {0}", e.Result);
-                SetDataSource(m_dataTable.DefaultView);
+                SetDataSource(m_dataTable);
                 InitColumnsFilter();
             }
         }
@@ -309,7 +309,7 @@ namespace DBCViewer
             if (m_filterForm != null)
                 m_filterForm.ResetFilters();
 
-            SetDataSource(m_dataTable.DefaultView);
+            SetDataSource(m_dataTable);
         }
 
         private void runPluginToolStripMenuItem_Click(object sender, EventArgs e)
@@ -474,7 +474,7 @@ namespace DBCViewer
 
                 e.ContextMenuStrip = columnContextMenuStrip;
             }
-            else
+            else if (e.ColumnIndex != -1)
             {
                 cellContextMenuStrip.Tag = string.Format("{0} {1}", e.ColumnIndex, e.RowIndex);
                 e.ContextMenuStrip = cellContextMenuStrip;
@@ -493,6 +493,23 @@ namespace DBCViewer
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("DBC Viewer @ 2010-2016 TOM_RUS", "About DBC Viewer", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dataGridView1.EndEdit();
+            m_dbreader.Save(m_dataTable, m_dataTable.TableName);
+        }
+
+        private void dataGridView1_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)
+        {
+            foreach (DataGridViewCell cell in e.Row.Cells)
+            {
+                if (cell.ValueType == typeof(string))
+                    cell.Value = string.Empty;
+                else
+                    cell.Value = 0;
+            }
         }
     }
 }
