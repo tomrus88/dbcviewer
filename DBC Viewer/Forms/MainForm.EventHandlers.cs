@@ -138,7 +138,7 @@ namespace DBCViewer
                 {
                     int colIndex = 0;
 
-                    for (int j = 0; j < m_fields.Count; ++j)    // Add cells
+                    for (int j = 0; j < m_fields.Count; j++)    // Add cells
                     {
                         for (int k = 0; k < arraySizes[j]; k++)
                         {
@@ -210,21 +210,21 @@ namespace DBCViewer
         private void ReadStringField(int colIndex, ColumnMeta meta, DataRow dataRow, BinaryReader br)
         {
             if (m_dbreader is WDBReader)
-                dataRow[colIndex] = br.ReadStringNull();
+                dataRow.SetField(colIndex, br.ReadStringNull());
             else if (m_dbreader is STLReader)
             {
                 int offset = br.ReadInt32();
-                dataRow[colIndex] = (m_dbreader as STLReader).ReadString(offset);
+                dataRow.SetField(colIndex, (m_dbreader as STLReader).ReadString(offset));
             }
             else
             {
                 try
                 {
-                    dataRow[colIndex] = m_dbreader.IsSparseTable ? br.ReadStringNull() : m_dbreader.StringTable[br.ReadInt32(meta)];
+                    dataRow.SetField(colIndex, m_dbreader.IsSparseTable ? br.ReadStringNull() : m_dbreader.StringTable[br.ReadInt32(meta)]);
                 }
                 catch
                 {
-                    dataRow[colIndex] = "Invalid string index!";
+                    dataRow.SetField(colIndex, "Invalid string index!");
                 }
             }
         }

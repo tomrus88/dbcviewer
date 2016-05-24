@@ -188,7 +188,7 @@ namespace DBCViewer
         public static sbyte ReadInt8(this BinaryReader reader, ColumnMeta meta)
         {
             if (meta != null && meta.Bits != 0x18)
-                throw new Exception("TypeCode.Int8 Unknown meta.Bits");
+                throw new Exception("TypeCode.SByte Unknown meta.Bits");
             return reader.ReadSByte();
             //if (meta == null)
             //    return reader.ReadSByte();
@@ -212,7 +212,7 @@ namespace DBCViewer
         public static byte ReadUInt8(this BinaryReader reader, ColumnMeta meta)
         {
             if (meta != null && meta.Bits != 0x18)
-                throw new Exception("TypeCode.UInt8 Unknown meta.Bits");
+                throw new Exception("TypeCode.Byte Unknown meta.Bits");
             return reader.ReadByte();
             //if (meta == null)
             //    return reader.ReadByte();

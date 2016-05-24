@@ -211,7 +211,7 @@ namespace DBCViewer
             {
                 for (int i = 0; i < field.ArraySize; i++)
                 {
-                    m_dataTable.Columns.Add(string.Format("{0}_{1}", field.Name, i + 1), typeof(T));
+                    m_dataTable.Columns.Add(string.Format("{0}_{1}", field.Name, i), typeof(T));
                 }
             }
             else
@@ -239,10 +239,10 @@ namespace DBCViewer
                 {
                     for (int i = 0; i < field.ArraySize; i++)
                     {
-                        dataGridView1.Columns[colName + "_" + (i + 1)].Visible = field.Visible;
-                        dataGridView1.Columns[colName + "_" + (i + 1)].Width = field.Width;
-                        dataGridView1.Columns[colName + "_" + (i + 1)].AutoSizeMode = GetColumnAutoSizeMode(field.Type, field.Format);
-                        dataGridView1.Columns[colName + "_" + (i + 1)].SortMode = DataGridViewColumnSortMode.Automatic;
+                        dataGridView1.Columns[colName + "_" + i].Visible = field.Visible;
+                        dataGridView1.Columns[colName + "_" + i].Width = field.Width;
+                        dataGridView1.Columns[colName + "_" + i].AutoSizeMode = GetColumnAutoSizeMode(field.Type, field.Format);
+                        dataGridView1.Columns[colName + "_" + i].SortMode = DataGridViewColumnSortMode.Automatic;
                     }
                 }
                 else
