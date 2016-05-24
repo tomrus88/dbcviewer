@@ -6,6 +6,6 @@
 
 Для запуска утилиты требуется [Microsoft .NET Framework 4.5][].
 
-[dbclayout.xml]: http://github.com/tomrus88/dbcviewer/blob/master/DBC%20Viewer/definitions
+[definitions]: http://github.com/tomrus88/dbcviewer/blob/master/DBC%20Viewer/definitions
 [Export2SQL.cs]: http://github.com/tomrus88/dbcviewer/blob/master/Export2SQL/Export2SQL.cs
 [Microsoft .NET Framework 4.5]: https://www.microsoft.com/en-us/download/details.aspx?id=42642
