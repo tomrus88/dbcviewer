@@ -235,7 +235,8 @@ namespace DBCViewer
             bool hasStrings = table.Columns.Cast<DataColumn>().Any(c => c.DataType == typeof(string));
 
             using (var fs = new FileStream(path, FileMode.Create))
-            using (var bw = new BinaryWriter(fs))
+            using (var ms = new MemoryStream())
+            using (var bw = new BinaryWriter(ms))
             {
                 bw.Write(DB5FmtSig); // magic
                 bw.Write(table.Rows.Count);
@@ -272,13 +273,15 @@ namespace DBCViewer
                     stringTable.WriteByte(0);
                 }
 
+                var fields = def.Fields;
+
                 for (int i = 0; i < table.Rows.Count; i++)
                 {
                     int colIndex = 0;
 
                     DataRow row = table.Rows[i];
 
-                    for (int j = 0; j < def.Fields.Count; j++)
+                    for (int j = 0; j < fields.Count; j++)
                     {
                         if (HasIndexTable && j == 0)
                         {
@@ -286,48 +289,56 @@ namespace DBCViewer
                             continue;
                         }
 
-                        int arraySize = def.Fields[j].ArraySize;
+                        int arraySize = fields[j].ArraySize;
 
                         for (int k = 0; k < arraySize; k++)
                         {
                             switch (columnTypeCodes[colIndex])
                             {
                                 case TypeCode.Byte:
-                                    bw.Write<byte>(row.Field<byte>(colIndex), columnMeta[j]);
+                                    bw.Write(row.Field<byte>(colIndex));
                                     break;
                                 case TypeCode.SByte:
-                                    bw.Write<sbyte>(row.Field<sbyte>(colIndex), columnMeta[j]);
+                                    bw.Write(row.Field<sbyte>(colIndex));
                                     break;
                                 case TypeCode.Int16:
-                                    bw.Write<short>(row.Field<short>(colIndex), columnMeta[j]);
+                                    bw.Write(row.Field<short>(colIndex));
                                     break;
                                 case TypeCode.UInt16:
-                                    bw.Write<ushort>(row.Field<ushort>(colIndex), columnMeta[j]);
+                                    bw.Write(row.Field<ushort>(colIndex));
                                     break;
                                 case TypeCode.Int32:
-                                    bw.Write<int>(row.Field<int>(colIndex), columnMeta[j]);
+                                    int count1 = (32 - columnMeta[j].Bits) >> 3;
+                                    byte[] bytes1 = BitConverter.GetBytes(row.Field<int>(colIndex));
+                                    bw.Write(bytes1, 0, count1);
                                     break;
                                 case TypeCode.UInt32:
-                                    bw.Write<uint>(row.Field<uint>(colIndex), columnMeta[j]);
+                                    int count2 = (32 - columnMeta[j].Bits) >> 3;
+                                    byte[] bytes2 = BitConverter.GetBytes(row.Field<uint>(colIndex));
+                                    bw.Write(bytes2, 0, count2);
                                     break;
                                 case TypeCode.Int64:
-                                    bw.Write<long>(row.Field<long>(colIndex), columnMeta[j]);
+                                    int count3 = (32 - columnMeta[j].Bits) >> 3;
+                                    byte[] bytes3 = BitConverter.GetBytes(row.Field<long>(colIndex));
+                                    bw.Write(bytes3, 0, count3);
                                     break;
                                 case TypeCode.UInt64:
-                                    bw.Write<ulong>(row.Field<ulong>(colIndex), columnMeta[j]);
+                                    int count4 = (32 - columnMeta[j].Bits) >> 3;
+                                    byte[] bytes4 = BitConverter.GetBytes(row.Field<ulong>(colIndex));
+                                    bw.Write(bytes4, 0, count4);
                                     break;
                                 case TypeCode.Single:
-                                    bw.Write<float>(row.Field<float>(colIndex), columnMeta[j]);
+                                    bw.Write(row.Field<float>(colIndex));
                                     break;
                                 case TypeCode.Double:
-                                    bw.Write<double>(row.Field<double>(colIndex), columnMeta[j]);
+                                    bw.Write(row.Field<double>(colIndex));
                                     break;
                                 case TypeCode.String:
                                     string str = row.Field<string>(colIndex);
                                     int offset;
                                     if (stringLookup.TryGetValue(str, out offset))
                                     {
-                                        bw.Write<string>(offset, columnMeta[j]);
+                                        bw.Write(offset);
                                     }
                                     else
                                     {
@@ -335,12 +346,12 @@ namespace DBCViewer
                                         if (strBytes.Length == 0)
                                         {
                                             throw new Exception("should not happen");
-                                            //bw.Write<string>(0, columnMeta[j]);
+                                            //bw.Write(0);
                                         }
                                         else
                                         {
                                             stringLookup[str] = (int)stringTable.Position;
-                                            bw.Write<string>((int)stringTable.Position, columnMeta[j]);
+                                            bw.Write((int)stringTable.Position);
                                             stringTable.Write(strBytes, 0, strBytes.Length);
                                             stringTable.WriteByte(0);
                                         }
@@ -355,22 +366,22 @@ namespace DBCViewer
                     }
 
                     // padding at the end of the row
-                    long rem = fs.Position % 4;
+                    long rem = ms.Position % 4;
                     if (rem != 0)
-                        fs.Position += (4 - rem);
+                        ms.Position += (4 - rem);
                 }
 
                 if (hasStrings)
                 {
+                    // update stringTableSize in the header
+                    long oldPos = ms.Position;
+                    ms.Position = 0x10;
+                    bw.Write((int)stringTable.Length);
+                    ms.Position = oldPos;
+
                     // write strings
                     stringTable.Position = 0;
-                    stringTable.CopyTo(fs);
-
-                    // update stringTableSize in the header
-                    long oldPos = fs.Position;
-                    fs.Position = 0x10;
-                    bw.Write((int)stringTable.Length);
-                    fs.Position = oldPos;
+                    stringTable.CopyTo(ms);
                 }
 
                 if (HasIndexTable)
@@ -380,6 +391,10 @@ namespace DBCViewer
                         bw.Write(id);
                     }
                 }
+
+                // copy data to file
+                ms.Position = 0;
+                ms.CopyTo(fs);
             }
         }
     }

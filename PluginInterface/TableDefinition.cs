@@ -28,6 +28,9 @@ namespace PluginInterface
 
         public static void Save(DBFilesClient db)
         {
+            if (!Directory.Exists(Path.GetDirectoryName(db.File)))
+                Directory.CreateDirectory(Path.GetDirectoryName(db.File));
+
             XmlSerializer ser = new XmlSerializer(typeof(DBFilesClient));
             XmlSerializerNamespaces namespaces = new XmlSerializerNamespaces();
             namespaces.Add(string.Empty, string.Empty);

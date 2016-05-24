@@ -397,58 +397,6 @@ namespace DBCViewer
         }
         #endregion
 
-        public static void Write<T>(this BinaryWriter writer, object value, ColumnMeta meta)
-        {
-            TypeCode code = Type.GetTypeCode(typeof(T));
-
-            switch (code)
-            {
-                case TypeCode.Byte:
-                    writer.Write((byte)value);
-                    break;
-                case TypeCode.SByte:
-                    writer.Write((sbyte)value);
-                    break;
-                case TypeCode.Int16:
-                    writer.Write((short)value);
-                    break;
-                case TypeCode.UInt16:
-                    writer.Write((ushort)value);
-                    break;
-                case TypeCode.Int32:
-                    int count1 = (32 - meta.Bits) >> 3;
-                    byte[] bytes1 = BitConverter.GetBytes((int)value);
-                    writer.Write(bytes1, 0, count1);
-                    break;
-                case TypeCode.UInt32:
-                    int count2 = (32 - meta.Bits) >> 3;
-                    byte[] bytes2 = BitConverter.GetBytes((uint)value);
-                    writer.Write(bytes2, 0, count2);
-                    break;
-                case TypeCode.Int64:
-                    int count3 = (32 - meta.Bits) >> 3;
-                    byte[] bytes3 = BitConverter.GetBytes((long)value);
-                    writer.Write(bytes3, 0, count3);
-                    break;
-                case TypeCode.UInt64:
-                    int count4 = (32 - meta.Bits) >> 3;
-                    byte[] bytes4 = BitConverter.GetBytes((ulong)value);
-                    writer.Write(bytes4, 0, count4);
-                    break;
-                case TypeCode.Single:
-                    writer.Write((float)value);
-                    break;
-                case TypeCode.Double:
-                    writer.Write((double)value);
-                    break;
-                case TypeCode.String:
-                    writer.Write((int)value);
-                    break;
-                default:
-                    throw new Exception("Unknown TypeCode " + code);
-            }
-        }
-
         public static void AppendFormatLine(this StringBuilder sb, string format, params object[] args)
         {
             sb.AppendFormat(format, args);

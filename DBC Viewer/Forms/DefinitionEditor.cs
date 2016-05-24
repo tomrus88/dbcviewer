@@ -42,7 +42,7 @@ namespace DBCViewer
 
         private bool CheckColumns()
         {
-            var names = from Field i in editingTable.Fields select i.Name;
+            var names = editingTable.Fields.Select(f => f.Name);
             if (names.Distinct().Count() != names.Count())
                 return false;
             return true;
