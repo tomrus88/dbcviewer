@@ -242,7 +242,7 @@ namespace DBCViewer
                 bw.Write(maxId);
                 bw.Write(Locale);
                 bw.Write(0); // CopyTableSize
-                bw.Write((ushort)0); // flags
+                bw.Write((ushort)(HasIndexTable ? 4 : 0)); // flags
                 bw.Write((ushort)IDColumn); // IDIndex
 
                 for (int i = 0; i < columnMeta.Count; i++)
