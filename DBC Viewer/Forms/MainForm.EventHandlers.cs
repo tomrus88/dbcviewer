@@ -484,8 +484,13 @@ namespace DBCViewer
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            saveFileDialog1.FileName = m_dataTable.TableName;
+
+            if (saveFileDialog1.ShowDialog() != DialogResult.OK)
+                return;
+
             dataGridView1.EndEdit();
-            m_dbreader.Save(m_dataTable, m_definition, m_dataTable.TableName);
+            m_dbreader.Save(m_dataTable, m_definition, saveFileDialog1.FileName);
         }
 
         private void dataGridView1_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)

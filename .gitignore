@@ -13,5 +13,7 @@
 *.suo
 *.user
 
+.vs/*
+
 */bin/
 */obj/
