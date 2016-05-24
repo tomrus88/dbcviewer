@@ -164,58 +164,60 @@ namespace DBCViewer
         {
             foreach (Field field in m_fields)
             {
-                var colName = field.Name;
-
                 switch (field.Type)
                 {
-                    case "long":
-                        CreateColumn<long>(field, colName);
-                        break;
-                    case "ulong":
-                        CreateColumn<ulong>(field, colName);
-                        break;
-                    case "int":
-                        CreateColumn<int>(field, colName);
-                        break;
-                    case "uint":
-                        CreateColumn<uint>(field, colName);
-                        break;
-                    case "short":
-                        CreateColumn<short>(field, colName);
-                        break;
-                    case "ushort":
-                        CreateColumn<ushort>(field, colName);
-                        break;
                     case "sbyte":
-                        CreateColumn<sbyte>(field, colName);
+                        CreateColumn<sbyte>(field);
                         break;
                     case "byte":
-                        CreateColumn<byte>(field, colName);
+                        CreateColumn<byte>(field);
+                        break;
+                    case "short":
+                        CreateColumn<short>(field);
+                        break;
+                    case "ushort":
+                        CreateColumn<ushort>(field);
+                        break;
+                    case "long":
+                        CreateColumn<long>(field);
+                        break;
+                    case "ulong":
+                        CreateColumn<ulong>(field);
+                        break;
+                    case "int":
+                        CreateColumn<int>(field);
+                        break;
+                    case "uint":
+                        CreateColumn<uint>(field);
                         break;
                     case "float":
-                        CreateColumn<float>(field, colName);
+                        CreateColumn<float>(field);
                         break;
                     case "double":
-                        CreateColumn<double>(field, colName);
+                        CreateColumn<double>(field);
                         break;
                     case "string":
-                        CreateColumn<string>(field, colName);
+                        CreateColumn<string>(field);
                         break;
                     default:
-                        throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Unknown field type {0}!", field.Type));
+                        throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Unknown field type {0} for column {1}!", field.Type, field.Name));
                 }
             }
         }
 
-        private void CreateColumn<T>(Field field, string colName)
+        private void CreateColumn<T>(Field field)
         {
             if (field.ArraySize > 1)
             {
                 for (int i = 0; i < field.ArraySize; i++)
-                    m_dataTable.Columns.Add(string.Format("{0}_{1}", colName, i + 1), typeof(T));
+                {
+                    m_dataTable.Columns.Add(string.Format("{0}_{1}", field.Name, i + 1), typeof(T));
+                }
             }
             else
-                m_dataTable.Columns.Add(colName, typeof(T));
+            {
+                m_dataTable.Columns.Add(field.Name, typeof(T));
+            }
         }
 
         private void InitColumnsFilter()

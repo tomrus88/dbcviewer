@@ -106,20 +106,9 @@ namespace DBCViewer
 
             m_fields = new List<Field>(m_definition.Fields);
 
-            string[] types = new string[m_fields.Count];
+            string[] colNames = m_fields.Select(f => f.Name).ToArray();
 
-            for (int j = 0; j < m_fields.Count; ++j)
-                types[j] = m_fields[j].Type;
-
-            string[] colNames = new string[m_fields.Count];
-
-            for (int j = 0; j < m_fields.Count; ++j)
-                colNames[j] = m_fields[j].Name;
-
-            int[] arraySizes = new int[m_fields.Count];
-
-            for (int j = 0; j < m_fields.Count; ++j)
-                arraySizes[j] = m_fields[j].ArraySize;
+            int[] arraySizes = m_fields.Select(f => f.ArraySize).ToArray();
 
             bool isDBCorDB2 = m_dbreader is DBCReader || m_dbreader is DB2Reader;
 
@@ -130,7 +119,16 @@ namespace DBCViewer
 
             CreateIndexes();                                // Add indexes
 
+            TypeCode[] types = m_dataTable.Columns.Cast<DataColumn>().Select(c => Type.GetTypeCode(c.DataType)).ToArray();
+
             var meta = (m_dbreader as DB5Reader)?.Meta;
+
+            Func<TypeCode, bool> isSmallType = (t) =>
+            {
+                if (t == TypeCode.SByte || t == TypeCode.Byte || t == TypeCode.Int16 || t == TypeCode.UInt16)
+                    return true;
+                return false;
+            };
 
             foreach (var row in m_dbreader.Rows) // Add rows
             {
@@ -138,48 +136,64 @@ namespace DBCViewer
 
                 using (BinaryReader br = row)
                 {
+                    int colIndex = 0;
+
                     for (int j = 0; j < m_fields.Count; ++j)    // Add cells
                     {
-                        switch (types[j])
+                        for (int k = 0; k < arraySizes[j]; k++)
                         {
-                            case "long":
-                                ReadField<long>(colNames[j], arraySizes[j], meta?[j], dataRow, br);
-                                break;
-                            case "ulong":
-                                ReadField<ulong>(colNames[j], arraySizes[j], meta?[j], dataRow, br);
-                                break;
-                            case "int":
-                                ReadField<int>(colNames[j], arraySizes[j], meta?[j], dataRow, br);
-                                break;
-                            case "uint":
-                                ReadField<uint>(colNames[j], arraySizes[j], meta?[j], dataRow, br);
-                                break;
-                            case "short":
-                                ReadField<short>(colNames[j], arraySizes[j], meta?[j], dataRow, br);
-                                break;
-                            case "ushort":
-                                ReadField<ushort>(colNames[j], arraySizes[j], meta?[j], dataRow, br);
-                                break;
-                            case "sbyte":
-                                ReadField<sbyte>(colNames[j], arraySizes[j], meta?[j], dataRow, br);
-                                break;
-                            case "byte":
-                                ReadField<byte>(colNames[j], arraySizes[j], meta?[j], dataRow, br);
-                                // bytes are padded with zeros in old format versions if next field isn't byte
-                                if (isDBCorDB2 && (j + 1 < types.Length) && (br.BaseStream.Position % 4) != 0 && types[j + 1] != "byte")
-                                    br.BaseStream.Position += (4 - br.BaseStream.Position % 4);
-                                break;
-                            case "float":
-                                ReadField<float>(colNames[j], arraySizes[j], meta?[j], dataRow, br);
-                                break;
-                            case "double":
-                                ReadField<double>(colNames[j], arraySizes[j], meta?[j], dataRow, br);
-                                break;
-                            case "string":
-                                ReadStringField(colNames[j], arraySizes[j], meta?[j], dataRow, br);
-                                break;
-                            default:
-                                throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Unknown field type {0}!", types[j]));
+                            switch (types[colIndex])
+                            {
+                                case TypeCode.SByte:
+                                    dataRow.SetField(colIndex, br.ReadInt8(meta?[j]));
+                                    // small fields are padded with zeros in old format versions if next field isn't small
+                                    if (isDBCorDB2 && (colIndex + 1 < types.Length) && (br.BaseStream.Position % 4) != 0 && !isSmallType(types[colIndex + 1]))
+                                        br.BaseStream.Position += (4 - br.BaseStream.Position % 4);
+                                    break;
+                                case TypeCode.Byte:
+                                    dataRow.SetField(colIndex, br.ReadUInt8(meta?[j]));
+                                    // small fields are padded with zeros in old format versions if next field isn't small
+                                    if (isDBCorDB2 && (colIndex + 1 < types.Length) && (br.BaseStream.Position % 4) != 0 && !isSmallType(types[colIndex + 1]))
+                                        br.BaseStream.Position += (4 - br.BaseStream.Position % 4);
+                                    break;
+                                case TypeCode.Int16:
+                                    dataRow.SetField(colIndex, br.ReadInt16(meta?[j]));
+                                    // small fields are padded with zeros in old format versions if next field isn't small
+                                    if (isDBCorDB2 && (colIndex + 1 < types.Length) && (br.BaseStream.Position % 4) != 0 && !isSmallType(types[colIndex + 1]))
+                                        br.BaseStream.Position += (4 - br.BaseStream.Position % 4);
+                                    break;
+                                case TypeCode.UInt16:
+                                    dataRow.SetField(colIndex, br.ReadUInt16(meta?[j]));
+                                    // small fields are padded with zeros in old format versions if next field isn't small
+                                    if (isDBCorDB2 && (colIndex + 1 < types.Length) && (br.BaseStream.Position % 4) != 0 && !isSmallType(types[colIndex + 1]))
+                                        br.BaseStream.Position += (4 - br.BaseStream.Position % 4);
+                                    break;
+                                case TypeCode.Int32:
+                                    dataRow.SetField(colIndex, br.ReadInt32(meta?[j]));
+                                    break;
+                                case TypeCode.UInt32:
+                                    dataRow.SetField(colIndex, br.ReadUInt32(meta?[j]));
+                                    break;
+                                case TypeCode.Int64:
+                                    dataRow.SetField(colIndex, br.ReadInt64(meta?[j]));
+                                    break;
+                                case TypeCode.UInt64:
+                                    dataRow.SetField(colIndex, br.ReadUInt64(meta?[j]));
+                                    break;
+                                case TypeCode.Single:
+                                    dataRow.SetField(colIndex, br.ReadSingle(meta?[j]));
+                                    break;
+                                case TypeCode.Double:
+                                    dataRow.SetField(colIndex, br.ReadDouble(meta?[j]));
+                                    break;
+                                case TypeCode.String:
+                                    ReadStringField(colIndex, meta?[j], dataRow, br);
+                                    break;
+                                default:
+                                    throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Unknown field type {0} for column {1}!", types[colIndex], colNames[j]));
+                            }
+
+                            colIndex++;
                         }
                     }
                 }
@@ -193,52 +207,24 @@ namespace DBCViewer
             e.Result = file;
         }
 
-        private static void ReadField<T>(string colName, int arraySize, ColumnMeta meta, DataRow dataRow, BinaryReader br)
-        {
-            if (arraySize > 1)
-            {
-                for (int i = 0; i < arraySize; i++)
-                    dataRow[colName + "_" + (i + 1)] = br.Read<T>(meta);
-            }
-            else
-                dataRow[colName] = br.Read<T>(meta);
-        }
-
-        private void ReadStringField(string colName, int arraySize, ColumnMeta meta, DataRow dataRow, BinaryReader br)
+        private void ReadStringField(int colIndex, ColumnMeta meta, DataRow dataRow, BinaryReader br)
         {
             if (m_dbreader is WDBReader)
-                dataRow[colName] = br.ReadStringNull();
+                dataRow[colIndex] = br.ReadStringNull();
             else if (m_dbreader is STLReader)
             {
                 int offset = br.ReadInt32();
-                dataRow[colName] = (m_dbreader as STLReader).ReadString(offset);
+                dataRow[colIndex] = (m_dbreader as STLReader).ReadString(offset);
             }
             else
             {
-                if (arraySize > 1)
+                try
                 {
-                    for (int i = 0; i < arraySize; i++)
-                    {
-                        try
-                        {
-                            dataRow[colName + "_" + (i + 1)] = m_dbreader.IsSparseTable ? br.ReadStringNull() : m_dbreader.StringTable[(int)br.Read<int>(meta)];
-                        }
-                        catch
-                        {
-                            dataRow[colName] = "Invalid string index!";
-                        }
-                    }
+                    dataRow[colIndex] = m_dbreader.IsSparseTable ? br.ReadStringNull() : m_dbreader.StringTable[br.ReadInt32(meta)];
                 }
-                else
+                catch
                 {
-                    try
-                    {
-                        dataRow[colName] = m_dbreader.IsSparseTable ? br.ReadStringNull() : m_dbreader.StringTable[(int)br.Read<int>(meta)];
-                    }
-                    catch
-                    {
-                        dataRow[colName] = "Invalid string index!";
-                    }
+                    dataRow[colIndex] = "Invalid string index!";
                 }
             }
         }

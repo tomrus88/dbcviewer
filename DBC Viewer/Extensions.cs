@@ -181,126 +181,221 @@ namespace DBCViewer
         }
         #endregion
 
-        #region ReadPackedInt32
+        #region ReadInt8
         /// <summary>
-        ///  Reads the packed Int32 from the current stream and advances the current position of the stream by packed Int32 size.
+        ///  Reads the Int8 from the current stream and advances the current position of the stream by Int8 size.
         /// </summary>
-        public static int ReadPackedInt32(this BinaryReader reader, int bits)
+        public static sbyte ReadInt8(this BinaryReader reader, ColumnMeta meta)
         {
-            byte[] b = reader.ReadBytes((32 - bits) >> 3);
+            if (meta != null && meta.Bits != 0x18)
+                throw new Exception("TypeCode.Int8 Unknown meta.Bits");
+            return reader.ReadSByte();
+            //if (meta == null)
+            //    return reader.ReadSByte();
+            //else
+            //{
+            //    byte[] b = reader.ReadBytes((32 - meta.Bits) >> 3);
 
-            int i32 = 0;
-            for (int i = 0; i < b.Length; i++)
-                i32 |= b[i] << i * 8;
+            //    sbyte i8 = 0;
+            //    for (int i = 0; i < b.Length; i++)
+            //        i8 |= (sbyte)(b[i] << i * 8);
 
-            return i32;
+            //    return i8;
+            //}
         }
         #endregion
 
-        #region ReadPackedUInt32
+        #region ReadUInt8
         /// <summary>
-        ///  Reads the packed UInt32 from the current stream and advances the current position of the stream by packed UInt32 size.
+        ///  Reads the UInt8 from the current stream and advances the current position of the stream by UInt8 size.
         /// </summary>
-        public static uint ReadPackedUInt32(this BinaryReader reader, int bits)
+        public static byte ReadUInt8(this BinaryReader reader, ColumnMeta meta)
         {
-            byte[] b = reader.ReadBytes((32 - bits) >> 3);
+            if (meta != null && meta.Bits != 0x18)
+                throw new Exception("TypeCode.UInt8 Unknown meta.Bits");
+            return reader.ReadByte();
+            //if (meta == null)
+            //    return reader.ReadByte();
+            //else
+            //{
+            //    byte[] b = reader.ReadBytes((32 - meta.Bits) >> 3);
 
-            uint u32 = 0;
-            for (int i = 0; i < b.Length; i++)
-                u32 |= (uint)b[i] << i * 8;
+            //    byte u8 = 0;
+            //    for (int i = 0; i < b.Length; i++)
+            //        u8 |= (byte)(b[i] << i * 8);
 
-            return u32;
+            //    return u8;
+            //}
         }
         #endregion
 
-        #region ReadPackedInt64
+        #region ReadInt16
         /// <summary>
-        ///  Reads the packed Int64 from the current stream and advances the current position of the stream by packed Int64 size.
+        ///  Reads the Int16 from the current stream and advances the current position of the stream by Int16 size.
         /// </summary>
-        public static long ReadPackedInt64(this BinaryReader reader, int bits)
+        public static short ReadInt16(this BinaryReader reader, ColumnMeta meta)
         {
-            byte[] b = reader.ReadBytes((32 - bits) >> 3);
+            if (meta != null && meta.Bits != 0x10)
+                throw new Exception("TypeCode.Int16 Unknown meta.Bits");
+            return reader.ReadInt16();
+            //if (meta == null)
+            //    return reader.ReadInt16();
+            //else
+            //{
+            //    byte[] b = reader.ReadBytes((32 - meta.Bits) >> 3);
 
-            long i64 = 0;
-            for (int i = 0; i < b.Length; i++)
-                i64 |= (long)b[i] << i * 8;
+            //    short i16 = 0;
+            //    for (int i = 0; i < b.Length; i++)
+            //        i16 |= (short)(b[i] << i * 8);
 
-            return i64;
+            //    return i16;
+            //}
         }
         #endregion
 
-        #region ReadPackedUInt64
+        #region ReadUInt16
         /// <summary>
-        ///  Reads the packed UInt64 from the current stream and advances the current position of the stream by packed UInt64 size.
+        ///  Reads the UInt16 from the current stream and advances the current position of the stream by UInt16 size.
         /// </summary>
-        public static ulong ReadPackedUInt64(this BinaryReader reader, int bits)
+        public static ushort ReadUInt16(this BinaryReader reader, ColumnMeta meta)
         {
-            byte[] b = reader.ReadBytes((32 - bits) >> 3);
+            if (meta != null && meta.Bits != 0x10)
+                throw new Exception("TypeCode.UInt16 Unknown meta.Bits");
+            return reader.ReadUInt16();
+            //if (meta == null)
+            //    return reader.ReadUInt16();
+            //else
+            //{
+            //    byte[] b = reader.ReadBytes((32 - meta.Bits) >> 3);
 
-            ulong u64 = 0;
-            for (int i = 0; i < b.Length; i++)
-                u64 |= (ulong)b[i] << i * 8;
+            //    ushort u16 = 0;
+            //    for (int i = 0; i < b.Length; i++)
+            //        u16 |= (ushort)(b[i] << i * 8);
 
-            return u64;
+            //    return u16;
+            //}
         }
         #endregion
 
-        public static object Read<T>(this BinaryReader reader, ColumnMeta meta)
+        #region ReadInt32
+        /// <summary>
+        ///  Reads the Int32 from the current stream and advances the current position of the stream by Int32 size.
+        /// </summary>
+        public static int ReadInt32(this BinaryReader reader, ColumnMeta meta)
         {
-            TypeCode code = Type.GetTypeCode(typeof(T));
-
-            switch (code)
+            if (meta == null)
+                return reader.ReadInt32();
+            else
             {
-                case TypeCode.Byte:
-                    if (meta != null && meta.Bits != 0x18)
-                        throw new Exception("TypeCode.Byte Unknown meta.Flags");
-                    return reader.ReadByte();
-                case TypeCode.SByte:
-                    if (meta != null && meta.Bits != 0x18)
-                        throw new Exception("TypeCode.SByte Unknown meta.Flags");
-                    return reader.ReadSByte();
-                case TypeCode.Int16:
-                    if (meta != null && meta.Bits != 0x10)
-                        throw new Exception("TypeCode.Int16 Unknown meta.Flags");
-                    return reader.ReadInt16();
-                case TypeCode.UInt16:
-                    if (meta != null && meta.Bits != 0x10)
-                        throw new Exception("TypeCode.UInt16 Unknown meta.Flags");
-                    return reader.ReadUInt16();
-                case TypeCode.Int32:
-                    if (meta == null)
-                        return reader.ReadInt32();
-                    else
-                        return reader.ReadPackedInt32(meta.Bits);
-                case TypeCode.UInt32:
-                    if (meta == null)
-                        return reader.ReadUInt32();
-                    else
-                        return reader.ReadPackedUInt32(meta.Bits);
-                case TypeCode.Int64:
-                    if (meta == null)
-                        return reader.ReadInt64();
-                    else
-                        return reader.ReadPackedInt64(meta.Bits);
-                case TypeCode.UInt64:
-                    if (meta == null)
-                        return reader.ReadUInt64();
-                    else
-                        return reader.ReadPackedUInt64(meta.Bits);
-                case TypeCode.Single:
-                    if (meta != null && meta.Bits != 0x00)
-                        throw new Exception("TypeCode.Single Unknown meta.Flags");
-                    return reader.ReadSingle();
-                case TypeCode.Double:
-                    return reader.ReadDouble();
-                case TypeCode.String:
-                    if (meta != null && meta.Bits != 0x00)
-                        throw new Exception("TypeCode.String Unknown meta.Flags");
-                    return reader.ReadStringNull();
-                default:
-                    throw new Exception("Unknown TypeCode " + code);
+                byte[] b = reader.ReadBytes((32 - meta.Bits) >> 3);
+
+                int i32 = 0;
+                for (int i = 0; i < b.Length; i++)
+                    i32 |= (b[i] << i * 8);
+
+                return i32;
             }
         }
+        #endregion
+
+        #region ReadUInt32
+        /// <summary>
+        ///  Reads the UInt32 from the current stream and advances the current position of the stream by UInt32 size.
+        /// </summary>
+        public static uint ReadUInt32(this BinaryReader reader, ColumnMeta meta)
+        {
+            if (meta == null)
+                return reader.ReadUInt32();
+            else
+            {
+                byte[] b = reader.ReadBytes((32 - meta.Bits) >> 3);
+
+                uint u32 = 0;
+                for (int i = 0; i < b.Length; i++)
+                    u32 |= ((uint)b[i] << i * 8);
+
+                return u32;
+            }
+        }
+        #endregion
+
+        #region ReadInt64
+        /// <summary>
+        ///  Reads the Int64 from the current stream and advances the current position of the stream by Int64 size.
+        /// </summary>
+        public static long ReadInt64(this BinaryReader reader, ColumnMeta meta)
+        {
+            if (meta == null)
+                return reader.ReadInt64();
+            else
+            {
+                byte[] b = reader.ReadBytes((32 - meta.Bits) >> 3);
+
+                long i64 = 0;
+                for (int i = 0; i < b.Length; i++)
+                    i64 |= ((long)b[i] << i * 8);
+
+                return i64;
+            }
+        }
+        #endregion
+
+        #region ReadUInt64
+        /// <summary>
+        ///  Reads the UInt64 from the current stream and advances the current position of the stream by UInt64 size.
+        /// </summary>
+        public static ulong ReadUInt64(this BinaryReader reader, ColumnMeta meta)
+        {
+            if (meta == null)
+                return reader.ReadUInt64();
+            else
+            {
+                byte[] b = reader.ReadBytes((32 - meta.Bits) >> 3);
+
+                ulong u64 = 0;
+                for (int i = 0; i < b.Length; i++)
+                    u64 |= ((ulong)b[i] << i * 8);
+
+                return u64;
+            }
+        }
+        #endregion
+
+        #region ReadSingle
+        /// <summary>
+        ///  Reads the Single from the current stream and advances the current position of the stream by Single size.
+        /// </summary>
+        public static float ReadSingle(this BinaryReader reader, ColumnMeta meta)
+        {
+            if (meta != null && meta.Bits != 0x00)
+                throw new Exception("TypeCode.Single Unknown meta.Bits");
+            return reader.ReadSingle();
+        }
+        #endregion
+
+        #region ReadDouble
+        /// <summary>
+        ///  Reads the Double from the current stream and advances the current position of the stream by Double size.
+        /// </summary>
+        public static double ReadDouble(this BinaryReader reader, ColumnMeta meta)
+        {
+            if (meta != null && meta.Bits != -32)
+                throw new Exception("TypeCode.Double Unknown meta.Bits");
+            return reader.ReadDouble();
+        }
+        #endregion
+
+        #region ReadString
+        /// <summary>
+        ///  Reads the String from the current stream and advances the current position of the stream by String size.
+        /// </summary>
+        public static string ReadString(this BinaryReader reader, ColumnMeta meta)
+        {
+            if (meta != null && meta.Bits != 0x00)
+                throw new Exception("TypeCode.String Unknown meta.Bits");
+            return reader.ReadStringNull();
+        }
+        #endregion
 
         public static void Write<T>(this BinaryWriter writer, object value, ColumnMeta meta)
         {

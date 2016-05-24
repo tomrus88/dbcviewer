@@ -276,6 +276,8 @@ namespace DBCViewer
                 {
                     int colIndex = 0;
 
+                    DataRow row = table.Rows[i];
+
                     for (int j = 0; j < def.Fields.Count; j++)
                     {
                         if (HasIndexTable && j == 0)
@@ -284,42 +286,44 @@ namespace DBCViewer
                             continue;
                         }
 
-                        for (int k = 0; k < def.Fields[j].ArraySize; k++)
+                        int arraySize = def.Fields[j].ArraySize;
+
+                        for (int k = 0; k < arraySize; k++)
                         {
                             switch (columnTypeCodes[colIndex])
                             {
                                 case TypeCode.Byte:
-                                    bw.Write<byte>(table.Rows[i][colIndex], columnMeta[j]);
+                                    bw.Write<byte>(row.Field<byte>(colIndex), columnMeta[j]);
                                     break;
                                 case TypeCode.SByte:
-                                    bw.Write<sbyte>(table.Rows[i][colIndex], columnMeta[j]);
+                                    bw.Write<sbyte>(row.Field<sbyte>(colIndex), columnMeta[j]);
                                     break;
                                 case TypeCode.Int16:
-                                    bw.Write<short>(table.Rows[i][colIndex], columnMeta[j]);
+                                    bw.Write<short>(row.Field<short>(colIndex), columnMeta[j]);
                                     break;
                                 case TypeCode.UInt16:
-                                    bw.Write<ushort>(table.Rows[i][colIndex], columnMeta[j]);
+                                    bw.Write<ushort>(row.Field<ushort>(colIndex), columnMeta[j]);
                                     break;
                                 case TypeCode.Int32:
-                                    bw.Write<int>(table.Rows[i][colIndex], columnMeta[j]);
+                                    bw.Write<int>(row.Field<int>(colIndex), columnMeta[j]);
                                     break;
                                 case TypeCode.UInt32:
-                                    bw.Write<uint>(table.Rows[i][colIndex], columnMeta[j]);
+                                    bw.Write<uint>(row.Field<uint>(colIndex), columnMeta[j]);
                                     break;
                                 case TypeCode.Int64:
-                                    bw.Write<long>(table.Rows[i][colIndex], columnMeta[j]);
+                                    bw.Write<long>(row.Field<long>(colIndex), columnMeta[j]);
                                     break;
                                 case TypeCode.UInt64:
-                                    bw.Write<ulong>(table.Rows[i][colIndex], columnMeta[j]);
+                                    bw.Write<ulong>(row.Field<ulong>(colIndex), columnMeta[j]);
                                     break;
                                 case TypeCode.Single:
-                                    bw.Write<float>(table.Rows[i][colIndex], columnMeta[j]);
+                                    bw.Write<float>(row.Field<float>(colIndex), columnMeta[j]);
                                     break;
                                 case TypeCode.Double:
-                                    bw.Write<double>(table.Rows[i][colIndex], columnMeta[j]);
+                                    bw.Write<double>(row.Field<double>(colIndex), columnMeta[j]);
                                     break;
                                 case TypeCode.String:
-                                    string str = (string)table.Rows[i][colIndex];
+                                    string str = row.Field<string>(colIndex);
                                     int offset;
                                     if (stringLookup.TryGetValue(str, out offset))
                                     {
@@ -331,7 +335,7 @@ namespace DBCViewer
                                         if (strBytes.Length == 0)
                                         {
                                             throw new Exception("should not happen");
-                                            bw.Write<string>(0, columnMeta[j]);
+                                            //bw.Write<string>(0, columnMeta[j]);
                                         }
                                         else
                                         {
