@@ -211,12 +211,24 @@ namespace DBCViewer
             {
                 for (int i = 0; i < field.ArraySize; i++)
                 {
-                    m_dataTable.Columns.Add(string.Format("{0}_{1}", field.Name, i), typeof(T));
+                    DataColumn col = m_dataTable.Columns.Add(string.Format("{0}_{1}", field.Name, i), typeof(T));
+                    if (col.DataType == typeof(string))
+                        col.DefaultValue = string.Empty;
+                    else if (col.DataType == typeof(float))
+                        col.DefaultValue = 0.0f;
+                    else
+                        col.DefaultValue = 0;
                 }
             }
             else
             {
-                m_dataTable.Columns.Add(field.Name, typeof(T));
+                DataColumn col = m_dataTable.Columns.Add(field.Name, typeof(T));
+                if (col.DataType == typeof(string))
+                    col.DefaultValue = string.Empty;
+                else if (col.DataType == typeof(float))
+                    col.DefaultValue = 0.0f;
+                else
+                    col.DefaultValue = 0;
             }
         }
 

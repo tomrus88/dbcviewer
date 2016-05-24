@@ -202,8 +202,6 @@ namespace DBCViewer
                         int id = reader.ReadInt32();
                         int idcopy = reader.ReadInt32();
 
-                        recordsCount++;
-
                         byte[] copyRow = Lookup[idcopy];
                         byte[] newRow = new byte[copyRow.Length];
                         Array.Copy(copyRow, newRow, newRow.Length);
@@ -223,12 +221,14 @@ namespace DBCViewer
         public void Save(DataTable table, Table def, string path)
         {
             int IDColumn = table.Columns.IndexOf(table.PrimaryKey[0]);
-            var idValues = table.Rows.Cast<DataRow>().Select(r => (int)r[IDColumn]);
+            var rows = table.Rows.Cast<DataRow>();
+            var idValues = rows.Select(r => (int)r[IDColumn]);
 
             DataRowComparer comparer = new DataRowComparer();
             comparer.IdColumnIndex = IDColumn;
 
-            var uniqueRows = table.Rows.Cast<DataRow>().Distinct(comparer).ToArray();
+            var uniqueRows = rows.Distinct(comparer);
+            var copyRows = rows.GroupBy(r => r, comparer).Where(g => g.Count() > 1);
 
             int minId = idValues.Min();
             int maxId = idValues.Max();
@@ -239,7 +239,7 @@ namespace DBCViewer
             using (var bw = new BinaryWriter(ms))
             {
                 bw.Write(DB5FmtSig); // magic
-                bw.Write(table.Rows.Count);
+                bw.Write(uniqueRows.Count());
                 bw.Write(HasIndexTable ? FieldsCount - 1 : FieldsCount);
                 bw.Write(RecordSize);
                 bw.Write(0); // stringTableSize placeholder
@@ -248,8 +248,15 @@ namespace DBCViewer
                 bw.Write(minId);
                 bw.Write(maxId);
                 bw.Write(Locale);
-                bw.Write(0); // CopyTableSize
-                bw.Write((ushort)(HasIndexTable ? 4 : 0)); // flags
+                bw.Write(0); // CopyTableSize placeholder
+
+                ushort flags = 0;
+
+                if (HasIndexTable)
+                    flags |= 0x4;
+
+                bw.Write(flags); // flags
+
                 bw.Write((ushort)IDColumn); // IDIndex
 
                 for (int i = 0; i < columnMeta.Count; i++)
@@ -275,11 +282,9 @@ namespace DBCViewer
 
                 var fields = def.Fields;
 
-                for (int i = 0; i < table.Rows.Count; i++)
+                foreach (DataRow row in uniqueRows)
                 {
                     int colIndex = 0;
-
-                    DataRow row = table.Rows[i];
 
                     for (int j = 0; j < fields.Count; j++)
                     {
@@ -386,10 +391,34 @@ namespace DBCViewer
 
                 if (HasIndexTable)
                 {
-                    foreach (var id in idValues)
+                    foreach (DataRow row in uniqueRows)
                     {
-                        bw.Write(id);
+                        bw.Write(row.Field<int>(IDColumn));
                     }
+                }
+
+                if (copyRows.Count() > 0)
+                {
+                    int copyTableSize = 0;
+
+                    foreach (var copies in copyRows)
+                    {
+                        foreach (var copy in copies)
+                        {
+                            if (copies.Key == copy)
+                                continue;
+
+                            bw.Write(copy.Field<int>(IDColumn));
+                            bw.Write(copies.Key.Field<int>(IDColumn));
+                            copyTableSize += 8;
+                        }
+                    }
+
+                    // update copyTableSize in the header
+                    long oldPos = ms.Position;
+                    ms.Position = 0x28;
+                    bw.Write(copyTableSize);
+                    ms.Position = oldPos;
                 }
 
                 // copy data to file
@@ -422,7 +451,7 @@ namespace DBCViewer
 
         public int GetHashCode(DataRow obj)
         {
-            return obj.GetHashCode();
+            return 0; // let Equals care about equality
         }
     }
 }

@@ -492,18 +492,5 @@ namespace DBCViewer
             dataGridView1.EndEdit();
             m_dbreader.Save(m_dataTable, m_definition, saveFileDialog1.FileName);
         }
-
-        private void dataGridView1_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)
-        {
-            foreach (DataGridViewCell cell in e.Row.Cells)
-            {
-                if (cell.ValueType == typeof(string))
-                    cell.Value = string.Empty;
-                else if (cell.ValueType == typeof(float))
-                    cell.Value = 0.0f;
-                else
-                    cell.Value = 0;
-            }
-        }
     }
 }
