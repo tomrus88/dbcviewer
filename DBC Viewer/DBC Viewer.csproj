@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DBCViewer</RootNamespace>
     <AssemblyName>DBC Viewer</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -168,7 +168,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Readers\STLReader.cs" />
     <Compile Include="Readers\WDBReader.cs" />
-    <Compile Include="TableDefinition.cs" />
     <EmbeddedResource Include="Forms\DefinitionCatalog.resx">
       <DependentUpon>DefinitionCatalog.cs</DependentUpon>
     </EmbeddedResource>

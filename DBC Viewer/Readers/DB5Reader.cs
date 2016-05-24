@@ -220,10 +220,16 @@ namespace DBCViewer
             FileName = fileName;
         }
 
-        public void Save(DataTable table, string path)
+        public void Save(DataTable table, Table def, string path)
         {
             int IDColumn = table.Columns.IndexOf(table.PrimaryKey[0]);
             var idValues = table.Rows.Cast<DataRow>().Select(r => (int)r[IDColumn]);
+
+            DataRowComparer comparer = new DataRowComparer();
+            comparer.IdColumnIndex = IDColumn;
+
+            var uniqueRows = table.Rows.Cast<DataRow>().Distinct(comparer).ToArray();
+
             int minId = idValues.Min();
             int maxId = idValues.Max();
             bool hasStrings = table.Columns.Cast<DataColumn>().Any(c => c.DataType == typeof(string));
@@ -268,69 +274,79 @@ namespace DBCViewer
 
                 for (int i = 0; i < table.Rows.Count; i++)
                 {
-                    for (int j = 0; j < table.Columns.Count; j++)
+                    int colIndex = 0;
+
+                    for (int j = 0; j < def.Fields.Count; j++)
                     {
                         if (HasIndexTable && j == 0)
-                            continue;
-
-                        switch (columnTypeCodes[j])
                         {
-                            case TypeCode.Byte:
-                                bw.Write<byte>(table.Rows[i][j], columnMeta[j]);
-                                break;
-                            case TypeCode.SByte:
-                                bw.Write<sbyte>(table.Rows[i][j], columnMeta[j]);
-                                break;
-                            case TypeCode.Int16:
-                                bw.Write<short>(table.Rows[i][j], columnMeta[j]);
-                                break;
-                            case TypeCode.UInt16:
-                                bw.Write<ushort>(table.Rows[i][j], columnMeta[j]);
-                                break;
-                            case TypeCode.Int32:
-                                bw.Write<int>(table.Rows[i][j], columnMeta[j]);
-                                break;
-                            case TypeCode.UInt32:
-                                bw.Write<uint>(table.Rows[i][j], columnMeta[j]);
-                                break;
-                            case TypeCode.Int64:
-                                bw.Write<long>(table.Rows[i][j], columnMeta[j]);
-                                break;
-                            case TypeCode.UInt64:
-                                bw.Write<ulong>(table.Rows[i][j], columnMeta[j]);
-                                break;
-                            case TypeCode.Single:
-                                bw.Write<float>(table.Rows[i][j], columnMeta[j]);
-                                break;
-                            case TypeCode.Double:
-                                bw.Write<double>(table.Rows[i][j], columnMeta[j]);
-                                break;
-                            case TypeCode.String:
-                                string str = (string)table.Rows[i][j];
-                                int offset;
-                                if (stringLookup.TryGetValue(str, out offset))
-                                {
-                                    bw.Write<string>(offset, columnMeta[j]);
-                                }
-                                else
-                                {
-                                    byte[] strBytes = Encoding.UTF8.GetBytes(str);
-                                    if (strBytes.Length == 0)
+                            colIndex++;
+                            continue;
+                        }
+
+                        for (int k = 0; k < def.Fields[j].ArraySize; k++)
+                        {
+                            switch (columnTypeCodes[colIndex])
+                            {
+                                case TypeCode.Byte:
+                                    bw.Write<byte>(table.Rows[i][colIndex], columnMeta[j]);
+                                    break;
+                                case TypeCode.SByte:
+                                    bw.Write<sbyte>(table.Rows[i][colIndex], columnMeta[j]);
+                                    break;
+                                case TypeCode.Int16:
+                                    bw.Write<short>(table.Rows[i][colIndex], columnMeta[j]);
+                                    break;
+                                case TypeCode.UInt16:
+                                    bw.Write<ushort>(table.Rows[i][colIndex], columnMeta[j]);
+                                    break;
+                                case TypeCode.Int32:
+                                    bw.Write<int>(table.Rows[i][colIndex], columnMeta[j]);
+                                    break;
+                                case TypeCode.UInt32:
+                                    bw.Write<uint>(table.Rows[i][colIndex], columnMeta[j]);
+                                    break;
+                                case TypeCode.Int64:
+                                    bw.Write<long>(table.Rows[i][colIndex], columnMeta[j]);
+                                    break;
+                                case TypeCode.UInt64:
+                                    bw.Write<ulong>(table.Rows[i][colIndex], columnMeta[j]);
+                                    break;
+                                case TypeCode.Single:
+                                    bw.Write<float>(table.Rows[i][colIndex], columnMeta[j]);
+                                    break;
+                                case TypeCode.Double:
+                                    bw.Write<double>(table.Rows[i][colIndex], columnMeta[j]);
+                                    break;
+                                case TypeCode.String:
+                                    string str = (string)table.Rows[i][colIndex];
+                                    int offset;
+                                    if (stringLookup.TryGetValue(str, out offset))
                                     {
-                                        throw new Exception("should not happen");
-                                        bw.Write<string>(0, columnMeta[j]);
+                                        bw.Write<string>(offset, columnMeta[j]);
                                     }
                                     else
                                     {
-                                        stringLookup[str] = (int)stringTable.Position;
-                                        bw.Write<string>((int)stringTable.Position, columnMeta[j]);
-                                        stringTable.Write(strBytes, 0, strBytes.Length);
-                                        stringTable.WriteByte(0);
+                                        byte[] strBytes = Encoding.UTF8.GetBytes(str);
+                                        if (strBytes.Length == 0)
+                                        {
+                                            throw new Exception("should not happen");
+                                            bw.Write<string>(0, columnMeta[j]);
+                                        }
+                                        else
+                                        {
+                                            stringLookup[str] = (int)stringTable.Position;
+                                            bw.Write<string>((int)stringTable.Position, columnMeta[j]);
+                                            stringTable.Write(strBytes, 0, strBytes.Length);
+                                            stringTable.WriteByte(0);
+                                        }
                                     }
-                                }
-                                break;
-                            default:
-                                throw new Exception("Unknown TypeCode " + columnTypeCodes[j]);
+                                    break;
+                                default:
+                                    throw new Exception("Unknown TypeCode " + columnTypeCodes[colIndex]);
+                            }
+
+                            colIndex++;
                         }
                     }
 
@@ -342,12 +358,15 @@ namespace DBCViewer
 
                 if (hasStrings)
                 {
+                    // write strings
                     stringTable.Position = 0;
                     stringTable.CopyTo(fs);
 
+                    // update stringTableSize in the header
+                    long oldPos = fs.Position;
                     fs.Position = 0x10;
-
                     bw.Write((int)stringTable.Length);
+                    fs.Position = oldPos;
                 }
 
                 if (HasIndexTable)
@@ -358,6 +377,33 @@ namespace DBCViewer
                     }
                 }
             }
+        }
+    }
+
+    class DataRowComparer : IEqualityComparer<DataRow>
+    {
+        public int IdColumnIndex { get; set; }
+
+        public bool Equals(DataRow x, DataRow y)
+        {
+            var xa = x.ItemArray;
+            var ya = y.ItemArray;
+
+            for (int i = 0; i < xa.Length; i++)
+            {
+                if (IdColumnIndex == i)
+                    continue;
+
+                if (!xa[i].Equals(ya[i]))
+                    return false;
+            }
+
+            return true;
+        }
+
+        public int GetHashCode(DataRow obj)
+        {
+            return obj.GetHashCode();
         }
     }
 }

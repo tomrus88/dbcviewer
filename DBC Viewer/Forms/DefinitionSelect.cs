@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using PluginInterface;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Forms;
 

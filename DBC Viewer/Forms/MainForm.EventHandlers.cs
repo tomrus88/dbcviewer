@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PluginInterface;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition.Hosting;
@@ -172,7 +173,7 @@ namespace DBCViewer
                                 ReadField<float>(colNames[j], arraySizes[j], meta?[j], dataRow, br);
                                 break;
                             case "double":
-                                ReadField<float>(colNames[j], arraySizes[j], meta?[j], dataRow, br);
+                                ReadField<double>(colNames[j], arraySizes[j], meta?[j], dataRow, br);
                                 break;
                             case "string":
                                 ReadStringField(colNames[j], arraySizes[j], meta?[j], dataRow, br);
@@ -498,7 +499,7 @@ namespace DBCViewer
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             dataGridView1.EndEdit();
-            m_dbreader.Save(m_dataTable, m_dataTable.TableName);
+            m_dbreader.Save(m_dataTable, m_definition, m_dataTable.TableName);
         }
 
         private void dataGridView1_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)
@@ -507,6 +508,8 @@ namespace DBCViewer
             {
                 if (cell.ValueType == typeof(string))
                     cell.Value = string.Empty;
+                else if (cell.ValueType == typeof(float))
+                    cell.Value = 0.0f;
                 else
                     cell.Value = 0;
             }

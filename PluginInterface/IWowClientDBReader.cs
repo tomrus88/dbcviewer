@@ -14,6 +14,6 @@ namespace PluginInterface
         bool IsSparseTable { get; }
         Dictionary<int, string> StringTable { get; }
         IEnumerable<BinaryReader> Rows { get; }
-        void Save(DataTable table, string path);
+        void Save(DataTable table, Table def, string path);
     }
 }

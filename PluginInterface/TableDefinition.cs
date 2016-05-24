@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Xml.Serialization;
 
-namespace DBCViewer
+namespace PluginInterface
 {
     [Serializable]
     public class DBFilesClient

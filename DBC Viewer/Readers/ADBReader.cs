@@ -100,7 +100,7 @@ namespace DBCViewer
             }
         }
 
-        public void Save(DataTable table, string path)
+        public void Save(DataTable table, Table def, string path)
         {
             throw new NotImplementedException();
         }

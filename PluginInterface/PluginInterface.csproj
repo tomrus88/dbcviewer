@@ -43,6 +43,7 @@
     <Compile Include="IPlugin.cs" />
     <Compile Include="IWowClientDBReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TableDefinition.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
