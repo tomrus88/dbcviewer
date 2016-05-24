@@ -223,8 +223,9 @@ namespace DBCViewer
         public void Save(DataTable table, string path)
         {
             int IDColumn = table.Columns.IndexOf(table.PrimaryKey[0]);
-            int minId = table.Rows.Cast<DataRow>().Select(r => (int)r[IDColumn]).Min();
-            int maxId = table.Rows.Cast<DataRow>().Select(r => (int)r[IDColumn]).Max();
+            var idValues = table.Rows.Cast<DataRow>().Select(r => (int)r[IDColumn]);
+            int minId = idValues.Min();
+            int maxId = idValues.Max();
             bool hasStrings = table.Columns.Cast<DataColumn>().Any(c => c.DataType == typeof(string));
 
             using (var fs = new FileStream(path, FileMode.Create))
@@ -232,7 +233,7 @@ namespace DBCViewer
             {
                 bw.Write(DB5FmtSig); // magic
                 bw.Write(table.Rows.Count);
-                bw.Write(FieldsCount);
+                bw.Write(HasIndexTable ? FieldsCount - 1 : FieldsCount);
                 bw.Write(RecordSize);
                 bw.Write(0); // stringTableSize placeholder
                 bw.Write(TableHash);
@@ -244,18 +245,24 @@ namespace DBCViewer
                 bw.Write((ushort)0); // flags
                 bw.Write((ushort)IDColumn); // IDIndex
 
-                foreach (var meta in columnMeta)
+                for (int i = 0; i < columnMeta.Count; i++)
                 {
-                    bw.Write(meta.Bits);
-                    bw.Write(meta.Offset);
+                    if (HasIndexTable && i == 0)
+                        continue;
+
+                    bw.Write(columnMeta[i].Bits);
+                    bw.Write(HasIndexTable ? (short)(columnMeta[i].Offset - 4) : columnMeta[i].Offset);
                 }
 
                 var columnTypeCodes = table.Columns.Cast<DataColumn>().Select(c => Type.GetTypeCode(c.DataType)).ToArray();
 
+                var stringLookup = hasStrings ? new Dictionary<string, int>() : null;
                 var stringTable = hasStrings ? new MemoryStream() : null;
 
                 if (hasStrings)
                 {
+                    stringLookup[""] = 0;
+                    stringTable.WriteByte(0);
                     stringTable.WriteByte(0);
                 }
 
@@ -263,6 +270,9 @@ namespace DBCViewer
                 {
                     for (int j = 0; j < table.Columns.Count; j++)
                     {
+                        if (HasIndexTable && j == 0)
+                            continue;
+
                         switch (columnTypeCodes[j])
                         {
                             case TypeCode.Byte:
@@ -296,16 +306,27 @@ namespace DBCViewer
                                 bw.Write<double>(table.Rows[i][j], columnMeta[j]);
                                 break;
                             case TypeCode.String:
-                                byte[] strBytes = Encoding.UTF8.GetBytes((string)table.Rows[i][j]);
-                                if (strBytes.Length == 0)
+                                string str = (string)table.Rows[i][j];
+                                int offset;
+                                if (stringLookup.TryGetValue(str, out offset))
                                 {
-                                    bw.Write<string>(0, columnMeta[j]);
+                                    bw.Write<string>(offset, columnMeta[j]);
                                 }
                                 else
                                 {
-                                    bw.Write<string>((int)stringTable.Position, columnMeta[j]);
-                                    stringTable.Write(strBytes, 0, strBytes.Length);
-                                    stringTable.WriteByte(0);
+                                    byte[] strBytes = Encoding.UTF8.GetBytes(str);
+                                    if (strBytes.Length == 0)
+                                    {
+                                        throw new Exception("should not happen");
+                                        bw.Write<string>(0, columnMeta[j]);
+                                    }
+                                    else
+                                    {
+                                        stringLookup[str] = (int)stringTable.Position;
+                                        bw.Write<string>((int)stringTable.Position, columnMeta[j]);
+                                        stringTable.Write(strBytes, 0, strBytes.Length);
+                                        stringTable.WriteByte(0);
+                                    }
                                 }
                                 break;
                             default:
@@ -327,6 +348,14 @@ namespace DBCViewer
                     fs.Position = 0x10;
 
                     bw.Write((int)stringTable.Length);
+                }
+
+                if (HasIndexTable)
+                {
+                    foreach (var id in idValues)
+                    {
+                        bw.Write(id);
+                    }
                 }
             }
         }
