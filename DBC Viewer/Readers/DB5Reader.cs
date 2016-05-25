@@ -227,8 +227,8 @@ namespace DBCViewer
             DataRowComparer comparer = new DataRowComparer();
             comparer.IdColumnIndex = IDColumn;
 
-            var uniqueRows = rows.Distinct(comparer);
-            var copyRows = rows.GroupBy(r => r, comparer).Where(g => g.Count() > 1);
+            var uniqueRows = rows.Distinct(comparer).ToArray();
+            var copyRows = rows.GroupBy(r => r, comparer).Where(g => g.Count() > 1).Select(g => new { Key = g.Key, Copies = g.Where(r => r != g.Key).ToArray() }).ToArray();
 
             int minId = idValues.Min();
             int maxId = idValues.Max();
@@ -239,7 +239,7 @@ namespace DBCViewer
             using (var bw = new BinaryWriter(ms))
             {
                 bw.Write(DB5FmtSig); // magic
-                bw.Write(uniqueRows.Count());
+                bw.Write(uniqueRows.Length);
                 bw.Write(HasIndexTable ? FieldsCount - 1 : FieldsCount);
                 bw.Write(RecordSize);
                 bw.Write(0); // stringTableSize placeholder
@@ -281,12 +281,13 @@ namespace DBCViewer
                 }
 
                 var fields = def.Fields;
+                var fieldsCount = fields.Count;
 
                 foreach (DataRow row in uniqueRows)
                 {
                     int colIndex = 0;
 
-                    for (int j = 0; j < fields.Count; j++)
+                    for (int j = 0; j < fieldsCount; j++)
                     {
                         if (HasIndexTable && j == 0)
                         {
@@ -397,17 +398,14 @@ namespace DBCViewer
                     }
                 }
 
-                if (copyRows.Count() > 0)
+                if (copyRows.Length > 0)
                 {
                     int copyTableSize = 0;
 
                     foreach (var copies in copyRows)
                     {
-                        foreach (var copy in copies)
+                        foreach (var copy in copies.Copies)
                         {
-                            if (copies.Key == copy)
-                                continue;
-
                             bw.Write(copy.Field<int>(IDColumn));
                             bw.Write(copies.Key.Field<int>(IDColumn));
                             copyTableSize += 8;
@@ -451,7 +449,19 @@ namespace DBCViewer
 
         public int GetHashCode(DataRow obj)
         {
-            return 0; // let Equals care about equality
+            int result = 0;
+
+            var items = obj.ItemArray;
+
+            for (int i = 0; i < items.Length; i++)
+            {
+                if (IdColumnIndex == i)
+                    continue;
+
+                result ^= items[i].GetHashCode();
+            }
+
+            return result;
         }
     }
 }
