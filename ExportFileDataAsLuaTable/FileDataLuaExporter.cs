@@ -16,7 +16,13 @@ namespace ExportFileDataAsLuaTable
 
         public void Run(DataTable table)
         {
-
+            using (var sw = new StreamWriter("interfacefiledata.txt"))
+            {
+                foreach (DataRow row in table.Rows)
+                {
+                    sw.WriteLine("{0}{1}", row[1], row[2]);
+                }
+            }
         }
 
         public void Run(IClientDBReader table)
