@@ -282,6 +282,7 @@ namespace DBCViewer
 
                 var fields = def.Fields;
                 var fieldsCount = fields.Count;
+                var fieldsArraySizes = fields.Select(f => f.ArraySize).ToArray();
 
                 foreach (DataRow row in uniqueRows)
                 {
@@ -295,7 +296,7 @@ namespace DBCViewer
                             continue;
                         }
 
-                        int arraySize = fields[j].ArraySize;
+                        int arraySize = fieldsArraySizes[j];
 
                         for (int k = 0; k < arraySize; k++)
                         {
@@ -404,10 +405,11 @@ namespace DBCViewer
 
                     foreach (var copies in copyRows)
                     {
+                        int keyIndex = copies.Key.Field<int>(IDColumn);
                         foreach (var copy in copies.Copies)
                         {
                             bw.Write(copy.Field<int>(IDColumn));
-                            bw.Write(copies.Key.Field<int>(IDColumn));
+                            bw.Write(keyIndex);
                             copyTableSize += 8;
                         }
                     }
