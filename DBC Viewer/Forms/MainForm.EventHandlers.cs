@@ -315,22 +315,24 @@ namespace DBCViewer
                 return;
             }
 
-            PluginsForm selector = new PluginsForm();
-            selector.SetPlugins(Plugins);
-            DialogResult result = selector.ShowDialog(this);
-            selector.Dispose();
-            if (result != DialogResult.OK)
+            using (PluginsForm selector = new PluginsForm())
             {
-                ShowErrorMessageBox("No plugin selected!");
-                return;
+                selector.SetPlugins(Plugins);
+                DialogResult result = selector.ShowDialog(this);
+
+                if (result != DialogResult.OK)
+                {
+                    ShowErrorMessageBox("No plugin selected!");
+                    return;
+                }
+
+                if (selector.NewPlugin != null)
+                    m_catalog.Catalogs.Add(new AssemblyCatalog(selector.NewPlugin));
+
+                statusToolStripLabel.Text = "Plugin working...";
+                Thread pluginThread = new Thread(() => RunPlugin(selector.PluginIndex));
+                pluginThread.Start();
             }
-
-            if (selector.NewPlugin != null)
-                m_catalog.Catalogs.Add(new AssemblyCatalog(selector.NewPlugin));
-
-            statusToolStripLabel.Text = "Plugin working...";
-            Thread pluginThread = new Thread(() => RunPlugin(selector.PluginIndex));
-            pluginThread.Start();
         }
 
         private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
