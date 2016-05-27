@@ -232,7 +232,6 @@ namespace DBCViewer
 
             int minId = idValues.Min();
             int maxId = idValues.Max();
-            bool hasStrings = table.Columns.Cast<DataColumn>().Any(c => c.DataType == typeof(string));
 
             using (var fs = new FileStream(path, FileMode.Create))
             using (var ms = new MemoryStream())
@@ -270,6 +269,7 @@ namespace DBCViewer
 
                 var columnTypeCodes = table.Columns.Cast<DataColumn>().Select(c => Type.GetTypeCode(c.DataType)).ToArray();
 
+                bool hasStrings = table.Columns.Cast<DataColumn>().Any(c => c.DataType == typeof(string));
                 var stringLookup = hasStrings ? new Dictionary<string, int>() : null;
                 var stringTable = hasStrings ? new MemoryStream() : null;
 
@@ -353,15 +353,12 @@ namespace DBCViewer
                                         if (strBytes.Length == 0)
                                         {
                                             throw new Exception("should not happen");
-                                            //bw.Write(0);
                                         }
-                                        else
-                                        {
-                                            stringLookup[str] = (int)stringTable.Position;
-                                            bw.Write((int)stringTable.Position);
-                                            stringTable.Write(strBytes, 0, strBytes.Length);
-                                            stringTable.WriteByte(0);
-                                        }
+
+                                        stringLookup[str] = (int)stringTable.Position;
+                                        bw.Write((int)stringTable.Position);
+                                        stringTable.Write(strBytes, 0, strBytes.Length);
+                                        stringTable.WriteByte(0);
                                     }
                                     break;
                                 default:

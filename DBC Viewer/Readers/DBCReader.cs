@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace DBCViewer
@@ -10,7 +11,7 @@ namespace DBCViewer
     class DBCReader : IClientDBReader
     {
         private const uint HeaderSize = 20;
-        private const uint DBCFmtSig = 0x43424457;          // WDBC
+        public const uint DBCFmtSig = 0x43424457;          // WDBC
 
         public int RecordsCount { get; private set; }
         public int FieldsCount { get; private set; }
@@ -96,7 +97,138 @@ namespace DBCViewer
 
         public void Save(DataTable table, Table def, string path)
         {
-            throw new NotImplementedException();
+            using (var fs = new FileStream(path, FileMode.Create))
+            using (var ms = new MemoryStream())
+            using (var bw = new BinaryWriter(ms))
+            {
+                bw.Write(DBCFmtSig); // magic
+                bw.Write(table.Rows.Count);
+                bw.Write(FieldsCount);
+                bw.Write(RecordSize);
+                bw.Write(0); // stringTableSize placeholder
+
+                var columnTypeCodes = table.Columns.Cast<DataColumn>().Select(c => Type.GetTypeCode(c.DataType)).ToArray();
+
+                bool hasStrings = table.Columns.Cast<DataColumn>().Any(c => c.DataType == typeof(string));
+                var stringLookup = hasStrings ? new Dictionary<string, int>() : null;
+                var stringTable = hasStrings ? new MemoryStream() : null;
+
+                if (hasStrings)
+                {
+                    stringLookup[""] = 0;
+                    stringTable.WriteByte(0);
+                }
+
+                var fields = def.Fields;
+                var fieldsCount = fields.Count;
+                var fieldsArraySizes = fields.Select(f => f.ArraySize).ToArray();
+
+                Func<TypeCode, bool> isSmallType = (t) =>
+                {
+                    if (t == TypeCode.SByte || t == TypeCode.Byte || t == TypeCode.Int16 || t == TypeCode.UInt16)
+                        return true;
+                    return false;
+                };
+
+                foreach (DataRow row in table.Rows)
+                {
+                    int colIndex = 0;
+
+                    for (int j = 0; j < fieldsCount; j++)
+                    {
+                        int arraySize = fieldsArraySizes[j];
+
+                        for (int k = 0; k < arraySize; k++)
+                        {
+                            switch (columnTypeCodes[colIndex])
+                            {
+                                case TypeCode.Byte:
+                                    bw.Write(row.Field<byte>(colIndex));
+                                    break;
+                                case TypeCode.SByte:
+                                    bw.Write(row.Field<sbyte>(colIndex));
+                                    break;
+                                case TypeCode.Int16:
+                                    bw.Write(row.Field<short>(colIndex));
+                                    break;
+                                case TypeCode.UInt16:
+                                    bw.Write(row.Field<ushort>(colIndex));
+                                    break;
+                                case TypeCode.Int32:
+                                    bw.Write(row.Field<int>(colIndex));
+                                    break;
+                                case TypeCode.UInt32:
+                                    bw.Write(row.Field<uint>(colIndex));
+                                    break;
+                                case TypeCode.Int64:
+                                    bw.Write(row.Field<long>(colIndex));
+                                    break;
+                                case TypeCode.UInt64:
+                                    bw.Write(row.Field<ulong>(colIndex));
+                                    break;
+                                case TypeCode.Single:
+                                    bw.Write(row.Field<float>(colIndex));
+                                    break;
+                                case TypeCode.Double:
+                                    bw.Write(row.Field<double>(colIndex));
+                                    break;
+                                case TypeCode.String:
+                                    string str = row.Field<string>(colIndex);
+                                    int offset;
+                                    if (stringLookup.TryGetValue(str, out offset))
+                                    {
+                                        bw.Write(offset);
+                                    }
+                                    else
+                                    {
+                                        byte[] strBytes = Encoding.UTF8.GetBytes(str);
+                                        if (strBytes.Length == 0)
+                                        {
+                                            throw new Exception("should not happen");
+                                        }
+
+                                        stringLookup[str] = (int)stringTable.Position;
+                                        bw.Write((int)stringTable.Position);
+                                        stringTable.Write(strBytes, 0, strBytes.Length);
+                                        stringTable.WriteByte(0);
+                                    }
+                                    break;
+                                default:
+                                    throw new Exception("Unknown TypeCode " + columnTypeCodes[colIndex]);
+                            }
+
+                            // small fields are padded with zeros in old format versions if next field isn't small
+                            long frem = ms.Position % 4;
+                            if (frem != 0 && isSmallType(columnTypeCodes[colIndex]) && (colIndex + 1 < columnTypeCodes.Length) && !isSmallType(columnTypeCodes[colIndex + 1]))
+                                ms.Position += (4 - frem);
+
+                            colIndex++;
+                        }
+                    }
+
+                    // padding at the end of the row
+                    long rem = ms.Position % 4;
+                    if (rem != 0)
+                        ms.Position += (4 - rem);
+                }
+
+                if (hasStrings)
+                {
+                    // update stringTableSize in the header
+                    long oldPos = ms.Position;
+                    ms.Position = 0x10;
+                    bw.Write((int)stringTable.Length);
+                    ms.Position = oldPos;
+
+                    // write strings
+                    stringTable.Position = 0;
+                    stringTable.CopyTo(ms);
+                }
+
+                // copy data to file
+                ms.Position = 0;
+                ms.CopyTo(fs);
+            }
         }
     }
 }

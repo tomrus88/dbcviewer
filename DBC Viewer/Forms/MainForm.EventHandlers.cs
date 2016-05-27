@@ -146,27 +146,15 @@ namespace DBCViewer
                             {
                                 case TypeCode.SByte:
                                     dataRow.SetField(colIndex, br.ReadInt8(meta?[j]));
-                                    // small fields are padded with zeros in old format versions if next field isn't small
-                                    if (isDBCorDB2 && (colIndex + 1 < types.Length) && (br.BaseStream.Position % 4) != 0 && !isSmallType(types[colIndex + 1]))
-                                        br.BaseStream.Position += (4 - br.BaseStream.Position % 4);
                                     break;
                                 case TypeCode.Byte:
                                     dataRow.SetField(colIndex, br.ReadUInt8(meta?[j]));
-                                    // small fields are padded with zeros in old format versions if next field isn't small
-                                    if (isDBCorDB2 && (colIndex + 1 < types.Length) && (br.BaseStream.Position % 4) != 0 && !isSmallType(types[colIndex + 1]))
-                                        br.BaseStream.Position += (4 - br.BaseStream.Position % 4);
                                     break;
                                 case TypeCode.Int16:
                                     dataRow.SetField(colIndex, br.ReadInt16(meta?[j]));
-                                    // small fields are padded with zeros in old format versions if next field isn't small
-                                    if (isDBCorDB2 && (colIndex + 1 < types.Length) && (br.BaseStream.Position % 4) != 0 && !isSmallType(types[colIndex + 1]))
-                                        br.BaseStream.Position += (4 - br.BaseStream.Position % 4);
                                     break;
                                 case TypeCode.UInt16:
                                     dataRow.SetField(colIndex, br.ReadUInt16(meta?[j]));
-                                    // small fields are padded with zeros in old format versions if next field isn't small
-                                    if (isDBCorDB2 && (colIndex + 1 < types.Length) && (br.BaseStream.Position % 4) != 0 && !isSmallType(types[colIndex + 1]))
-                                        br.BaseStream.Position += (4 - br.BaseStream.Position % 4);
                                     break;
                                 case TypeCode.Int32:
                                     dataRow.SetField(colIndex, br.ReadInt32(meta?[j]));
@@ -192,6 +180,11 @@ namespace DBCViewer
                                 default:
                                     throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Unknown field type {0} for column {1}!", types[colIndex], colNames[j]));
                             }
+
+                            // small fields are padded with zeros in old format versions if next field isn't small
+                            long frem = br.BaseStream.Position % 4;
+                            if (isDBCorDB2 && frem != 0 && isSmallType(types[colIndex]) && (colIndex + 1 < types.Length) && !isSmallType(types[colIndex + 1]))
+                                br.BaseStream.Position += (4 - frem);
 
                             colIndex++;
                         }
@@ -465,18 +458,16 @@ namespace DBCViewer
             }
             else if (e.ColumnIndex != -1)
             {
-                cellContextMenuStrip.Tag = string.Format("{0} {1}", e.ColumnIndex, e.RowIndex);
+                cellContextMenuStrip.Tag = Tuple.Create(e.ColumnIndex, e.RowIndex);
                 e.ContextMenuStrip = cellContextMenuStrip;
             }
         }
 
         private void filterThisToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string[] meta = ((string)cellContextMenuStrip.Tag).Split(' ');
-            int column = Convert.ToInt32(meta[0]);
-            int row = Convert.ToInt32(meta[1]);
+            Tuple<int, int> meta = (Tuple<int, int>)cellContextMenuStrip.Tag;
             ShowFilterForm();
-            m_filterForm.SetSelection(dataGridView1.Columns[column].Name, dataGridView1[column, row].Value.ToString());
+            m_filterForm.SetSelection(dataGridView1.Columns[meta.Item1].Name, dataGridView1[meta.Item1, meta.Item2].Value.ToString());
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)

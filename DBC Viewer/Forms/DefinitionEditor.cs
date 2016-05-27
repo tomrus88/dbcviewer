@@ -125,40 +125,47 @@ namespace DBCViewer
 
             using (var br = new BinaryReader(new FileStream(m_mainForm.DBCFile, FileMode.Open)))
             {
-                br.ReadUInt32();
-                br.ReadUInt32();
+                var magic = br.ReadUInt32();
+                var recordsCount = br.ReadUInt32();
                 var fieldsCount = br.ReadUInt32();
                 var recordsize = br.ReadUInt32();
 
-                // only for files with 4 byte fields (most of dbc's)
-                if ((recordsize % fieldsCount == 0) && (fieldsCount * 4 == recordsize))
+                if (magic == DBCReader.DBCFmtSig)
                 {
-                    var def = new Table();
-
-                    def.Name = m_mainForm.DBCName;
-                    def.Fields = new List<Field>();
-
-                    for (int i = 0; i < fieldsCount; ++i)
+                    // only for files with 4 byte fields (most of dbc's)
+                    if ((recordsize % fieldsCount == 0) && (fieldsCount * 4 == recordsize))
                     {
-                        var field = new Field();
+                        var def = new Table();
 
-                        if (i == 0)
+                        def.Name = m_mainForm.DBCName;
+                        def.Fields = new List<Field>();
+
+                        for (int i = 0; i < fieldsCount; ++i)
                         {
-                            field.IsIndex = true;
-                            field.Name = "m_ID";
-                        }
-                        else
-                        {
-                            field.Name = string.Format("field{0}", i);
+                            var field = new Field();
+
+                            if (i == 0)
+                            {
+                                field.IsIndex = true;
+                                field.Name = "m_ID";
+                            }
+                            else
+                            {
+                                field.Name = string.Format("field{0}", i);
+                            }
+
+                            field.Type = "int";
+
+                            def.Fields.Add(field);
                         }
 
-                        field.Type = "int";
-
-                        def.Fields.Add(field);
+                        m_changed = true;
+                        return def;
                     }
-
-                    m_changed = true;
-                    return def;
+                    else if (magic == DB5Reader.DB5FmtSig)
+                    {
+                        // make something
+                    }
                 }
             }
 

@@ -413,7 +413,7 @@
             // 
             // saveFileDialog1
             // 
-            this.saveFileDialog1.Filter = "WoW Client DB Files|*.db2";
+            this.saveFileDialog1.Filter = "WoW Client DB Files|*.dbc;*.db2";
             // 
             // MainForm
             // 

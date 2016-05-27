@@ -31,11 +31,11 @@ namespace DBCViewer
 
         // Properties
         public DataTable DataTable { get { return m_dataTable; } }
-        public string WorkingFolder { get { return m_workingFolder; } }
+        //public string WorkingFolder { get { return m_workingFolder; } }
         public Table Definition { get { return m_definition; } }
         public DBFilesClient Definitions { get { return m_definitions; } }
         public string DBCName { get { return m_dbcName; } }
-        public int DefinitionIndex { get { return m_selector != null ? m_selector.DefinitionIndex : 0; } }
+        //public int DefinitionIndex { get { return m_selector != null ? m_selector.DefinitionIndex : 0; } }
         public string DBCFile { get { return m_dbcFile; } }
 
         // Plugins
