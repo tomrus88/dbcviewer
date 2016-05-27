@@ -479,7 +479,8 @@ namespace DBCViewer
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("DBC Viewer @ 2010-2016 TOM_RUS", "About DBC Viewer", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            using (AboutBox about = new AboutBox())
+                about.ShowDialog();
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)

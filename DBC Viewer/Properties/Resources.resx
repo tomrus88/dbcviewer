@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="donateURL" xml:space="preserve">
+    <value>https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=CFDMAA6ELV2G8</value>
+  </data>
   <data name="pluginTemplate" xml:space="preserve">
     <value>using System;
 using System.ComponentModel.Composition;
