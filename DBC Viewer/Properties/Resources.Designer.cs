@@ -80,7 +80,7 @@ namespace DBCViewer.Properties {
         ///namespace NewPlugin
         ///{
         ///    [Export(typeof(IPlugin))]
-        ///    public class New : IPlugin
+        ///    public class Plugin : IPlugin
         ///    {
         ///        [Import(&quot;PluginFinished&quot;)]
         ///        public Action&lt;int&gt; Finished { get; set; }
@@ -89,7 +89,7 @@ namespace DBCViewer.Properties {
         ///        {
         ///            int count = 0;
         ///
-        ///            StreamWriter sqlWriter = new StreamWriter(Path.GetFileNameWithoutExtension(data.TableNa [rest of string was truncated]&quot;;.
+        ///            using (StreamWriter sqlWriter = new StreamWriter(Path.GetFileNameWithoutExtension(da [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string pluginTemplate {
             get {

@@ -131,7 +131,7 @@ using PluginInterface;
 namespace NewPlugin
 {
     [Export(typeof(IPlugin))]
-    public class New : IPlugin
+    public class Plugin : IPlugin
     {
         [Import("PluginFinished")]
         public Action&lt;int&gt; Finished { get; set; }
@@ -140,28 +140,31 @@ namespace NewPlugin
         {
             int count = 0;
 
-            StreamWriter sqlWriter = new StreamWriter(Path.GetFileNameWithoutExtension(data.TableName) + ".txt");
-
-            sqlWriter.WriteLine("local treasures = {");
-
-            var c = System.Globalization.CultureInfo.InvariantCulture;
-            System.Threading.Thread.CurrentThread.CurrentCulture = c;
-            System.Threading.Thread.CurrentThread.CurrentUICulture = c;
-
-            foreach (DataRow row in data.Rows)
+            using (StreamWriter sqlWriter = new StreamWriter(Path.GetFileNameWithoutExtension(data.TableName) + ".txt"))
             {
-                if ((int)row[4] == 1116 &amp;&amp; (int)row[6] == 197 )
+                sqlWriter.WriteLine("local treasures = {");
+
+                var c = System.Globalization.CultureInfo.InvariantCulture;
+                System.Threading.Thread.CurrentThread.CurrentCulture = c;
+                System.Threading.Thread.CurrentThread.CurrentUICulture = c;
+
+                foreach (DataRow row in data.Rows)
                 {
-                    sqlWriter.WriteLine("    [{0}] = {{ {1}, {2}, \"{3}\" }},", row[0], row[7].ToString(), row[8].ToString(), row[9]);
+                    if ((int)row[4] == 1116 &amp;&amp; (int)row[6] == 197 )
+                    {
+                        sqlWriter.WriteLine("    [{0}] = {{ {1}, {2}, \"{3}\" }},", row[0], row[7].ToString(), row[8].ToString(), row[9]);
+                    }
                 }
+
+                sqlWriter.WriteLine("}");
             }
 
-            sqlWriter.WriteLine("}");
-
-            sqlWriter.Flush();
-            sqlWriter.Close();
-
             Finished(count);
+        }
+
+        public void Run(IClientDBReader data)
+        {
+
         }
     }
 }</value>

@@ -4,8 +4,10 @@
 
 Имеется возможность экспорта в sql, а так же интерфейс для написания плагинов экспорта в другие форматы (csv, xml и т.д.) Для примера можно посмотреть [исходник][Export2SQL.cs] экспортера в sql.
 
-Для запуска утилиты требуется [Microsoft .NET Framework 4.5][].
+Также имеется возможность редактирования файлов DB2 (только WDB5).
+
+Для запуска утилиты требуется [Microsoft .NET Framework 4.6.1][].
 
 [definitions]: http://github.com/tomrus88/dbcviewer/blob/master/DBC%20Viewer/definitions
 [Export2SQL.cs]: http://github.com/tomrus88/dbcviewer/blob/master/Export2SQL/Export2SQL.cs
-[Microsoft .NET Framework 4.5]: https://www.microsoft.com/en-us/download/details.aspx?id=42642
+[Microsoft .NET Framework 4.6.1]: https://www.microsoft.com/en-us/download/details.aspx?id=49982

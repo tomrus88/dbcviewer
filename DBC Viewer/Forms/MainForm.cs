@@ -7,6 +7,7 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -363,15 +364,22 @@ namespace DBCViewer
         {
             m_catalog = new AggregateCatalog();
             m_catalog.Catalogs.Add(new DirectoryCatalog(m_workingFolder));
-            //m_catalog.Catalogs.Add(new AssemblyCatalog(m_workingFolder));
+            m_catalog.Catalogs.Add(new AssemblyCatalog(Assembly.GetExecutingAssembly()));
             var container = new CompositionContainer(m_catalog);
             container.ComposeParts(this);
         }
 
         private void RunPlugin(int index)
         {
-            Plugins[index].Run(m_dataTable);
-            Plugins[index].Run(m_dbreader);
+            try
+            {
+                Plugins[index].Run(m_dataTable);
+                Plugins[index].Run(m_dbreader);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.ToString());
+            }
         }
     }
 }
