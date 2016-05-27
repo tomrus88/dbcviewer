@@ -16,7 +16,10 @@ namespace ExportFileDataAsLuaTable
 
         public void Run(DataTable table)
         {
-            using (var sw = new StreamWriter("interfacefiledata.txt"))
+            if (table.TableName != "ManifestInterfaceData.db2")
+                return;
+
+            using (var sw = new StreamWriter("ManifestInterfaceData.txt"))
             {
                 foreach (DataRow row in table.Rows)
                 {
@@ -27,6 +30,9 @@ namespace ExportFileDataAsLuaTable
 
         public void Run(IClientDBReader table)
         {
+            if (Path.GetFileName(table.FileName) != "FileDataComplete.db2")
+                return;
+
             var sw = new StreamWriter("FileDataLib.lua");
 
             sw.WriteLine("local PATHDATA = {");
