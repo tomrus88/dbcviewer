@@ -484,7 +484,15 @@ namespace DBCViewer
                 return;
 
             dataGridView1.EndEdit();
-            m_dbreader.Save(m_dataTable, m_definition, saveFileDialog1.FileName);
+
+            try
+            {
+                m_dbreader.Save(m_dataTable, m_definition, saveFileDialog1.FileName);
+            }
+            catch (Exception exc)
+            {
+                ShowErrorMessageBox(exc.Message);
+            }
         }
     }
 }

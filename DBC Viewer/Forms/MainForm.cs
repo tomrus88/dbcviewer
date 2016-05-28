@@ -378,7 +378,7 @@ namespace DBCViewer
             }
             catch (Exception exc)
             {
-                MessageBox.Show(exc.ToString());
+                ShowErrorMessageBox(exc.ToString());
             }
         }
     }
