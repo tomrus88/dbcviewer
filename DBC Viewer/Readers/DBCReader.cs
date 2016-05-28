@@ -105,19 +105,15 @@ namespace DBCViewer
                 bw.Write(table.Rows.Count);
                 bw.Write(FieldsCount);
                 bw.Write(RecordSize);
-                bw.Write(0); // stringTableSize placeholder
+                bw.Write(1); // stringTableSize placeholder
 
                 var columnTypeCodes = table.Columns.Cast<DataColumn>().Select(c => Type.GetTypeCode(c.DataType)).ToArray();
 
-                bool hasStrings = table.Columns.Cast<DataColumn>().Any(c => c.DataType == typeof(string));
-                var stringLookup = hasStrings ? new Dictionary<string, int>() : null;
-                var stringTable = hasStrings ? new MemoryStream() : null;
+                var stringLookup = new Dictionary<string, int>();
+                stringLookup[""] = 0;
 
-                if (hasStrings)
-                {
-                    stringLookup[""] = 0;
-                    stringTable.WriteByte(0);
-                }
+                var stringTable = new MemoryStream();
+                stringTable.WriteByte(0);
 
                 var fields = def.Fields;
                 var fieldsCount = fields.Count;
@@ -212,18 +208,15 @@ namespace DBCViewer
                         ms.Position += (4 - rem);
                 }
 
-                if (hasStrings)
-                {
-                    // update stringTableSize in the header
-                    long oldPos = ms.Position;
-                    ms.Position = 0x10;
-                    bw.Write((int)stringTable.Length);
-                    ms.Position = oldPos;
+                // update stringTableSize in the header
+                long oldPos = ms.Position;
+                ms.Position = 0x10;
+                bw.Write((int)stringTable.Length);
+                ms.Position = oldPos;
 
-                    // write strings
-                    stringTable.Position = 0;
-                    stringTable.CopyTo(ms);
-                }
+                // write strings
+                stringTable.Position = 0;
+                stringTable.CopyTo(ms);
 
                 // copy data to file
                 ms.Position = 0;
