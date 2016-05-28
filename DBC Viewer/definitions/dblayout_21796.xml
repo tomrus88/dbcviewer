@@ -5,14 +5,14 @@
     <Field Name="field04" Type="string" />
     <Field Name="field08" Type="int" />
     <Field Name="field0C" Type="string" />
-    <Field Name="field10" Type="ushort" />
+    <Field Name="field10" Type="short" />
     <Field Name="field12" Type="ushort" />
     <Field Name="field14" Type="ushort" />
     <Field Name="field16" Type="ushort" />
     <Field Name="field18" Type="ushort" />
     <Field Name="field1A" Type="ushort" />
     <Field Name="field1C" Type="ushort" />
-    <Field Name="field1E" Type="byte" />
+    <Field Name="field1E" Type="sbyte" />
     <Field Name="field1F" Type="byte" />
     <Field Name="field20" Type="byte" />
     <Field Name="m_ID" Type="int" IsIndex="true" />

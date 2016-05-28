@@ -437,7 +437,12 @@ namespace DBCViewer
 
         private void dataGridView1_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
-            label2.Text = string.Format(CultureInfo.InvariantCulture, "Rows Displayed: {0}", dataGridView1.RowCount);
+            label2.Text = string.Format("Rows Displayed: {0}", dataGridView1.RowCount);
+
+            if (m_dbreader != null)
+                label3.Text = string.Format("Info: {0} fields, {1} records of size {2}, stringTable size {3}", m_dbreader.FieldsCount, m_dbreader.RecordsCount, m_dbreader.RecordSize, m_dbreader.StringTableSize);
+            else
+                label3.Text = "Info: ...";
         }
 
         private void dataGridView1_CellContextMenuStripNeeded(object sender, DataGridViewCellContextMenuStripNeededEventArgs e)
