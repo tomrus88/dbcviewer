@@ -29,7 +29,7 @@ namespace DBCViewer
 
         private SortedDictionary<int, byte[]> Lookup = new SortedDictionary<int, byte[]>();
 
-        public List<ColumnMeta> Meta { get { return columnMeta; } }
+        public List<ColumnMeta> Meta => columnMeta;
 
         public IEnumerable<BinaryReader> Rows
         {
@@ -46,56 +46,33 @@ namespace DBCViewer
         public bool HasIndexTable { get; private set; }
         public uint TableHash { get; private set; }
         public uint LayoutHash { get; private set; }
+        public int MinId { get; private set; }
+        public int MaxId { get; private set; }
         public int Locale { get; private set; }
+        public int CopyTableSize { get; private set; }
+        public int IdIndex { get; private set; }
         public string FileName { get; private set; }
 
-        public DB5Reader(Stream stream)
+        public DB5Reader(string fileName) : this(new FileStream(fileName, FileMode.Open))
         {
-            using (var reader = new BinaryReader(stream, Encoding.UTF8))
+            FileName = fileName;
+        }
+
+        public DB5Reader(Stream stream) : this(new BinaryReader(stream, Encoding.UTF8))
+        {
+
+        }
+
+        public DB5Reader(BinaryReader reader, bool headerOnly = false)
+        {
+            int recordsCount = ReadHeader(reader);
+
+            if (headerOnly)
+                return;
+
+            using (reader)
             {
-                if (reader.BaseStream.Length < HeaderSize)
-                {
-                    throw new InvalidDataException(string.Format("File {0} is corrupted!", FileName));
-                }
-
-                if (reader.ReadUInt32() != DB5FmtSig)
-                {
-                    throw new InvalidDataException(string.Format("File {0} isn't valid DB2 file!", FileName));
-                }
-
-                int recordsCount = reader.ReadInt32();
-                FieldsCount = reader.ReadInt32();
-                RecordSize = reader.ReadInt32();
-                StringTableSize = reader.ReadInt32(); // also offset for sparse table
-
-                TableHash = reader.ReadUInt32();
-                LayoutHash = reader.ReadUInt32(); // 21737: changed from build number to layoutHash
-
-                int MinId = reader.ReadInt32();
-                int MaxId = reader.ReadInt32();
-                Locale = reader.ReadInt32();
-                int CopyTableSize = reader.ReadInt32();
-                ushort flags = reader.ReadUInt16();
-                ushort IDIndex = reader.ReadUInt16();
-
-                IsSparseTable = (flags & 0x1) != 0;
-                HasIndexTable = (flags & 0x4) != 0;
-                int colMetaSize = FieldsCount * 4;
-
-                columnMeta = new List<ColumnMeta>();
-
-                for (int i = 0; i < FieldsCount; i++)
-                {
-                    columnMeta.Add(new ColumnMeta() { Bits = reader.ReadInt16(), Offset = (short)(reader.ReadInt16() + (HasIndexTable ? 4 : 0)) });
-                }
-
-                if (HasIndexTable)
-                {
-                    FieldsCount++;
-                    columnMeta.Insert(0, new ColumnMeta());
-                }
-
-                long recordsOffset = HeaderSize + colMetaSize;
+                long recordsOffset = HeaderSize + (HasIndexTable ? FieldsCount - 1 : FieldsCount) * 4;
                 long eof = reader.BaseStream.Length;
                 long copyTablePos = eof - CopyTableSize;
                 long indexTablePos = copyTablePos - (HasIndexTable ? recordsCount * 4 : 0);
@@ -169,8 +146,8 @@ namespace DBCViewer
                         }
                         else
                         {
-                            int numBytes = (32 - columnMeta[IDIndex].Bits) >> 3;
-                            int offset = columnMeta[IDIndex].Offset;
+                            int numBytes = (32 - columnMeta[IdIndex].Bits) >> 3;
+                            int offset = columnMeta[IdIndex].Offset;
                             int id = 0;
 
                             for (int j = 0; j < numBytes; j++)
@@ -213,9 +190,50 @@ namespace DBCViewer
             }
         }
 
-        public DB5Reader(string fileName) : this(new FileStream(fileName, FileMode.Open))
+        public int ReadHeader(BinaryReader reader)
         {
-            FileName = fileName;
+            if (reader.BaseStream.Length < HeaderSize)
+            {
+                throw new InvalidDataException(string.Format("File {0} is corrupted!", FileName));
+            }
+
+            if (reader.ReadUInt32() != DB5FmtSig)
+            {
+                throw new InvalidDataException(string.Format("File {0} isn't valid DB2 file!", FileName));
+            }
+
+            int recordsCount = reader.ReadInt32();
+            FieldsCount = reader.ReadInt32();
+            RecordSize = reader.ReadInt32();
+            StringTableSize = reader.ReadInt32(); // also offset for sparse table
+
+            TableHash = reader.ReadUInt32();
+            LayoutHash = reader.ReadUInt32(); // 21737: changed from build number to layoutHash
+
+            MinId = reader.ReadInt32();
+            MaxId = reader.ReadInt32();
+            Locale = reader.ReadInt32();
+            CopyTableSize = reader.ReadInt32();
+            ushort flags = reader.ReadUInt16();
+            IdIndex = reader.ReadUInt16();
+
+            IsSparseTable = (flags & 0x1) != 0;
+            HasIndexTable = (flags & 0x4) != 0;
+
+            columnMeta = new List<ColumnMeta>();
+
+            for (int i = 0; i < FieldsCount; i++)
+            {
+                columnMeta.Add(new ColumnMeta() { Bits = reader.ReadInt16(), Offset = (short)(reader.ReadInt16() + (HasIndexTable ? 4 : 0)) });
+            }
+
+            if (HasIndexTable)
+            {
+                FieldsCount++;
+                columnMeta.Insert(0, new ColumnMeta());
+            }
+
+            return recordsCount;
         }
 
         public void Save(DataTable table, Table def, string path)

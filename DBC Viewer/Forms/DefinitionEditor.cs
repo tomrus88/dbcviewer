@@ -140,7 +140,7 @@ namespace DBCViewer
                         def.Name = m_mainForm.DBCName;
                         def.Fields = new List<Field>();
 
-                        for (int i = 0; i < fieldsCount; ++i)
+                        for (int i = 0; i < fieldsCount; i++)
                         {
                             var field = new Field();
 
@@ -162,10 +162,77 @@ namespace DBCViewer
                         m_changed = true;
                         return def;
                     }
-                    else if (magic == DB5Reader.DB5FmtSig)
+                }
+                else if (magic == DB5Reader.DB5FmtSig)
+                {
+                    br.BaseStream.Position = 0;
+
+                    DB5Reader db5 = new DB5Reader(br, true);
+
+                    var def = new Table();
+
+                    def.Name = m_mainForm.DBCName;
+                    def.Fields = new List<Field>();
+
+                    for (int i = 0; i < db5.Meta.Count; i++)
                     {
-                        // make something
+                        var field = new Field();
+
+                        if (i == db5.IdIndex)
+                        {
+                            field.IsIndex = true;
+                            field.Name = "m_ID";
+                            field.Type = "int";
+                        }
+                        else
+                        {
+                            field.Name = string.Format("field{0:X2}", db5.Meta[i].Offset);
+
+                            int bits = db5.Meta[i].Bits;
+
+                            if (bits == 0x18)
+                                field.Type = "byte";
+                            else if (bits == 0x10)
+                                field.Type = "ushort";
+                            else if (bits == 0x08)
+                                field.Type = "int";
+                            else if (bits == 0x00)
+                                field.Type = "int";
+                            else if (bits == -32)
+                                field.Type = "ulong";
+                            else
+                                throw new Exception("New Bits value detected!");
+
+                            int byteCount = (32 - bits) >> 3;
+
+                            // array
+                            if (i + 1 < db5.Meta.Count && db5.Meta[i].Offset + byteCount != db5.Meta[i + 1].Offset)
+                            {
+                                int arraySize = (db5.Meta[i + 1].Offset - db5.Meta[i].Offset) / byteCount;
+
+                                field.ArraySize = arraySize;
+                            }
+
+                            // array (last field)
+                            int rowSize = db5.HasIndexTable ? db5.RecordSize + 4 : db5.RecordSize;
+                            if (i + 1 == db5.Meta.Count && db5.Meta[i].Offset + byteCount != rowSize)
+                            {
+                                int diff = rowSize - db5.Meta[i].Offset;
+
+                                if (diff >= byteCount * 2)
+                                {
+                                    int arraySize = diff / byteCount;
+
+                                    field.ArraySize = arraySize;
+                                }
+                            }
+                        }
+
+                        def.Fields.Add(field);
                     }
+
+                    m_changed = true;
+                    return def;
                 }
             }
 

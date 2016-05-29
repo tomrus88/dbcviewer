@@ -1,4 +1,5 @@
 ﻿using PluginInterface;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 
@@ -17,7 +18,19 @@ namespace DBCViewer
         {
             using (var selector = new DefinitionCatalog())
             {
-                var files = Directory.GetFiles(Path.Combine(path, "definitions"), "*.xml");
+                var defpath = Path.Combine(path, "definitions");
+
+                if (!Directory.Exists(defpath))
+                    Directory.CreateDirectory(defpath);
+
+                var files = Directory.GetFiles(defpath, "*.xml");
+
+                if (files.Length == 0)
+                {
+                    selector.DialogResult = DialogResult.OK;
+                    selector.Close();
+                    return new DBFilesClient() { File = Path.Combine(defpath, "default.xml"), Tables = new List<Table>() };
+                }
 
                 foreach (var file in files)
                     selector.listBox1.Items.Add(Path.GetFileName(file));

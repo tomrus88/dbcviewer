@@ -5115,7 +5115,7 @@
   </Table>
   <Table Name="Item-sparse" Build="21796">
     <Field Name="m_ID" Type="int" IsIndex="true" />
-    <Field Name="field00" Type="int" ArraySize="3" />
+    <Field Name="m_flags" Type="int" ArraySize="3" />
     <Field Name="field0C" Type="float" />
     <Field Name="field10" Type="float" />
     <Field Name="field14" Type="int" />
@@ -5128,7 +5128,7 @@
     <Field Name="field30" Type="int" ArraySize="10" />
     <Field Name="field58" Type="float" ArraySize="10" />
     <Field Name="field80" Type="float" />
-    <Field Name="field84" Type="string" />
+    <Field Name="m_name" Type="string" />
     <Field Name="field88" Type="string" />
     <Field Name="field8C" Type="string" />
     <Field Name="field90" Type="string" />
