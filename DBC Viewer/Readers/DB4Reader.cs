@@ -80,9 +80,9 @@ namespace DBCViewer
                 {
                     reader.BaseStream.Position = indexTablePos;
 
-                    m_indexes = new int[RecordsCount];
+                    m_indexes = new int[recordsCount];
 
-                    for (int i = 0; i < RecordsCount; i++)
+                    for (int i = 0; i < recordsCount; i++)
                         m_indexes[i] = reader.ReadInt32();
                 }
 
