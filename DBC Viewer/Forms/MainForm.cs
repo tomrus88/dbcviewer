@@ -50,6 +50,20 @@ namespace DBCViewer
             MessageBox.Show(msg);
         }
 
+        void ClearDT()
+        {
+            m_dataTable.Clear();
+        }
+
+        [Export("ClearDataTable")]
+        public void ClearDataTable()
+        {
+            if (dataGridView1.InvokeRequired)
+                dataGridView1.Invoke(new MethodInvoker(ClearDT));
+            else
+                ClearDT();
+        }
+
         // MainForm
         public MainForm()
         {

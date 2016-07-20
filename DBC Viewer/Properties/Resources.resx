@@ -135,6 +135,8 @@ namespace NewPlugin
     {
         [Import("PluginFinished")]
         public Action&lt;int&gt; Finished { get; set; }
+        [Import("ClearDataTable")]
+        public Action&lt;int&gt; ClearDataTable { get; set; }
 
         public void Run(DataTable data)
         {

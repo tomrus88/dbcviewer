@@ -12,6 +12,8 @@ namespace TestPlugin
     {
         [Import("PluginFinished")]
         public Action<int> Finished { get; set; }
+        [Import("ClearDataTable")]
+        public Action ClearDataTable { get; set; }
 
         public void Run(DataTable data)
         {
@@ -27,6 +29,12 @@ namespace TestPlugin
             //System.Threading.Thread.CurrentThread.CurrentCulture = c;
             //// Sets the UI culture to French (France)
             //System.Threading.Thread.CurrentThread.CurrentUICulture = c;
+
+            //ClearDataTable();
+            //var newrow = data.NewRow();
+            //newrow[0] = "123";
+            //newrow[1] = "456";
+            //data.Rows.Add(newrow);
 
             foreach (DataRow row in data.Rows)
             {

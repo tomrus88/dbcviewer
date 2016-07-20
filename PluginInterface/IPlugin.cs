@@ -11,5 +11,6 @@ namespace PluginInterface
         void Run(IClientDBReader table);
         // callback to main program
         Action<int> Finished { get; set; }
+        Action ClearDataTable { get; set; }
     }
 }

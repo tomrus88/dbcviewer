@@ -14,6 +14,8 @@ namespace Export2SQL
     {
         [Import("PluginFinished")]
         public Action<int> Finished { get; set; }
+        [Import("ClearDataTable")]
+        public Action ClearDataTable { get; set; }
 
         public void Run(DataTable data)
         {

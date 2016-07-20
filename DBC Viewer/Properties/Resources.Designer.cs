@@ -84,12 +84,14 @@ namespace DBCViewer.Properties {
         ///    {
         ///        [Import(&quot;PluginFinished&quot;)]
         ///        public Action&lt;int&gt; Finished { get; set; }
+        ///        [Import(&quot;ClearDataTable&quot;)]
+        ///        public Action&lt;int&gt; ClearDataTable { get; set; }
         ///
         ///        public void Run(DataTable data)
         ///        {
         ///            int count = 0;
         ///
-        ///            using (StreamWriter sqlWriter = new StreamWriter(Path.GetFileNameWithoutExtension(da [rest of string was truncated]&quot;;.
+        ///    [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string pluginTemplate {
             get {
