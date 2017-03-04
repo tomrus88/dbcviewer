@@ -130,6 +130,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Readers\ADBReader.cs" />
+    <Compile Include="Readers\DB6Reader.cs" />
     <Compile Include="Readers\DB5Reader.cs" />
     <Compile Include="Readers\DB4Reader.cs" />
     <Compile Include="Readers\DB3Reader.cs" />

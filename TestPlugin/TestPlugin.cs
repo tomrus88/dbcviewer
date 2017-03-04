@@ -30,14 +30,41 @@ namespace TestPlugin
             //// Sets the UI culture to French (France)
             //System.Threading.Thread.CurrentThread.CurrentUICulture = c;
 
-            //ClearDataTable();
+            ClearDataTable();
             //var newrow = data.NewRow();
             //newrow[0] = "123";
             //newrow[1] = "456";
             //data.Rows.Add(newrow);
 
-            foreach (DataRow row in data.Rows)
+            using (var sr = new StreamReader("listfile_export.txt"))
             {
+                string line;
+
+                while((line = sr.ReadLine()) != null)
+                {
+                    var newrow = data.NewRow();
+                    var tokens = line.Split(new [] { ' ' }, 2);
+                    newrow[0] = tokens[0];
+                    var file = tokens[1];
+                    var slashIndex = file.LastIndexOf('\\');
+                    if (slashIndex != -1)
+                    {
+                        var path1 = file.Substring(0, slashIndex + 1);
+                        var path2 = file.Substring(slashIndex + 1);
+                        newrow[1] = path1;
+                        newrow[2] = path2;
+                    }
+                    else
+                    {
+                        newrow[1] = "";
+                        newrow[2] = file;
+                    }
+                    data.Rows.Add(newrow);
+                }
+            }
+
+            //foreach (DataRow row in data.Rows)
+            //{
                 //sqlWriter.WriteLine("{0} - {1:X2}{2:X2}{3:X2}{4:X2}{5:X2}{6:X2}{7:X2}{8:X2}{9:X2}{10:X2}{11:X2}{12:X2}{13:X2}{14:X2}{15:X2}{16:X2}", row[0],
                 //    row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8],
                 //    row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16]);
@@ -143,7 +170,7 @@ namespace TestPlugin
                 //    Debug.Print("template {0}, reaction {1}", row[0], reaction);
                 //    count++;
                 //}
-            }
+            //}
 
             //sqlWriter.WriteLine("}");
 

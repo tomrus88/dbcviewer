@@ -18,6 +18,23 @@ namespace ExportFileDataAsLuaTable
 
         public void Run(DataTable table)
         {
+            if (table.TableName == "SoundKit.db2")
+            {
+                using (var sw1 = new StreamWriter("SoundKitData.lua"))
+                {
+                    sw1.WriteLine("local SOUNDDATA = {");
+
+                    foreach (DataRow row in table.Rows)
+                    {
+                        sw1.WriteLine("[{0}] = \"{1}\"", row[16], row[0]);
+                    }
+
+                    sw1.WriteLine("}");
+                }
+
+                return;
+            }
+
             if (table.TableName != "ManifestInterfaceData.db2")
                 return;
 
@@ -49,9 +66,9 @@ namespace ExportFileDataAsLuaTable
                     return true;
 
                 // .wwe, .pd4, .anim, .skin, .wmo
-                //string namel = name.ToLower();
-                //if (namel.EndsWith(".wwe") || namel.EndsWith(".pd4") || namel.EndsWith(".anim") || namel.EndsWith(".skin") || namel.EndsWith(".wmo"))
-                //    return true;
+                string namel = name.ToLower();
+                if (namel.EndsWith(".wwe") || namel.EndsWith(".pd4") || namel.EndsWith(".anim") || namel.EndsWith(".skin") || namel.EndsWith(".wmo") || namel.EndsWith(".html") || namel.EndsWith(".bone") || namel.EndsWith(".phys"))
+                    return true;
 
                 return false;
             };

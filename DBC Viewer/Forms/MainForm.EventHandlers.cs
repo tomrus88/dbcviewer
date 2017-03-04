@@ -121,7 +121,13 @@ namespace DBCViewer
 
             TypeCode[] types = m_dataTable.Columns.Cast<DataColumn>().Select(c => Type.GetTypeCode(c.DataType)).ToArray();
 
-            var meta = (m_dbreader as DB5Reader)?.Meta;
+            List<ColumnMeta> meta = null;
+
+            if (m_dbreader is DB5Reader)
+                meta = (m_dbreader as DB5Reader).Meta;
+
+            if (m_dbreader is DB6Reader)
+                meta = (m_dbreader as DB6Reader).Meta;
 
             Func<TypeCode, bool> isSmallType = (t) =>
             {

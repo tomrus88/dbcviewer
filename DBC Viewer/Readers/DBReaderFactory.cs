@@ -34,6 +34,8 @@ namespace DBCViewer
                         return new DB4Reader(file);
                     case DB5Reader.DB5FmtSig:
                         return new DB5Reader(file);
+                    case DB6Reader.DB6FmtSig:
+                        return new DB6Reader(file);
                 }
             }
             else if (ext == ".ADB")
