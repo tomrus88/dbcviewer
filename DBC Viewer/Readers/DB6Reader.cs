@@ -236,20 +236,6 @@ namespace DBCViewer
                                     throw new Exception("Invalid data type " + type);
                             }
 
-                            //byte[] row;
-
-                            //if (Lookup.TryGetValue(id, out row))
-                            //{
-                            //    int oldLen = row.Length;
-
-                            //    Array.Resize(ref row, oldLen + data.Length);
-                            //    Array.Copy(data, 0, row, oldLen, data.Length);
-                            //}
-
-
-                            //Lookup[id] = row;
-
-                            //fieldData[i][id] = data;
                             fieldData[i].Add(id, data);
                         }
                     }
@@ -264,32 +250,14 @@ namespace DBCViewer
                             if (col.Count == 0)
                                 continue;
 
-                            if (col.ContainsKey(row))
-                            {
-                                byte[] rowData = Lookup[row];
+                            byte[] rowData = Lookup[row];
 
-                                int oldLen = rowData.Length;
+                            byte[] data = col.ContainsKey(row) ? col[row] : new byte[col.First().Value.Length];
 
-                                byte[] data = col[row];
+                            Array.Resize(ref rowData, rowData.Length + data.Length);
+                            Array.Copy(data, 0, rowData, columnMeta[i].Offset, data.Length);
 
-                                Array.Resize(ref rowData, oldLen + data.Length);
-                                Array.Copy(data, 0, rowData, columnMeta[i].Offset, data.Length);
-
-                                Lookup[row] = rowData;
-                            }
-                            else
-                            {
-                                byte[] rowData = Lookup[row];
-
-                                int oldLen = rowData.Length;
-
-                                byte[] data = new byte[col.First().Value.Length];
-
-                                Array.Resize(ref rowData, oldLen + data.Length);
-                                Array.Copy(data, 0, rowData, columnMeta[i].Offset, data.Length);
-
-                                Lookup[row] = rowData;
-                            }
+                            Lookup[row] = rowData;
                         }
                     }
                 }
