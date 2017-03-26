@@ -190,7 +190,7 @@ namespace DBCViewer
 
                 if (CommonDataSize != 0)
                 {
-                    reader.BaseStream.Position = copyTablePos;
+                    reader.BaseStream.Position = commonDataPos;
 
                     int fieldsCount = reader.ReadInt32();
 
