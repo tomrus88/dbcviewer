@@ -234,6 +234,77 @@ namespace DBCViewer
                     m_changed = true;
                     return def;
                 }
+                else if (magic == DB6Reader.DB6FmtSig)
+                {
+                    br.BaseStream.Position = 0;
+
+                    DB6Reader db6 = new DB6Reader(br, true);
+
+                    var def = new Table();
+
+                    def.Name = m_mainForm.DBCName;
+                    def.Fields = new List<Field>();
+
+                    for (int i = 0; i < db6.Meta.Count; i++)
+                    {
+                        var field = new Field();
+
+                        if (i == db6.IdIndex)
+                        {
+                            field.IsIndex = true;
+                            field.Name = "m_ID";
+                            field.Type = "int";
+                        }
+                        else
+                        {
+                            field.Name = string.Format("field{0:X2}", db6.Meta[i].Offset);
+
+                            int bits = db6.Meta[i].Bits;
+
+                            if (bits == 0x18)
+                                field.Type = "byte";
+                            else if (bits == 0x10)
+                                field.Type = "ushort";
+                            else if (bits == 0x08)
+                                field.Type = "int";
+                            else if (bits == 0x00)
+                                field.Type = "int";
+                            else if (bits == -32)
+                                field.Type = "ulong";
+                            else
+                                throw new Exception("New Bits value detected!");
+
+                            int byteCount = (32 - bits) >> 3;
+
+                            // array
+                            if (i + 1 < db6.Meta.Count && db6.Meta[i].Offset + byteCount != db6.Meta[i + 1].Offset)
+                            {
+                                int arraySize = (db6.Meta[i + 1].Offset - db6.Meta[i].Offset) / byteCount;
+
+                                field.ArraySize = arraySize;
+                            }
+
+                            // array (last field)
+                            int rowSize = db6.HasIndexTable ? db6.RecordSize + 4 : db6.RecordSize;
+                            if (i + 1 == db6.Meta.Count && db6.Meta[i].Offset + byteCount != rowSize)
+                            {
+                                int diff = rowSize - db6.Meta[i].Offset;
+
+                                if (diff >= byteCount * 2)
+                                {
+                                    int arraySize = diff / byteCount;
+
+                                    field.ArraySize = arraySize;
+                                }
+                            }
+                        }
+
+                        def.Fields.Add(field);
+                    }
+
+                    m_changed = true;
+                    return def;
+                }
             }
 
             return null;
